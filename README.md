@@ -1,6 +1,8 @@
 # HIRES/KPF Automatic Scheduling/Script Generating Software
 Generate scripts for HIRES/KPF observers for the next upcoming observing night by processing and optimizing a semester of data
 
+## Installation
+
 #### Basic Requirements
 * numpy
 * astropy
@@ -9,15 +11,13 @@ Generate scripts for HIRES/KPF observers for the next upcoming observing night b
 
 #### Computing Requirement
 * Gurobi Python API (gurobipy)
-  * Obtain a license for the ILP Solver https://www.gurobi.com/solutions/licensing/
-    * There are both free trial licenses and free academic licenses
+  * Obtain a license (trial or academic will both work) for the ILP Solver https://www.gurobi.com/solutions/licensing/
   * You can learn more about Gurobi here https://www.gurobi.com/documentation/quickstart.html
 
-## Installation
-Since the scheduer is not yet packaged, clone the git repository and open the file single_night_optimizer.py
+Since the scheduler is not yet packaged, clone the git repository and ispect the file single_night_optimizer.py
 
-Here you can adjust your data directories, but they are linked to appropriate example files included in the repo by default. To make your first
-schedule, just run the file through command line
+Here you can adjust your data directories, but the filepaths to example files are included in the repo by default. To make your first
+schedule, just run the file through the command line:
 ```
 python single_night_optimizer.py
 ```
@@ -32,9 +32,10 @@ python single_night_optimizer.py
 * *allocated_nights* https://github.com/California-Planet-Search/jump-config/tree/master/allocations/hires_j
   * Dates and start/stop markers for each quarter night
 * *marked_scripts*
-  * Directory of text files of format 'MM-DD-YYYY.txt' from all previous dates in observing semester
+  * Directory of text files of format 'YYYY--MM-DD.txt' from all previous dates in observing semester
   * Copy the marked starlist targets relevant to the observers sheet (i.e. above the line of X's)
 * *current_day*
+  * Date string in same format as above
  
 ## The Scheduler
 
@@ -58,7 +59,7 @@ slot, and listed values are the assigned request numbers (indeces in *observers_
 
 ### Example Usage
 
-This repository comes equipped with data for the 2022B Semester up to October 4th. To generate a schedule, you would use the function:
+This repository comes equipped with data for the 2022B Semester up to October 4th. In generating the schedule above, you are calling the function:
 
 ```
 semester_schedule(observers_sheet = 'Data/HIRES_observers - PI-requests2022B.csv',
