@@ -11,39 +11,32 @@ from astropy.time import Time
 from astropy.time import TimeDelta
 from itertools import combinations
 import csv
+import argparse
+import logging
 
-def generate_twilight_sheet():
 
-    #Initialize the astroplan observer object
-    keck = apl.Observer.at_site('W. M. Keck Observatory')
+# TODO: move CLI to own script once optimizer is packaged
+parser = argparse.ArgumentParser(description='Generate Schedules for Upcoming Night')
 
-    #Create a range of dates to calculate (some before and some after semester in this case)
-    twilight_frame = pd.date_range('2021-06-01','2023-06-01').to_frame()
-    twilight_frame = twilight_frame.rename(columns={0:'time_utc'})
-    eighteen_deg_evening = []
-    twelve_deg_evening = []
-    six_deg_evening = []
-    eighteen_deg_morning = []
-    twelve_deg_morning = []
-    six_deg_morning = []
-    for day in twilight_frame.index.strftime(date_format='%Y-%m-%d').tolist():
-        as_day = Time(day,format='iso',scale='utc')
-        eighteen_deg_evening.append(keck.twilight_evening_astronomical(as_day,which='next'))
-        twelve_deg_evening.append(keck.twilight_evening_nautical(as_day,which='next'))
-        six_deg_evening.append(keck.twilight_evening_civil(as_day,which='next'))
-        eighteen_deg_morning.append(keck.twilight_morning_astronomical(as_day,which='next'))
-        twelve_deg_morning.append(keck.twilight_morning_nautical(as_day,which='next'))
-        six_deg_morning.append(keck.twilight_morning_civil(as_day,which='next'))
+parser.add_argument('-o','--observers_sheet', help='Path to observers csv',
+                default='example_data/HIRES_observers - PI-requests2022B.csv')
+parser.add_argument('-t','--twilight_times', help='Path to twilight times csv',
+                default='example_data/twilight_times.csv')
+parser.add_argument('-a','--allocated_nights', help='Path to night allocations',
+                default='example_data/hires_schedule_2022B.csv')
+parser.add_argument('-m','--marked_scripts', help='Path to script directory',
+                default='example_data/MarkedScripts')
+parser.add_argument('-d','--current_day', help='Date to be scheduled YYYY-MM-DD. Must be in allocated_nights',
+                default='2022-10-04')
+parser.add_argument('-g','--gurobi_output',action='store_true', help='Activate Gurobi console outputs',
+                default=False)
+parser.add_argument('-p','--equalize',action='store_true',help='Alter Objective to prioritize program equity',
+                default=False)
 
-    twilight_frame['18_evening'] = eighteen_deg_evening
-    twilight_frame['12_evening'] = twelve_deg_evening
-    twilight_frame['6_evening'] = six_deg_evening
-    twilight_frame['18_morning'] = eighteen_deg_morning
-    twilight_frame['12_morning'] = twelve_deg_morning
-    twilight_frame['6_morning'] = six_deg_morning
+args = parser.parse_args()
 
-    #Create simple csv with date and twilight evening/morning times
-    twilight_frame.to_csv('twilight_times.csv')
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 def generate_reservation_list(all_targets_frame,plan,twilight_frame,observatory):
     dates = plan.Date.to_list()
@@ -70,8 +63,11 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame,observatory)
     else_min_alt = 18
     max_alt = 85
 
+    logger.info('Generating Reservation List...')
+
     #Go request by request, and find which quarter nights we can throw each target into
     for index,row in all_targets_frame.iterrows():
+        res_per_obs = 0
         name = row['Starname']
         ra = row['ra']
         dec = row['dec']
@@ -125,7 +121,11 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame,observatory)
             #Here I've decided to make it so that a target must be accessible for at least half of a quarter night
             #to make the reservation schedulable. This is crucial for time independent traveling salesman later
             if (len(d) - np.bincount(d)[0]) >= len(d)/2:
+                res_per_obs += 1
                 reservations.append((index,ind))
+
+        if res_per_obs == 0:
+            logger.debug('Target {} lacks reservations for this semester'.format(name))
 
         #This generates a minimum separation for targets that don't have one specified by the PI
         if math.isnan(row['Cadence']):
@@ -174,6 +174,9 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame,observatory)
         #For PI specified cadences    
         else:
             min_separations.append(row['Cadence'])
+    
+    logger.info('Reservations done')
+    
     return reservations,min_separations
 
 def calculate_intervals(plan,twilight_frame):
@@ -245,7 +248,10 @@ def can_force(forced_slots,reserved_slots):
 def relaxed_minimum(minimum,relaxation):
     return math.ceil(minimum * relaxation)
 
-def process_scripts(all_targets_frame,plan,marked_scripts):
+def process_scripts(all_targets_frame,plan,marked_scripts,current_day):
+
+    logger.info('Processing Scripts...')
+
     import os
     observed_dict = defaultdict(list)
 
@@ -253,8 +259,10 @@ def process_scripts(all_targets_frame,plan,marked_scripts):
     #titled by date. i.e 'marked_scripts/2022-08-07.txt'
     #Note: these files should include only targets for that night, and none of the text/notes that follow
     directory = marked_scripts
-    for filename in os.listdir(directory)[1:]:
-
+    dates = []
+    for filename in os.listdir(directory):
+        
+        targ_per_script = 0
         fpath = os.path.join(directory, filename)
         with open(fpath) as f:
 
@@ -263,6 +271,7 @@ def process_scripts(all_targets_frame,plan,marked_scripts):
 
             #Parse the corresponding date
             day = f.name[:-4][-10:]
+            dates.append(day)
 
             #The observation is always assigned to the first qn of that date for simplicity. The date of observation
             #all that matters for the optimization, not the specific qn
@@ -294,7 +303,18 @@ def process_scripts(all_targets_frame,plan,marked_scripts):
                 #If we can find it, append the corresponding qn identifier to the targets
                 #past observation dictionary
                 if targ.size > 0:
+                    targ_per_script += 1
                     observed_dict[targ[0]].append(slot)
+
+        if targ_per_script == 0:
+            logger.warning('No targets recognized in {}'.format(filename))
+    print(current_day)
+    current_slot = plan[plan['Date'] == current_day].index[0]
+
+    for script_date in plan[:current_slot].Date.tolist():
+        if script_date not in dates:
+            logger.warning('Script not found for {}'.format(script_date))
+
 
     return observed_dict
 
@@ -355,6 +375,7 @@ def write_starlist(frame,requests,condition,current_day):
 
     formatted_frame = frame.loc[requests][columns]
 
+    logger.info('Writing starlist to {}_{}.txt'.format(current_day,condition))
     lines = []
     for index,row in formatted_frame.iterrows():
 
@@ -395,14 +416,18 @@ def write_starlist(frame,requests,condition,current_day):
         with open('{}_{}.txt'.format(current_day,condition), 'w') as f:
             f.write('\n'.join(lines))
 
-def salesman_scheduler(all_targets_frame,plan,current_day):
+def salesman_scheduler(all_targets_frame,plan,current_day,output_flag):
+
     for condition in ['nominal','weathered','poor']:
+
+        logger.info('Solving traveling salesman for condition: {}'.format(condition))
 
         #Retrieve the conditions from respective csv's
         file = open("2022B_{}.csv".format(condition), "r")
         blocked_targets = list(csv.reader(file, delimiter=","))
         file.close()
         for i in range(len(blocked_targets)):
+            blocked_targets[i] = blocked_targets[i][1:]
             for j in range(len(blocked_targets[i])):
                 blocked_targets[i][j] = int(blocked_targets[i][j])
 
@@ -449,7 +474,7 @@ def salesman_scheduler(all_targets_frame,plan,current_day):
             # tested with Python 3.7 & Gurobi 9.0.0
 
             m = gp.Model()
-            m.Params.OutputFlag = 0
+            m.Params.OutputFlag = output_flag
             # Variables: is city 'i' adjacent to city 'j' on the tour?
             vars = m.addVars(dist.keys(), obj=dist, vtype=GRB.BINARY, name='x')
 
@@ -478,7 +503,8 @@ def salesman_scheduler(all_targets_frame,plan,current_day):
         #Turn all the nights targets into starlists   
         write_starlist(all_targets_frame,ordered_requests,condition,current_day)
 
-def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scripts,current_day):
+def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scripts,current_day,output_flag,
+                                                                                    equalize_programs):
 
     ############Load Observer information and data files, Pandas is an easy way to manage this############
     keck = apl.Observer.at_site('W. M. Keck Observatory')
@@ -568,7 +594,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
         reservation_dict[targ].append(slot)
 
     ############Process completed observations############
-    observed_dict = process_scripts(all_targets_frame,plan,marked_scripts)
+    observed_dict = process_scripts(all_targets_frame,plan,marked_scripts,current_day)
 
     #Remove reservations that occur before the current day unless actually took place
     starting_slot = plan[plan['Date'] == current_day].index[0]
@@ -609,11 +635,14 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
         else:
             priority_dict[targ] = 1
 
-    #Generate four lists for various conditions for observers to bounce between
+    #Generate three lists for various conditions for observers to bounce between
     for condition_type in ['nominal','weathered','poor']:
+
+        logger.info('Scheduling semester for condition: {}'.format(condition_type))
 
         #Initialize our Gurobi Model
         m = Model('Semester_Plan')
+        m.Params.OutputFlag = output_flag
 
         #Determine the size of our qn buckets
         interval_dict = defaultdict(int)
@@ -742,7 +771,6 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
 
         #We can also choose to enforce program equality. Research suggests this is often harmful to the end result,
         #for now we've set it to false
-        equalize_programs = False
         if equalize_programs:
             equity_list = [item for item in program_dict.keys()]
             yp = m.addVars(program_dict.keys(),vtype=GRB.INTEGER)
@@ -790,13 +818,14 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
             #It's possible the solve issue isn't with our fill constraints
             #If so, this allows us to view our limiting constraints that break the model
             if relax_coeff <= 0:
-                print('Issue with solve for condition {}. Proceeding to IIS computation'.format(condition_type))
+                logger.error('Issue with solve for condition {}. Proceeding to IIS computation'.format(condition_type))
                 break
             m.update()
             m.optimize()
         
         #Search out model issues
         if m.Status == GRB.INFEASIBLE:
+            logger.info('Model remains infeasible. Searching for invalid constraints')
             conflicting_constraints(m,300)
         
         if m.Status != GRB.INFEASIBLE:
@@ -819,7 +848,8 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
             #Create nightly lists of star requests to be assigned there
             starlists = []
             for i in range(len(plan)):
-                s = []
+                time_log = plan.loc[i,'Date']
+                s = [time_log]
                 for j in range(len(scheduled_targets)):
                     if int(scheduled_targets[j][1]) == i:
                         obs = int(scheduled_targets[j][0])
@@ -827,16 +857,17 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
                 starlists.append(s)
 
 
-            #Write four individual files. I like to print them so it's easy to inspect what the top level is producing
+            #Write three individual files. I like to print them so it's easy to inspect what the top level is producing
+            logger.info('Writing to {}'.format(outpfile))
             with open(outpfile, "w", newline="") as f:
                 writer = csv.writer(f)
                 writer.writerows(starlists)
     
-    salesman_scheduler(all_targets_frame,plan,current_day)
-    
-    
-#Input the filepaths for the relevant data and specify the current date for calculation
-semester_schedule('Data/HIRES_observers - PI-requests2022B.csv','Data/twilight_times.csv',
-                            'Data/hires_schedule_2022B.csv','Data/MarkedScripts','2022-10-04')
+    salesman_scheduler(all_targets_frame,plan,current_day,output_flag)
+
+
+#Call the scheduling function
+semester_schedule(args.observers_sheet,args.twilight_times,args.allocated_nights,
+                        args.marked_scripts,args.current_day,args.gurobi_output,args.equalize)
 
 
