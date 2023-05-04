@@ -7,7 +7,7 @@ from astropy.time import Time
 keck = apl.Observer.at_site('W. M. Keck Observatory')
 
 #Create a range of dates to calculate (some before and some after semester in this case)
-twilight_frame = pd.date_range('2021-06-01','2023-06-01').to_frame()
+twilight_frame = pd.date_range('2022-06-01','2024-06-01').to_frame()
 twilight_frame = twilight_frame.rename(columns={0:'time_utc'})
 eighteen_deg_evening = []
 twelve_deg_evening = []
@@ -32,4 +32,4 @@ twilight_frame['12_morning'] = twelve_deg_morning
 twilight_frame['6_morning'] = six_deg_morning
 
 #Create simple csv with date and twilight evening/morning times
-twilight_frame.to_csv('twilight_times.csv')
+twilight_frame.to_csv('2023_data/twilight_times.csv')
