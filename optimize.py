@@ -10,16 +10,19 @@ import astroplan as apl
 from astropy.time import Time
 from astropy.time import TimeDelta
 from itertools import combinations
+from itertools import permutations
 import csv
 import logging
+import plotting
 
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-def generate_reservation_list(all_targets_frame,plan,twilight_frame,observatory):
+def generate_reservation_list(all_targets_frame,plan,twilight_frame,observatory,current_day,forced_targets):
     dates = plan.Date.to_list()
-
+    next_slots = plan[plan['Date'] == current_day].index.values
+    
     #Reservations is a list of tuples of the form (r,t), where r is the request id, and t is a qn slot
     #in which the request target is accessible
     reservations = []
@@ -39,7 +42,9 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame,observatory)
     min_az = 5.3
     max_az = 146.2
     min_alt = 33.3
-    else_min_alt = 18
+    else_min_alt = 25
+    #min_alt = 40
+    #else_min_alt = 40
     max_alt = 85
 
     logger.info('Generating Reservation List...')
@@ -99,9 +104,19 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame,observatory)
 
             #Here I've decided to make it so that a target must be accessible for at least half of a quarter night
             #to make the reservation schedulable. This is crucial for time independent traveling salesman later
-            if (len(d) - np.bincount(d)[0]) >= len(d)/2:
-                res_per_obs += 1
-                reservations.append((index,ind))
+            #Targets forcefully scheduled will have additional flexibility
+            if index in forced_targets and ind in next_slots:
+                if (len(d) - np.bincount(d)[0]) >= len(d)/6:
+                    res_per_obs += 1
+                    reservations.append((index,ind))
+            if index in forced_targets and ind not in next_slots:
+                if (len(d) - np.bincount(d)[0]) >= len(d)/2:
+                    res_per_obs += 1
+                    reservations.append((index,ind))
+            if index not in forced_targets:
+                if (len(d) - np.bincount(d)[0]) >= len(d)/2:
+                    res_per_obs += 1
+                    reservations.append((index,ind))
 
         if res_per_obs == 0:
             logger.debug('Target {} lacks reservations for this semester'.format(name))
@@ -191,7 +206,7 @@ def calculate_intervals(plan,twilight_frame):
         observing_ends = night_starts[i] + diff*stops[i]
         durations.append(math.floor(((observing_ends-observing_starts)*24)*60))
 
-    #Finally assign the rouned beginning and ending of each quarter night in the plan
+    #Finally assign the rounded beginning and ending of each quarter night in the plan
     interval_starts = []
     interval_stops = []
     for i in range(len(dates)):
@@ -215,7 +230,7 @@ def calculate_intervals(plan,twilight_frame):
     return plan
 
 def discretize(seconds):
-    return np.round(seconds/60,1) + 1
+    return np.round(seconds/60,1)
 
 def can_force(forced_slots,reserved_slots):
     for x in forced_slots:
@@ -287,10 +302,10 @@ def process_scripts(all_targets_frame,plan,marked_scripts,current_day):
 
         if targ_per_script == 0:
             logger.warning('No targets recognized in {}'.format(filename))
-    print(current_day)
+
     current_slot = plan[plan['Date'] == current_day].index[0]
 
-    for script_date in plan[:current_slot].Date.tolist():
+    for script_date in list(dict.fromkeys(plan[:current_slot].Date.tolist())):
         if script_date not in dates:
             logger.warning('Script not found for {}'.format(script_date))
 
@@ -325,25 +340,11 @@ def coordinates(frame,plan,targ,qn):
     
     return AZ
 
-def distance(frame, plan, targ1, targ2, qn):
-    t1 = coordinates(frame,plan,targ1,qn)
-    t2 = coordinates(frame,plan,targ2,qn)
-
-    #If you wanted to calculate pairwise distances including elevation
-    #diff = (t1.az.deg-t2.az.deg, t1.alt.deg-t2.alt.deg)
-    #return math.sqrt(diff[0]*diff[0]+diff[1]*diff[1])
-
-    return np.abs(t1.az.deg-t2.az.deg)
-
-def create_coordinates(name,ra,dec,time,observatory):
+def get_ra_dec(all_targets_frame,id_num):
+    ra = all_targets_frame.loc[id_num,'ra']
+    dec = all_targets_frame.loc[id_num,'dec']
     
-    #I've included hour angle here for future implementation, however it's not currently used
-    coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
-    target = apl.FixedTarget(name=name, coord=coords)
-    AZ = observatory.altaz(time, target)
-    HA = observatory.target_hour_angle(time, target)
-    
-    return AZ,HA
+    return ra,dec
 
 def write_starlist(frame,requests,condition,current_day):
 
@@ -366,13 +367,17 @@ def write_starlist(frame,requests,condition,current_day):
                             + '0'*(4-len(str(row['RAS']))) + str(row['RAS']))
         
         starter = '+'
-        if int(row['DECD']) < 0:
+        if row['DECD'][0] == '-' or row['DECD'][0] == '−':
             starter = '-'
-        decstring = (starter + '0'*(2-len(str(abs(int(row['DECD']))))) + str(abs(int(row['DECD']))) + ' '
-                        + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
-                            + '0'*(4-len(str(row['DECS']))) + str(int(row['DECS'])))
+            decstring = (starter + '0'*(2-len(str(abs(int(row['DECD'][1:]))))) + str(abs(int(row['DECD'][1:]))) + ' '
+                            + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
+                                + '0'*(4-len(str(row['DECS']))) + str(int(row['DECS'])))
+        else:
+            decstring = (starter + '0'*(2-len(str(abs(int(row['DECD']))))) + str(abs(int(row['DECD']))) + ' '
+                            + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
+                                + '0'*(4-len(str(row['DECS']))) + str(int(row['DECS'])))
         
-        magstring = row['vmag='] + str(row['Vmag']) + ' '*(5-len(str(row['Vmag'])))
+        magstring = row['vmag='] + str(row['Vmag']) + ' '*(4-len(str(row['Vmag'])))
         
         exposurestring = (' '*(4-len(str(int(row['T_exp(sec)'])))) + str(int(row['T_exp(sec)'])) + '/' 
                             + str(int(row['T_max(sec)'])) + ' '*(4-len(str(int(row['T_max(sec)'])))))
@@ -395,14 +400,30 @@ def write_starlist(frame,requests,condition,current_day):
         with open('{}_{}.txt'.format(current_day,condition), 'w') as f:
             f.write('\n'.join(lines))
 
-def salesman_scheduler(all_targets_frame,plan,current_day,output_flag):
+def get_alt_az(frame,id_num,time,observatory):
+    ra,dec = get_ra_dec(frame,id_num)
+    
+    coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
+    target = apl.FixedTarget(name=id_num, coord=coords)
+    AZ = observatory.altaz(time, target)
+    
+    return AZ.alt.deg,AZ.az.deg
 
-    for condition in ['nominal','weathered','poor']:
+def moon_safe(alt,az,moon_alt,moon_az):
+    if ((apy.coordinates.angular_separation(alt,az,moon_alt,moon_az))*180/np.pi) >= 30:
+        return True
+    else:
+        return False
+            
+def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_results):
+    
+    keck = apl.Observer.at_site('W. M. Keck Observatory')
+    for condition in ['nominal']:
 
-        logger.info('Solving traveling salesman for condition: {}'.format(condition))
+        logger.info('Building traveling salesman for condition: {}'.format(condition))
 
         #Retrieve the conditions from respective csv's
-        file = open("2022B_{}.csv".format(condition), "r")
+        file = open("2023A_{}.csv".format(condition), "r")
         blocked_targets = list(csv.reader(file, delimiter=","))
         file.close()
         for i in range(len(blocked_targets)):
@@ -410,87 +431,267 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag):
             for j in range(len(blocked_targets[i])):
                 blocked_targets[i][j] = int(blocked_targets[i][j])
 
-
-        #Functions unique to Gurobi's salesman implementation. I've only touched these enough to make them work
-        def subtourelim(model, where):
-            if where == GRB.Callback.MIPSOL:
-                # make a list of edges selected in the solution
-                vals = model.cbGetSolution(model._vars)
-                selected = gp.tuplelist((i, j) for i, j in model._vars.keys()
-                                    if vals[i, j] > 0.5)
-                # find the shortest cycle in the selected edge list
-                tour = subtour(selected)
-                if len(tour) < len(blocked_targets[qn]):
-                    # add subtour elimination constr. for every pair of cities in subtour
-                    model.cbLazy(gp.quicksum(model._vars[i, j] for i, j in combinations(tour, 2))
-                                <= len(tour)-1)
-
-        def subtour(edges):
-            unvisited = blocked_targets[qn][:]
-            cycle = blocked_targets[qn][:] # Dummy - guaranteed to be replaced
-            while unvisited:  # true if list is non-empty
-                thiscycle = []
-                neighbors = unvisited
-                while neighbors:
-                    current = neighbors[0]
-                    thiscycle.append(current)
-                    unvisited.remove(current)
-                    neighbors = [j for i, j in edges.select(current, '*')
-                                if j in unvisited]
-                if len(thiscycle) <= len(cycle):
-                    cycle = thiscycle # New shortest subtour
-            return cycle    
-
-
-        ordered_requests = []
-
+        ordered_requests = []       
+        
+        #Plot folder
+        plotpath = '{}_plots'.format(current_day)
+        
         #The path for each quarter night is computed independently
         for qn in plan[plan['Date'] == current_day].index.tolist(): 
 
-            #Traveling Salesman https://www.gurobi.com/resource/traveling-salesman-problem/
+            nightly_targets = blocked_targets[qn]
 
-            dist = {(t1, t2): distance(all_targets_frame,plan,t1, t2, qn) for t1, t2 in combinations(blocked_targets[qn], 2)}
-            # tested with Python 3.7 & Gurobi 9.0.0
+            #Find reason for duplicates
+            nightly_targets = list(set(nightly_targets))
 
-            m = gp.Model()
-            m.Params.OutputFlag = output_flag
-            # Variables: is city 'i' adjacent to city 'j' on the tour?
-            vars = m.addVars(dist.keys(), obj=dist, vtype=GRB.BINARY, name='x')
+            ind_to_id = defaultdict(int)
+            i = 1
+            for targ in nightly_targets:
+                ind_to_id[i] = targ
+                i += 1
 
-            # Symmetric direction: Copy the object
-            for i, j in vars.keys():
-                vars[j, i] = vars[i, j]  # edge in opposite direction
+            start = Time(plan.loc[qn,'qn_start'],format='jd')
+            end = Time(plan.loc[qn,'qn_stop'],format='jd')
+            dur = np.round((end-start).jd*24*60,0)*60
+            stop = start + TimeDelta(dur,format='sec')
+            step = TimeDelta(60,format='sec')
+            t = np.arange(start.jd,stop.jd,step.jd)
+            t = Time(t,format='jd')
 
-            # Constraints: two edges incident to each city
-            cons = m.addConstrs(vars.sum(t, '*') == 2 for t in blocked_targets[qn])
-            m._vars = vars
-            m.Params.lazyConstraints = 1
-            m.optimize(subtourelim)
+            R = len(nightly_targets)+2
+            T = int(dur/60)
+            slots = range(T)
 
-            # Retrieve solution
+            min_az = 5.3
+            max_az = 146.2
+            min_alt = 33.3
+            else_min_alt = 25
+            #min_alt = 40
+            #else_min_alt = 40
+            max_alt = 85
 
-            vals = m.getAttr('x', vars)
-            selected = gp.tuplelist((i, j) for i, j in vals.keys() if vals[i, j] > 0.5)
-
-            tour = subtour(selected)
-            assert len(tour) == len(blocked_targets[qn])
-
-            for i in range(len(tour)):
-                #Stitch targets from each qn together
-                ordered_requests.append(tour[i])
+            min_time = []
+            max_time = []
+            s = []
+            for i in range(R):
+                if i == 0 or i == R-1:
+                    min_time.append(0)
+                    max_time.append(T)
+                    s.append(0)
+                else:
+                    targ = ind_to_id[i]
+                    exp = all_targets_frame.loc[targ,'discretized_duration']
+                    s.append(exp)
+                    ra,dec = get_ra_dec(all_targets_frame,targ)
+                    coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
+                    target = apl.FixedTarget(name=targ, coord=coords)
+                    AZ = keck.altaz(t, target)
+                    alt=AZ.alt.deg
+                    az=AZ.az.deg
+                    deck = np.where((az >= min_az) & (az <= max_az))
+                    deck_height = np.where((alt <= max_alt) & (alt >= min_alt))
+                    not_deck_1 = np.where((az < min_az))
+                    not_deck_2 = np.where((az > max_az))
+                    not_deck_height = np.where((alt <= max_alt) & (alt >= else_min_alt))
+                    first = np.intersect1d(deck,deck_height)
+                    second = np.intersect1d(not_deck_1,not_deck_height)
+                    third = np.intersect1d(not_deck_2,not_deck_height)
+                    good = np.concatenate((first,second,third))
+                    if len(good > 0):
+                        min_time.append(good[0]+exp)
+                        if good[-1] < T:
+                            max_time.append(good[-1])
+                        elif good[-1] >= T:
+                            max_time.append(T)
+                    else:
+                        print(ind_to_id[i])
+                        min_time.append(0)
+                        max_time.append(0)
             
+            def to_wrap_frame(angle):
+                angle += 90
+                if angle >= 360:
+                    angle -= 360
+                return angle
+            
+            start_slots = t[:-1]
+            logger.info('Calculating Distance Tensor for qn {}'.format(qn))
+            
+            coordinate_matrix = []
+            coordinate_matrix.append(np.zeros(len(start_slots)))
+            for i in range(len(nightly_targets)):
+                id_num = nightly_targets[i]
+                ra,dec = get_ra_dec(all_targets_frame,id_num)
+                coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
+                target = apl.FixedTarget(name=id_num, coord=coords)
+                coordinate_matrix.append(keck.altaz(start_slots,target).az.deg)
+            coordinate_matrix.append(np.zeros(len(start_slots)))
+            coordinate_matrix = np.array(coordinate_matrix)
+
+            def distance(targ1,targ2,slot):
+                if targ1 == 0 and targ2 == R-1:
+                    return 0
+                if targ1 == R-1 and targ2 == 0:
+                    return 0
+                if targ1 == 0 or targ1 == R-1:
+                    #return to_wrap_frame(coordinate_matrix[targ2,slot])
+                    return 0
+                if targ2 == 0 or targ2 == R-1:
+                    #return to_wrap_frame(coordinate_matrix[targ1,slot])
+                    return 0
+                t1 = to_wrap_frame(coordinate_matrix[targ1,slot])
+                t2 = to_wrap_frame(coordinate_matrix[targ2,slot])
+
+                #diff = (t1[0]-t2[0], t1[1]-t2[1])
+                #return math.sqrt(diff[0]*diff[0]+diff[1]*diff[1])
+                return np.abs(t1-t2)
+
+            dist = defaultdict(float)
+            for i in range(len(start_slots)):
+                for targ1,targ2 in permutations(range(R),2):
+                    dist[(targ1,targ2,i)] = distance(targ1,targ2,i)
+
+            #Time windows
+            w = []
+            for m in range(T+1):
+                w.append(m)
+
+            ####Variables####
+
+            Mod = Model('TDTSP')
+            Mod.Params.OutputFlag = output_flag
+
+            yi = Mod.addVars(range(R),vtype=GRB.BINARY,name='yi')
+            xijm = Mod.addVars(range(R),range(R),range(T),vtype=GRB.BINARY,name='xijm')
+            ti = Mod.addVars(range(R),vtype=GRB.INTEGER,lb=0,name='ti')
+            #tijm = Mod.addVars(range(R),range(R),range(T),vtype=GRB.BINARY,name='tijm')
+
+            start_origin = Mod.addConstr(gp.quicksum(xijm[0,j,m] for j in range(R) for m in range(T)) == 1,
+                               'start_origin')
+            end_origin = Mod.addConstr(gp.quicksum(xijm[i,R-1,m] for i in range(R) for m in range(T)) == 1,
+                               'end_origin')
+            visit_once = Mod.addConstrs((gp.quicksum(xijm[i,j,m] for i in range(R)[:-1] for m in range(T)) == yi[j]
+                             for j in range(R)[1:]), 'visit_once')
+            flow_constr = Mod.addConstrs(((gp.quicksum(xijm[i,k,m] for i in range(R)[:-1] for m in range(T))
+                               - gp.quicksum(xijm[k,j,m] for j in range(R)[1:] for m in range(T)) == 0)
+                              for k in range(R)[:-1][1:]), 'flow_constr')
+            exp_constr = Mod.addConstrs((ti[j] >= gp.quicksum((m + dist[(i,j,m)]/60 + s[j])*xijm[i,j,m] 
+                                                      for m in range(T) for i in range(R)[:-1])
+                               for j in range(R)[1:])
+                              , 'exp_constr')
+            t_min = Mod.addConstrs((ti[i] >= gp.quicksum(w[m]*xijm[i,j,m] for j in range(R)[1:]
+                                                 for m in range(T))
+                             for i in range(R)[:-1]),'t_min')
+            t_max = Mod.addConstrs((ti[i] <= gp.quicksum(w[m+1]*xijm[i,j,m] for j in range(R)[1:]
+                                                 for m in range(T))
+                             for i in range(R)[:-1]),'t_max')
+            rise_constr = Mod.addConstrs((ti[i] >= min_time[i]*yi[i] for i in range(R)),'rise_constr')
+            set_constr = Mod.addConstrs((ti[i] <= max_time[i]*yi[i] for i in range(R)),'set_constr')
+            priority_param = 50
+            slew_param = 1/360
+
+            Mod.setObjective(priority_param*gp.quicksum(yi[j] for j in range(R)) 
+                             -slew_param *gp.quicksum(dist[(i,j,m)]*xijm[i,j,m] for i in range(R)[:-1] 
+                                           for j in range(R)[1:] for m in range(T))
+                                ,GRB.MAXIMIZE)
+            logger.info('Solving TDTSP for qn {}'.format(qn))
+            Mod.params.TimeLimit = 300
+            Mod.params.MIPGap = .001
+            Mod.update()
+            Mod.optimize()
+
+            scheduled_targets = []
+            for i in range(R)[1:][:-1]:
+                if np.round(yi[i].X,0) == 1:
+                    v = ti[i]
+                    scheduled_targets.append((int(v.VarName[3:-1]),int(v.X)))
+
+            start_times = []
+            unordered_times = []
+
+            for i in range(len(scheduled_targets)):
+                unordered_times.append(int(scheduled_targets[i][1]))
+            order = np.argsort(unordered_times)
+            scheduled_targets = [scheduled_targets[i] for i in order]
+            
+
+            if plot_results:
+                logger.info('Plotting qn {}'.format(qn))
+
+                obs_time=[]
+                az_path=[]
+                alt_path=[]
+                names=[]
+                targ_list=[]
+                for pair in scheduled_targets:
+                    targ=pair[0]
+                    time=t[pair[1]]
+                    exp=s[targ]
+                    targ_list.append(targ)
+                    names.append(all_targets_frame.loc[ind_to_id[targ],'Starname'])
+                    time1=time-TimeDelta(60*exp,format='sec')
+                    obs_time.append(time1.jd)
+                    obs_time.append(time.jd)
+                    az_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time1,keck)[1])
+                    az_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time,keck)[1])
+                    alt_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time1,keck)[0])
+                    alt_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time,keck)[0])
+                    
+                time_array = []
+                for i in range(len(obs_time)):
+                    if i % 2 == 0:
+                        time_array.append((obs_time[i] - obs_time[0])*1440)
+
+                time_counter = Time(obs_time[0],format='jd')
+                time_strings = []
+                tel_az = []
+                tel_zen = []
+                observed_at_time = []
+                while time_counter.jd < obs_time[-1]:
+                    time_strings.append(time_counter.isot)
+                    ind = np.flatnonzero(time_array <= (time_counter.jd - obs_time[0])*1440)[-1]
+                    req = ind_to_id[targ_list[ind]]
+                    observed_at_time.append(ind)
+                    tel_az.append(get_alt_az(all_targets_frame,req,time_counter,keck)[1] * (np.pi/180))
+                    tel_zen.append(90-get_alt_az(all_targets_frame,req,time_counter,keck)[0])
+                    time_counter += TimeDelta(30,format='sec')
+
+                time_counter = Time(obs_time[0],format='jd')
+                total_azimuth_list = []
+                total_zenith_list = []
+                while time_counter.jd < obs_time[-1]:
+                    azimuth_list = []
+                    zenith_list = []
+                    for targ in targ_list:
+                        azimuth_list.append(get_alt_az(all_targets_frame,ind_to_id[targ],time_counter,keck)[1] * (np.pi/180))
+                        zenith_list.append(90-get_alt_az(all_targets_frame,ind_to_id[targ],time_counter,keck)[0])
+                    total_azimuth_list.append(azimuth_list)
+                    total_zenith_list.append(zenith_list)
+                    time_counter += TimeDelta(30,format='sec')
+                
+                plotting.plot_path_2D(obs_time,az_path,alt_path,names,targ_list,
+                                    plotpath,current_day,int(plan.loc[qn,'stop']*4))
+                plotting.animate_telescope(time_strings,total_azimuth_list,total_zenith_list,
+                                        tel_az,tel_zen,observed_at_time,plotpath,int(plan.loc[qn,'stop']*4))
+            
+            for pair in scheduled_targets:
+                ordered_requests.append(ind_to_id[pair[0]])
+
         #Turn all the nights targets into starlists   
         write_starlist(all_targets_frame,ordered_requests,condition,current_day)
 
 def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scripts,current_day,output_flag,
-                                                                                    equalize_programs):
+                                                                                    equalize_programs,plot_results):
 
     ############Load Observer information and data files, Pandas is an easy way to manage this############
     keck = apl.Observer.at_site('W. M. Keck Observatory')
 
     #Retrieve the night allocations as csv from jump-config, drop the RM observation nights not part of Community Cadence
     obs_plan = pd.read_csv(allocated_nights)
-    obs_plan = obs_plan.drop([25,28,35])
+    obs_plan = obs_plan[obs_plan['Date'] != '2022-02-09']
+    obs_plan = obs_plan[obs_plan['Date'] != '2022-06-24']
+    obs_plan = obs_plan[obs_plan['Date'] != '2022-07-06']
+    obs_plan.reset_index(inplace=True,drop=True)
 
     #Retrieve the generated twilight times information and the HIRES observers sheet as csv's
     twilight_frame = pd.read_csv(twilight_times, parse_dates=True, index_col=0)
@@ -498,13 +699,22 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
     
     #Turn the observers sheet into a dataframe that is simplified and useful for caluculations. This assumes the 
     #sheet is left downloaded directly
-    all_targets_frame = all_targets_frame.drop([0,1])
+    all_targets_frame = all_targets_frame.drop([0,1,2,3,4])
 
 
     ############Compute coordinates in decimal RA hours and decimal DEC deg############
     all_targets_frame['ra'] = all_targets_frame['RAH'] + (1/60)*all_targets_frame['RAM'] + (1/3600)*all_targets_frame['RAS']
-    all_targets_frame['dec'] = all_targets_frame['DECD'] + (1/60)*all_targets_frame['DECM'] + (1/3600)*all_targets_frame['DECS']
 
+    #Reading in dec can be troublesome
+    all_targets_frame['dec'] = '' 
+    for index,row in all_targets_frame.iterrows():
+        if row['DECD'][0] == '-' or row['DECD'][0] == '−':
+            dec = (int(row['DECD'][1:]) + (1/60)*row['DECM'] + (1/3600)*row['DECS'])
+            all_targets_frame.at[index,'dec'] = -np.abs(dec)
+        else:
+            dec = (int(row['DECD']) + (1/60)*row['DECM'] + (1/3600)*row['DECS'])
+            all_targets_frame.at[index,'dec'] = np.abs(dec)
+            
     #For triple shots, we assume the total exposure time is triple the listed nominal for our calculations
     for index,row in all_targets_frame.iterrows():
         if row['N_obs'] == 3.0:
@@ -519,9 +729,9 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
 
 
     #Remove the RM targets corresponding to the RM nights
-    all_targets_frame = all_targets_frame[all_targets_frame['Starname'] != 'HIP41378']
-    all_targets_frame = all_targets_frame[all_targets_frame['Starname'] != 'TIC256722647']
-    all_targets_frame = all_targets_frame[all_targets_frame['Starname'] != 'TIC419523962']
+    all_targets_frame = all_targets_frame[all_targets_frame['Starname'] != 'TIC69997672']
+    all_targets_frame = all_targets_frame[all_targets_frame['Starname'] != 'TIC230075120']
+    all_targets_frame = all_targets_frame[all_targets_frame['Starname'] != 'TIC139474683']
 
     #Remove the duplicated targets from our list that are calibration shots not relevant to community cadence
     dup = all_targets_frame[all_targets_frame.duplicated(subset='Starname',keep=False)]
@@ -531,6 +741,10 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
     #Finally assign a unique identifier to each request to be used in lookup tables
     all_targets_frame.reset_index(inplace=True,drop=True)
     all_targets_frame['request_number'] = all_targets_frame.index.tolist()
+    
+    #Targets forcefully scheduled will have different rules
+    force_sched = all_targets_frame[(all_targets_frame['Include'] == 'Y') | 
+                                        (all_targets_frame['Include'] == 'y')].index.tolist()
 
     #Create simplified 'plan' dataframe of quarter nights with columns date, start, and stop
     #These are the discretized time 'buckets' that the top level optimization fills
@@ -551,7 +765,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
     plan = calculate_intervals(plan,twilight_frame)
 
     #Create a list of reservations and the minimum separation for each target
-    reservations,min_separations = generate_reservation_list(all_targets_frame,plan,twilight_frame,keck)
+    reservations,min_separations = generate_reservation_list(all_targets_frame,plan,twilight_frame,keck,current_day,force_sched)
 
     #Group targets by program in case we want to use statistics or equalizing algorithm
     program_dict = defaultdict(list)
@@ -615,7 +829,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
             priority_dict[targ] = 1
 
     #Generate three lists for various conditions for observers to bounce between
-    for condition_type in ['nominal','weathered','poor']:
+    for condition_type in ['nominal']:
 
         logger.info('Scheduling semester for condition: {}'.format(condition_type))
 
@@ -632,17 +846,14 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
         #Group together our community cadence targets for the optimizer
         cadenced_obs = all_targets_frame[(all_targets_frame['N_obs(full_semester)'] > 1) 
                                     & (all_targets_frame['Program code'] != 'Ex')].index.tolist()
-
-
-        ############Variable format adopted by ZTF's scheduler############
-
+        
         #yrt = 1 if target r is scheduled to quarter night t  
         yrt = m.addVars(target_ids,slots, vtype = GRB.BINARY, name = 'Yrt')
         for r in target_ids:
             for t in slots:
                 if t not in reservation_dict[r]:
                     m.addConstr((yrt[r,t] == 0),'constr_observable_{}_{}'.format(r,t))
-
+        
         #If the observers make the mistake of overobserving, we need to increase Nobs to avoid model breakdown
         #by constraint 'constr_num_obs'
         for r in observed_dict.keys():
@@ -666,20 +877,20 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
         #Force the next night to contain an amount of stars necessary for different conditions
         if condition_type == 'nominal':
             #These bound the size of the upcoming nights 'bin'
-            lb = 0.9
+            lb = 0.85
             ub = 1.0
             mag_lim = np.inf
-            outpfile = '2022B_nominal.csv'
+            outpfile = '2023A_nominal.csv'
         if condition_type == 'weathered':
             lb = 0.6
             ub = 0.8
             mag_lim = 12
-            outpfile = '2022B_weathered.csv'
+            outpfile = '2023A_weathered.csv'
         if condition_type == 'poor':
             lb = 0.3
             ub = 0.5
             mag_lim = 11
-            outpfile = '2022B_poor.csv'
+            outpfile = '2023A_poor.csv'
         fill_above = m.addConstr((gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration'] 
                             for r in target_ids for t in next_slots) >= 
                                 lb * sum(interval_dict[t] for t in next_slots))
@@ -732,16 +943,13 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
                                         (all_targets_frame['Include'] == 'n')].index.tolist()
         dont_include = m.addConstrs((yrt[r,t] == 0 for r in dont_sched for t in next_slots)
                                     ,'dont_sched_{}_{}'.format(r,t))
-        force_sched = all_targets_frame[(all_targets_frame['Include'] == 'Y') | 
-                                        (all_targets_frame['Include'] == 'y')].index.tolist()
-        for r in force_sched:
-
+        
+        '''for r in force_sched:
             #Require that the request can go through only if it is also observable
-            #TO DO: find a solution for communicating this error
-            '''if can_force(next_slots,reservation_dict[r]):
+            if can_force(next_slots,reservation_dict[r]):
                 m.addConstr((gp.quicksum(yrt[r,t] for t in next_slots) == 1),
                             'forced_sched_{}_{}'.format(r,next_slots[0]))'''
-
+                
         #This activates the minimum slot separation constraint
         relax_coeff = 1
         constr_min_slotsep = m.addConstrs((yrdt[r,dt] == 0 for r in cadenced_obs for dt in dtdict.keys() 
@@ -782,7 +990,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
                     , GRB.MAXIMIZE)
 
         #Optimization almost always complete or plateaued within 6 minutes
-        m.Params.TimeLimit = 360
+        m.Params.TimeLimit = 600
         m.update()
         m.optimize()
 
@@ -812,7 +1020,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
             scheduled_targets = []
             for v in yrt.values():
                 #If decision variable = 1, append the id to that slot
-                if v.X == 1:
+                if np.round(v.X,0) == 1:
                     #Perhaps theres a better way than parsing the names, I haven't found it!
                     scheduled_targets.append(v.VarName[4:][:-1].split(','))
 
@@ -823,6 +1031,11 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
                 unordered_times.append(int(scheduled_targets[i][1]))
             order = np.argsort(unordered_times)
             scheduled_targets = [scheduled_targets[i] for i in order]
+            
+            targets_observed = defaultdict(list)
+            for i in range(len(scheduled_targets)):
+                slot = int(scheduled_targets[i][1])
+                targets_observed[slot].append(int(scheduled_targets[i][0]))
             
             #Create nightly lists of star requests to be assigned there
             starlists = []
@@ -835,11 +1048,27 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
                         s.append(all_targets_frame.loc[obs,'request_number'])
                 starlists.append(s)
 
+            if plot_results:
+                #Plot program CDF's
+                logger.info('Plotting Program CDFs')
+                plotpath = '{}_plots'.format(current_day)
+                if not os.path.isdir(plotpath):
+                    os.mkdir(plotpath)
+                plotting.plot_program_cdf(plan,program_dict,targets_observed,Nobs,plotpath,current_day)
+                #plotting.plot_one_cdf(plan,program_dict,targets_observed,Nobs,plotpath,current_day,'DG')
+                
+                #Plot target cadence by program
+                logger.info('Plotting Program Cadences')
+                plotting.plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,
+                                    min_separations,plotpath)
+                #plotting.plot_cadence_night_resolution(plan,all_targets_frame,twilight_frame,starlists,
+                #                     min_separations,plotpath)
 
-            #Write three individual files. I like to print them so it's easy to inspect what the top level is producing
+
+            #Write three individual files. Print them so it's easy to inspect what the top level is producing
             logger.info('Writing to {}'.format(outpfile))
             with open(outpfile, "w", newline="") as f:
                 writer = csv.writer(f)
                 writer.writerows(starlists)
     
-    salesman_scheduler(all_targets_frame,plan,current_day,output_flag)
+    salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_results)
