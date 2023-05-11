@@ -1,3 +1,4 @@
+from collections import defaultdict
 import matplotlib.pyplot as plt
 import imageio
 import os
@@ -56,7 +57,6 @@ def plot_path_2D(obs_time,az_path,alt_path,names,targ_list,outputdir,current_day
     plt.savefig(os.path.join(outputdir,'Telescope_Path_Quarter_{}'.format(quarter)))
     plt.close()
 
-
 def animate_telescope(time_strings,total_azimuth_list,total_zenith_list,tel_az,tel_zen,
                       observed_at_time,outputdir,quarter):
            
@@ -87,7 +87,7 @@ def animate_telescope(time_strings,total_azimuth_list,total_zenith_list,tel_az,t
         filenames.append(filename)
 
         # save frame
-        plt.savefig(os.path.join(outputdir,filename),dpi=150)
+        plt.savefig(os.path.join(outputdir,filename),dpi=100)
         plt.close()
 
     # build gif
@@ -99,7 +99,6 @@ def animate_telescope(time_strings,total_azimuth_list,total_zenith_list,tel_az,t
     # Remove files
     for filename in set(filenames):
         os.remove(os.path.join(outputdir,filename))
-
 
 def plot_program_cdf(plan,program_dict,targets_observed,Nobs,outputdir,current_day):
 
@@ -249,22 +248,30 @@ def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_sep
         fig,axs = plt.subplots(1,figsize=(12,12))
         fig.patch.set_alpha(1)
         axs.set_xlim(-5,240)
-        program_frame = all_targets_frame[all_targets_frame['Program code'] == program]
-        y_positions = []
-        y_labels = []
-        height = 0
-        for targ in program_frame['request_number'].tolist():
-            name = program_frame.loc[targ,'Starname']
-            ra = program_frame.loc[targ,'ra']
-            dec = program_frame.loc[targ,'dec']
-            dur = program_frame.loc[targ,'discretized_duration']
-            nobs = program_frame.loc[targ,'N_obs(full_semester)']
-            if nobs > 1:
+        cadenced_frame = all_targets_frame[(all_targets_frame['Program code'] == program) & (all_targets_frame['N_obs(full_semester)'] > 1)]
+        if len(cadenced_frame) > 0:
+            y_positions = []
+            y_labels = []
+            nobs_list = []
+            target_list = []
+            request_list = []
+            targ_names = []
+            for request_id in cadenced_frame['request_number'].tolist():
+                request_list.append(request_id)
+                name = cadenced_frame.loc[request_id,'Starname']
+                ra = cadenced_frame.loc[request_id,'ra']
+                dec = cadenced_frame.loc[request_id,'dec']
                 coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
                 target = apl.FixedTarget(name=name, coord=coords)
-                AZ = keck.altaz(t, target)
-                alt=AZ.alt.deg
-                az=AZ.az.deg
+                target_list.append(target)
+                targ_names.append(name)
+                nobs_list.append(cadenced_frame.loc[request_id,'N_obs(full_semester)'])
+
+            AZ = keck.altaz(t, target_list, grid_times_targets=True)
+            observability_matrix = []
+            for i in range(len(AZ)):
+                alt=AZ[i].alt.deg
+                az=AZ[i].az.deg
                 deck = np.where((az >= min_az) & (az <= max_az))
                 deck_height = np.where((alt <= max_alt) & (alt >= min_alt))
                 first = np.intersect1d(deck,deck_height)
@@ -276,26 +283,39 @@ def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_sep
                 good = np.concatenate((first,second,third))
                 a = np.zeros(len(t),dtype=int)
                 a[good] = 1
-                min_cadence = min_separations[targ]
-                total_observable = 0
+                observability_matrix.append(a)
+            
+            b_dict = defaultdict(list)
+            c_dict = defaultdict(list)
+            for qn in [0,1,2,3]:
+                for day in pd.date_range(dates[0],dates[-1]).strftime(date_format='%Y-%m-%d').tolist():
+                    day_start = Time(day,format='iso',scale='utc')
+                    day_diff = (day_start-start).value
+                    offset = math.floor(day_diff/15)
+                    shift = day_diff * 4 - offset
+                    night_frame = all_qn_plan[all_qn_plan['Date'] == day].reset_index()                        
+                    qn_starts = Time(night_frame.loc[qn,'qn_start'],format='jd')
+                    qn_stops = Time(night_frame.loc[qn,'qn_stop'],format='jd')
+                    b_dict[qn].append(int(np.round((qn_starts - day_start).jd * 24*60,0) + shift))
+                    c_dict[qn].append(int(np.round((qn_stops - day_start).jd * 24*60,0) + 1 + shift))
+
+            for i in range(len(observability_matrix)):
+                height = i*5
+                name = targ_names[i]
+                min_cadence = min_separations[i]
+                nobs = nobs_list[i]
+                total_observed = 0
+                a = observability_matrix[i]
+                targ = request_list[i]
                 total_observed = 0
                 for qn in [0,1,2,3]:
-                    y_positions.append(height+.5)
-                    if qn == 3:
-                        y_labels.append(name + ' ' + str(qn+1))
-                    else:
-                        y_labels.append(str(qn+1))
                     observability = []
-                    for day in pd.date_range(dates[0],dates[-1]).strftime(date_format='%Y-%m-%d').tolist():
-                        day_start = Time(day,format='iso',scale='utc')
-                        day_diff = (day_start-start).value
-                        offset = math.floor(day_diff/15)
-                        shift = day_diff * 4 - offset
-                        night_frame = all_qn_plan[all_qn_plan['Date'] == day].reset_index()                        
-                        qn_starts = Time(night_frame.loc[qn,'qn_start'],format='jd')
-                        qn_stops = Time(night_frame.loc[qn,'qn_stop'],format='jd')
-                        b = int(np.round((qn_starts - day_start).jd * 24*60,0) + shift)
-                        c = int(np.round((qn_stops - day_start).jd * 24*60,0) + 1 + shift)
+                    if qn == 3:
+                        y_positions.append(height+.5)
+                        y_labels.append(name)
+                    for j in range(len(b_dict[qn])):
+                        b = b_dict[qn][j]
+                        c = c_dict[qn][j]
                         if c > len(a):
                             one = a[b:]
                             remainder = c % len(a)
@@ -307,28 +327,26 @@ def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_sep
                             observability.append(1)
                         else:
                             observability.append(0)
-                    
+            
                     if len(np.bincount(observability)) > 1:
-                        days_observable = np.bincount(observability)[1]
-                        total_observable += days_observable
                         condition = True
                         points = []
-                        for i in range(len(observability)):
-                            if observability[i] == condition:
-                                points.append(i)
+                        for j in range(len(observability)):
+                            if observability[j] == condition:
+                                points.append(j)
                                 condition = not condition
                         if len(points) % 2 != 0:
                             points.append(len(observability)-1)
                         axs.hlines([height,height+1],0,171,color = 'black',alpha = .2,linewidth=0.5)
-                        i = 0
-                        while i < (len(points) - 1):
-                            axs.fill_between(np.linspace(points[i],points[i+1]),height,height+1,color = 'lime',alpha = .5)
-                            i += 2
+                        j = 0
+                        while j < (len(points) - 1):
+                            axs.fill_between(np.linspace(points[j],points[j+1]),height,height+1,color = 'lime',alpha = .5)
+                            j += 2
                         observed = []
-                        for i in range(len(starlists)):
-                            if targ in starlists[i]:
-                                if plan.loc[i,'start'] == qn/4:
-                                    observed.append((Time(plan.loc[i,'Date'],format='iso')-start).jd)
+                        for j in range(len(starlists)):
+                            if targ in starlists[j]:
+                                if plan.loc[j,'start'] == qn/4:
+                                    observed.append((Time(plan.loc[j,'Date'],format='iso')-start).jd)
                         axs.vlines(observed,height,height+1,color='black')
                         total_observed += len(observed)
                         allocated = []
@@ -340,14 +358,13 @@ def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_sep
                             plt.text(182,height-.5,str(min_cadence)
                                                     + ' Days Minimum Cadence, '+ str(total_observed) + 
                                                     '/%s Observations Achieved' % nobs,fontsize=4)
-                        height += 1
                     else:
                         observed = []
                         axs.hlines([height,height+1],0,171,color = 'black',alpha = .2,linewidth=0.5)
-                        for i in range(len(starlists)):
-                            if targ in starlists[i]:
-                                if plan.loc[i,'start'] == qn/4:
-                                    day = Time(plan.loc[i,'Date'],format='iso')
+                        for j in range(len(starlists)):
+                            if targ in starlists[j]:
+                                if plan.loc[j,'start'] == qn/4:
+                                    day = Time(plan.loc[j,'Date'],format='iso')
                                     observed.append((day-start).jd)
                         axs.vlines(observed,height,height+1,color='black')
                         total_observed += len(observed)
@@ -360,13 +377,12 @@ def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_sep
                             plt.text(182,height-.5,str(min_cadence)
                                                     + ' Days Minimum Cadence, '+ str(total_observed) + 
                                                     '/%s Observations Achieved' % nobs,fontsize=4)
-                        height += 1
-                height += 2
-        axs.set_yticks(y_positions,y_labels,fontsize=4)
-        axs.set_xticks([0,85,171],['Feb 7','May 03','Jul 28'])
-        axs.set_title('Cadence for Program %s' % program)
-        plt.savefig(os.path.join(cadence_folder,'Program_{}.pdf'.format(program)),dpi=200)
-        plt.close()
+                    height += 1
+            axs.set_yticks(y_positions,y_labels,fontsize=4)
+            axs.set_xticks([0,85,171],['Feb 7','May 03','Jul 28'])
+            axs.set_title('Cadence for Program %s' % program)
+            plt.savefig(os.path.join(cadence_folder,'Program_{}.pdf'.format(program)),dpi=200)
+            plt.close()
 
 def plot_cadence_night_resolution(plan,all_targets_frame,twilight_frame,starlists,min_separations,outputdir):
 
@@ -452,8 +468,6 @@ def plot_cadence_night_resolution(plan,all_targets_frame,twilight_frame,starlist
                         observability.append(0)
                 
                 if len(np.bincount(observability)) > 1:
-                    days_observable = np.bincount(observability)[1]
-                    total_observable += days_observable
                     condition = True
                     points = []
                     for i in range(len(observability)):

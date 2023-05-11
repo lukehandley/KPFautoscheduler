@@ -19,14 +19,14 @@ import plotting
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-def generate_reservation_list(all_targets_frame,plan,twilight_frame,observatory,current_day,forced_targets):
-    dates = plan.Date.to_list()
-    next_slots = plan[plan['Date'] == current_day].index.values
-    
-    #Reservations is a list of tuples of the form (r,t), where r is the request id, and t is a qn slot
-    #in which the request target is accessible
-    reservations = []
+def generate_reservation_list(all_targets_frame,plan,twilight_frame):
+    keck = apl.Observer.at_site('W. M. Keck Observatory')
 
+    #Astroplan observers don't interface well with astropy functions
+    keckapy = apy.coordinates.EarthLocation.of_site('Keck Observatory')
+
+    dates = plan.Date.to_list()
+    
     #The minimium separation list will contain either the PI specified cadence, or one generated if necessary
     min_separations = []
 
@@ -49,9 +49,9 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame,observatory,
 
     logger.info('Generating Reservation List...')
 
-    #Go request by request, and find which quarter nights we can throw each target into
+    target_list = []
+    ra_dec_list = []
     for index,row in all_targets_frame.iterrows():
-        res_per_obs = 0
         name = row['Starname']
         ra = row['ra']
         dec = row['dec']
@@ -60,11 +60,22 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame,observatory,
         #Standard astroplan procedure
         coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
         target = apl.FixedTarget(name=name, coord=coords)
-        AZ = observatory.altaz(t, target)
-        alt=AZ.alt.deg
-        az=AZ.az.deg
+        target_list.append(target)
 
-        #Filter by observability constraints, assign '1' to good minutes out of the day, otherwise '0'
+        #Convert everything to radians
+        ra_dec_list.append((ra*np.pi/12,dec*np.pi/180))
+
+        if math.isnan(row['Cadence']):
+            min_separations.append(1)
+            row['Cadence'] = 1
+        else:
+            min_separations.append(row['Cadence'])
+
+    AZ = keck.altaz(t, target_list, grid_times_targets=True)
+    observability_matrix = []
+    for i in range(len(AZ)):
+        alt=AZ[i].alt.deg
+        az=AZ[i].az.deg
         deck = np.where((az >= min_az) & (az <= max_az))
         deck_height = np.where((alt <= max_alt) & (alt >= min_alt))
         first = np.intersect1d(deck,deck_height)
@@ -76,24 +87,28 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame,observatory,
         good = np.concatenate((first,second,third))
         a = np.zeros(len(t),dtype=int)
         a[good] = 1
+        observability_matrix.append(a)
 
-        #Now that we have a starting observability array, we can quickly do the same for any day we want by
-        #permuting this array by the change in set times due to sidereal time
-        for ind,r in plan.iterrows():
-            date = dates[ind]
-            day_diff = (Time(date)-start).value
+    reservation_matrix = np.zeros((len(all_targets_frame),len(plan)))
+    for ind,r in plan.iterrows():
+        date = dates[ind]
+        day_diff = (Time(date)-start).value
 
-            #This shift is easy to compute and keeps us accurate within a minute at any time
-            offset = math.floor(day_diff/15)
-            shift = day_diff * 4 - offset
+        #This shift is easy to compute and keeps us accurate within a minute at any time
+        offset = math.floor(day_diff/15)
+        shift = day_diff * 4 - offset
 
-            #Find the starting/ending minute for each interval in our plan to use as accessibility bounds
-            b = int(np.round((Time(r['qn_start'],format='jd')-
-                Time(date,format='iso',scale='utc')).jd * 24*60,0) + shift)
-            c = int(np.round((Time(r['qn_stop'],format='jd')-
-                Time(date,format='iso',scale='utc')).jd * 24*60,0) + 1 + shift)
+        #Need the time list for calculating the moon observability array
+        moon = apy.coordinates.get_moon(Time(r['qn_start'],format='jd'), keckapy)
 
-            #Permute the accessibility array
+        #Find the starting/ending minute for each interval in our plan to use as accessibility bounds
+        b = int(np.round((Time(r['qn_start'],format='jd')-
+            Time(date,format='iso',scale='utc')).jd * 24*60,0) + shift)
+        c = int(np.round((Time(r['qn_stop'],format='jd')-
+            Time(date,format='iso',scale='utc')).jd * 24*60,0) + 1 + shift)
+
+        for i in range(len(observability_matrix)):
+            a = observability_matrix[i]
             if c > len(a):
                 one = a[b:]
                 remainder = c % len(a)
@@ -101,77 +116,13 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame,observatory,
                 d = np.concatenate((one,two))
             else:
                 d = a[b:c]
+            if (len(d) - np.bincount(d)[0]) >= len(d)/2 and moon_safe(moon,ra_dec_list[i]):
+                reservation_matrix[i,ind] = 1
 
-            #Here I've decided to make it so that a target must be accessible for at least half of a quarter night
-            #to make the reservation schedulable. This is crucial for time independent traveling salesman later
-            #Targets forcefully scheduled will have additional flexibility
-            if index in forced_targets and ind in next_slots:
-                if (len(d) - np.bincount(d)[0]) >= len(d)/6:
-                    res_per_obs += 1
-                    reservations.append((index,ind))
-            if index in forced_targets and ind not in next_slots:
-                if (len(d) - np.bincount(d)[0]) >= len(d)/2:
-                    res_per_obs += 1
-                    reservations.append((index,ind))
-            if index not in forced_targets:
-                if (len(d) - np.bincount(d)[0]) >= len(d)/2:
-                    res_per_obs += 1
-                    reservations.append((index,ind))
 
-        if res_per_obs == 0:
-            logger.debug('Target {} lacks reservations for this semester'.format(name))
-
-        #This generates a minimum separation for targets that don't have one specified by the PI
-        if math.isnan(row['Cadence']):
-
-            #Only applicable for cadenced observations
-            if row['N_obs(full_semester)'] > 1:
-
-                #Find the number of total days in the semester that the target is up
-                days_observable = 0
-                for day in pd.date_range(dates[0],dates[-1]).strftime(date_format='%Y-%m-%d').tolist():
-                    
-                    #Similar process as above
-                    day_start = Time(day,format='iso',scale='utc')
-                    day_diff = (day_start-start).value
-                    offset = math.floor(day_diff/15)
-                    shift = day_diff * 4 - offset
-                    morning_twilight = Time(twilight_frame.loc[day,'12_morning'],format='jd')
-                    evening_twilight = Time(twilight_frame.loc[day,'12_evening'],format='jd')
-                    b = int(np.round((evening_twilight - day_start).jd * 24*60,0) + shift)
-                    c = int(np.round((morning_twilight - day_start).jd * 24*60,0) + 1 + shift)
-                    if c > len(a):
-                        one = a[b:]
-                        remainder = c % len(a)
-                        two = a[:remainder]
-                        d = np.concatenate((one,two))
-                    else:
-                        d = a[b:c]
-                    #For this calculation the observability constraint is relaxed. We just look to see if it could be
-                    #observed at any point at all, not for a major chunk
-                    if (len(d) - np.bincount(d)[0]) >= dur:
-                        days_observable += 1
-
-                #This is the formula to calculate separation based on accessible days and Nobs
-                if int(np.round(0.8 * days_observable/row['N_obs(full_semester)'],0)) - 3 > 1:
-                    min_separations.append(int(np.round(0.8 * days_observable/row['N_obs(full_semester)'],0))-3)
-                    row['Cadence'] = min_separations[-1]
-                else:
-                    min_separations.append(1)
-                    row['Cadence'] = min_separations[-1]
-            
-            #For single shots
-            else:
-                min_separations.append(0)
-                row['Cadence'] = min_separations[-1]
-
-        #For PI specified cadences    
-        else:
-            min_separations.append(row['Cadence'])
-    
     logger.info('Reservations done')
     
-    return reservations,min_separations
+    return reservation_matrix,min_separations
 
 def calculate_intervals(plan,twilight_frame):
     dates = plan.Date.to_list()
@@ -409,8 +360,10 @@ def get_alt_az(frame,id_num,time,observatory):
     
     return AZ.alt.deg,AZ.az.deg
 
-def moon_safe(alt,az,moon_alt,moon_az):
-    if ((apy.coordinates.angular_separation(alt,az,moon_alt,moon_az))*180/np.pi) >= 30:
+def moon_safe(moon,target_tuple):
+    ang_dist = apy.coordinates.angular_separation(moon.ra.rad,moon.dec.rad,
+                                                  target_tuple[0],target_tuple[1])
+    if ang_dist*180/(np.pi) >= 30:
         return True
     else:
         return False
@@ -595,8 +548,8 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
                                            for j in range(R)[1:] for m in range(T))
                                 ,GRB.MAXIMIZE)
             logger.info('Solving TDTSP for qn {}'.format(qn))
-            Mod.params.TimeLimit = 300
-            Mod.params.MIPGap = .001
+            Mod.params.TimeLimit = 30
+            Mod.params.MIPGap = .0005
             Mod.update()
             Mod.optimize()
 
@@ -742,9 +695,9 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
     all_targets_frame.reset_index(inplace=True,drop=True)
     all_targets_frame['request_number'] = all_targets_frame.index.tolist()
     
-    #Targets forcefully scheduled will have different rules
+    '''#Targets forcefully scheduled will have different rules
     force_sched = all_targets_frame[(all_targets_frame['Include'] == 'Y') | 
-                                        (all_targets_frame['Include'] == 'y')].index.tolist()
+                                        (all_targets_frame['Include'] == 'y')].index.tolist()'''
 
     #Create simplified 'plan' dataframe of quarter nights with columns date, start, and stop
     #These are the discretized time 'buckets' that the top level optimization fills
@@ -765,7 +718,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
     plan = calculate_intervals(plan,twilight_frame)
 
     #Create a list of reservations and the minimum separation for each target
-    reservations,min_separations = generate_reservation_list(all_targets_frame,plan,twilight_frame,keck,current_day,force_sched)
+    reservations,min_separations = generate_reservation_list(all_targets_frame,plan,twilight_frame)
 
     #Group targets by program in case we want to use statistics or equalizing algorithm
     program_dict = defaultdict(list)
@@ -783,8 +736,10 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
 
     #Turn our reservation list into a dictionary for when we want to easily access reservations by target
     reservation_dict = defaultdict(list)
-    for targ, slot in reservations:
-        reservation_dict[targ].append(slot)
+    for targ in range(len(reservations)):
+        for slot in range(len(reservations[targ])):
+            if reservations[targ][slot] == 1:
+                reservation_dict[targ].append(slot)
 
     ############Process completed observations############
     observed_dict = process_scripts(all_targets_frame,plan,marked_scripts,current_day)
@@ -877,7 +832,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
         #Force the next night to contain an amount of stars necessary for different conditions
         if condition_type == 'nominal':
             #These bound the size of the upcoming nights 'bin'
-            lb = 0.85
+            lb = 0.95
             ub = 1.0
             mag_lim = np.inf
             outpfile = '2023A_nominal.csv'
@@ -906,13 +861,13 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
         #                    'constr_lim_magnitude_{}'.format(r))
 
 
-        #yrtt = 1 if target r is scheduled to both slot t and t2. This is how we build a cadence framework
-        yrtt = m.addVars(cadenced_obs,slots,slots,vtype=GRB.BINARY)
+        #Brtt = 1 if target r is scheduled to both slot t and t2. This is how we build a cadence framework
+        Brtt = m.addVars(cadenced_obs,slots,slots,vtype=GRB.BINARY)
         for r in cadenced_obs:
             for t in reservation_dict[r]:
                 for t2 in reservation_dict[r]:
                     if ((t2 < t) and (t2 >= starting_slot or t >= starting_slot)):
-                        m.addGenConstrAnd(yrtt[r,t,t2],[yrt[r,t],yrt[r,t2]],
+                        m.addGenConstrAnd(Brtt[r,t,t2],[yrt[r,t],yrt[r,t2]],
                                     "slotdiff_and_{}_{}_{}".format(r,t,t2))
                         #Variabled activated if and only if both corresponding slots are occupied by the target
         
@@ -927,14 +882,14 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
                                     -Time(plan.loc[t,'Date'],format='iso',scale='utc')).jd))
                     dtdict[dt].append((t,t2))
 
-        #yrdt = 1 if target r is scheduled to two slots with interval dt between them           
-        yrdt = m.addVars(cadenced_obs,dtdict.keys(), vtype=GRB.BINARY)
+        #Drdt = 1 if target r is scheduled to two slots with interval dt between them           
+        Drdt = m.addVars(cadenced_obs,dtdict.keys(), vtype=GRB.BINARY)
         for r in cadenced_obs:
             for dt in dtdict.keys():
 
                 #This is activated for ANY two slots that produce this difference dt
-                m.addGenConstrOr(yrdt[r,dt], 
-                [yrtt[r,t,t2] for (t,t2) in dtdict[dt]],
+                m.addGenConstrOr(Drdt[r,dt], 
+                [Brtt[r,t,t2] for (t,t2) in dtdict[dt]],
                     "slot_dt_indicator_{}_{}".format(r,dt))
 
         #These constraints are built on interface from the human schedulers
@@ -952,7 +907,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
                 
         #This activates the minimum slot separation constraint
         relax_coeff = 1
-        constr_min_slotsep = m.addConstrs((yrdt[r,dt] == 0 for r in cadenced_obs for dt in dtdict.keys() 
+        constr_min_slotsep = m.addConstrs((Drdt[r,dt] == 0 for r in cadenced_obs for dt in dtdict.keys() 
                                        if dt < relaxed_minimum(min_separations[r],relax_coeff)), 'constr_min_slot_sep')
 
 
@@ -964,7 +919,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
             ytot = m.addVar(vtype=GRB.INTEGER)
             m.addConstrs((yp[program] == gp.quicksum(yrt[r,t] for r in program_dict[program] for t in reservation_dict[r])
                         for program in program_dict.keys()),'N_per_program')
-            m.addConstr((ytot == gp.quicksum(yrt[r,t] for r,t in reservations)),'N_total')
+            m.addConstr((ytot == gp.quicksum(yrt[r,t] for r in target_ids for t in slots)),'N_total')
             dev = m.addVars(program_dict.keys(),lb=-np.inf,vtype=GRB.CONTINUOUS)
             abs_dev = m.addVars(program_dict.keys(),vtype=GRB.CONTINUOUS)
             t_divisor = sum(Nobs)
@@ -979,18 +934,18 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
 
         #Reward more observations, closer cadence to minimum, and also program equity
         if equalize_programs:
-            m.setObjective(gp.quicksum(yrt[r,t] * priority_dict[r] for r,t in reservations)
-                    - cadence_scalar * gp.quicksum(yrdt[r,dt] * dt * 1/(Nobs[r]) for r in cadenced_obs for dt in dtdict.keys())
+            m.setObjective(gp.quicksum(yrt[r,t] * priority_dict[r] for r in target_ids for t in slots)
+                    - cadence_scalar * gp.quicksum(Drdt[r,dt] * dt * 1/(Nobs[r]) for r in cadenced_obs for dt in dtdict.keys())
                     - program_scalar * gp.quicksum(abs_dev[program] for program in equity_list)
                     , GRB.MAXIMIZE)
 
         else:
-            m.setObjective(gp.quicksum(yrt[r,t] for r,t in reservations)
-                    - cadence_scalar * gp.quicksum(yrdt[r,dt] * dt * 1/(Nobs[r]) for r in cadenced_obs for dt in dtdict.keys())
+            m.setObjective(gp.quicksum(yrt[r,t] for r in target_ids for t in slots)
+                    - cadence_scalar * gp.quicksum(Drdt[r,dt] * dt * 1/(Nobs[r]) for r in cadenced_obs for dt in dtdict.keys())
                     , GRB.MAXIMIZE)
 
         #Optimization almost always complete or plateaued within 6 minutes
-        m.Params.TimeLimit = 600
+        m.Params.TimeLimit = 30
         m.update()
         m.optimize()
 
@@ -999,7 +954,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
             #Remove the constraint so it can be redone
             m.remove(constr_min_slotsep)
             relax_coeff -= 0.1
-            constr_min_slotsep = m.addConstrs((yrdt[r,dt] == 0 for r in cadenced_obs for dt in dtdict.keys() 
+            constr_min_slotsep = m.addConstrs((Drdt[r,dt] == 0 for r in cadenced_obs for dt in dtdict.keys() 
                                         if dt < relaxed_minimum(min_separations[r],relax_coeff)), 'constr_min_slot_sep')
 
             #It's possible the solve issue isn't with our fill constraints
