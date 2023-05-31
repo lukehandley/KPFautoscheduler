@@ -3,7 +3,7 @@ Generate scripts for HIRES/KPF observers for the next upcoming observing night b
 
 ## Installation
 
-Clone the git repository onto your local system with
+Clone the git repository onto your local system with:
 ```
 $ git clone https://github.com/lukehandley/KPFautoscheduler.git
 ```
@@ -16,36 +16,36 @@ $ git clone https://github.com/lukehandley/KPFautoscheduler.git
 * gurobipy
 
 
-
 ### Install Gurobi and Obtain a License
   1. Download Gurobi for your OS here: https://www.gurobi.com/documentation/9.5/quickstart_windows/software_installation_guid.html
   2. Obtain an academic (non trial) license for the ILP Solver https://www.gurobi.com/solutions/licensing/
   3. You can learn more about Gurobi here https://www.gurobi.com/documentation/quickstart.html
 
-For pip, you can use 
+You can install everything at once with pip using:
 ```
-python -m pip install gurobipy
+pip install -r requirements.txt
 ```
  
-On Conda, first set up the channel, then install gurobipy using:
+On Conda installing gurobipy will require first setting up the channel, then installing using:
 ```
 conda config --add channels https://conda.anaconda.org/gurobi
 ```
 ```
 conda install -c gurobi gurobi
 ```
+Note that some external files may be downloaded while installing system requirements (i.e. ephemerides for the astroplan module)
 
 ### Using the scheduler
-Gurobi tutorials are included in /tutorials.
+Custom gurobi tutorials are included in /tutorials.
 
 View the available commands with:
 ```
-python single_night_optimizer.py -h
+python scheduler.py -h
 ```
 
-You can run the scheduler with included example data for the 2022B semester valid through 10/04/22. These are set as the default parameters, so just run:
+You can run the scheduler with example data for the 2023A semester (valid through 2023-07-28). These are set as the default parameters, so to generate a schedule for a given night on HIRES run:
 ```
-python single_night_optimizer.py
+python scheduler.py -d 'YYYY-MM-DD'
 ```
 
 #### Data Inputs
@@ -59,13 +59,13 @@ python single_night_optimizer.py
   * Dates and start/stop markers for each quarter night
 * *marked_scripts*
   * Directory of text files of format 'YYYY--MM-DD.txt' from all previous dates in observing semester
-  * Copy the marked starlist targets relevant to the observers sheet (i.e. above the line of X's)
+  * Includes the marked starlist targets relevant to the observers sheet (i.e. above the line of X's)
 * *current_day*
-  * Date string in same format as above
+  * Date string in same format as above to generate a schedule for
  
 ## The Scheduler
 
-Organizes all observing requests from *observers_sheet* into a large set of possible 'reservations' and attempts to schedule as many as possible 
+Organizes all observing requests from *observers_sheet* into a large set of possible observations and attempts to schedule as many as possible 
 into the *allocated_nights* based on target accessibility. It uses Integer Linear Programming (https://en.wikipedia.org/wiki/Integer_programming)
 to construct a mathematical formulation of the scheduling problem. This problem is then optimized to maximize observations at the desired cadence
 using a third party solver (Gurobi) in real time.
@@ -75,8 +75,8 @@ scheduler will construct an optimal semester plan moving forward. It generates t
 (nominal, weathered, poor) in the upcoming night for observers to swap between at their convenience. 
 
 Targets are binned into discretized quarter nights, and those from the next upcoming night are run through an additional optimization. The scheduler
-solves the traveling salesman problem (see https://www.gurobi.com/resource/traveling-salesman-problem/) to minimize the slews for the next night. The 
-ordered list is then automatically formatted into scripts.
+solves a complex formulation of the traveling salesman problem to minimize the slews for the next night. The ordered list is then automatically formatted
+into scripts.
 
 #### Outputs
 * A csv is created for each weather condition for *current_day* and saved to the current directory for inspection. Each row represents a quarter night

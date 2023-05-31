@@ -421,7 +421,7 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
             else_min_alt = 25
             #min_alt = 40
             #else_min_alt = 40
-            max_alt = 85
+            max_alt = 90
 
             min_time = []
             max_time = []
@@ -548,7 +548,7 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
                                            for j in range(R)[1:] for m in range(T))
                                 ,GRB.MAXIMIZE)
             logger.info('Solving TDTSP for qn {}'.format(qn))
-            Mod.params.TimeLimit = 30
+            Mod.params.TimeLimit = 300
             Mod.params.MIPGap = .0005
             Mod.update()
             Mod.optimize()
@@ -945,7 +945,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
                     , GRB.MAXIMIZE)
 
         #Optimization almost always complete or plateaued within 6 minutes
-        m.Params.TimeLimit = 30
+        m.Params.TimeLimit = 300
         m.update()
         m.optimize()
 
@@ -1015,7 +1015,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
                 #Plot target cadence by program
                 logger.info('Plotting Program Cadences')
                 plotting.plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,
-                                    min_separations,plotpath)
+                                    min_separations,plotpath,current_day)
                 #plotting.plot_cadence_night_resolution(plan,all_targets_frame,twilight_frame,starlists,
                 #                     min_separations,plotpath)
 

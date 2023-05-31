@@ -209,7 +209,7 @@ def calculate_intervals(plan,twilight_frame):
     plan['qn_stop'] = interval_stops
     return plan
 
-def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_separations,outputdir):
+def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_separations,outputdir,current_day,cadence_mode=False):
 
     dates = plan.Date.to_list()
     
@@ -248,24 +248,28 @@ def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_sep
         fig,axs = plt.subplots(1,figsize=(12,12))
         fig.patch.set_alpha(1)
         axs.set_xlim(-5,240)
-        cadenced_frame = all_targets_frame[(all_targets_frame['Program code'] == program) & (all_targets_frame['N_obs(full_semester)'] > 1)]
-        if len(cadenced_frame) > 0:
+        height = 0
+        if cadence_mode:
+            program_frame = all_targets_frame[(all_targets_frame['Program code'] == program) & (all_targets_frame['N_obs(full_semester)'] > 1)]
+        if not cadence_mode:
+            program_frame = all_targets_frame[(all_targets_frame['Program code'] == program)]
+        if len(program_frame) > 0:
             y_positions = []
             y_labels = []
             nobs_list = []
             target_list = []
             request_list = []
             targ_names = []
-            for request_id in cadenced_frame['request_number'].tolist():
+            for request_id in program_frame['request_number'].tolist():
                 request_list.append(request_id)
-                name = cadenced_frame.loc[request_id,'Starname']
-                ra = cadenced_frame.loc[request_id,'ra']
-                dec = cadenced_frame.loc[request_id,'dec']
+                name = program_frame.loc[request_id,'Starname']
+                ra = program_frame.loc[request_id,'ra']
+                dec = program_frame.loc[request_id,'dec']
                 coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
                 target = apl.FixedTarget(name=name, coord=coords)
                 target_list.append(target)
                 targ_names.append(name)
-                nobs_list.append(cadenced_frame.loc[request_id,'N_obs(full_semester)'])
+                nobs_list.append(program_frame.loc[request_id,'N_obs(full_semester)'])
 
             AZ = keck.altaz(t, target_list, grid_times_targets=True)
             observability_matrix = []
@@ -302,11 +306,11 @@ def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_sep
             for i in range(len(observability_matrix)):
                 height = i*5
                 name = targ_names[i]
-                min_cadence = min_separations[i]
                 nobs = nobs_list[i]
                 total_observed = 0
                 a = observability_matrix[i]
                 targ = request_list[i]
+                min_cadence = min_separations[targ]
                 total_observed = 0
                 for qn in [0,1,2,3]:
                     observability = []
@@ -378,6 +382,7 @@ def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_sep
                                                     + ' Days Minimum Cadence, '+ str(total_observed) + 
                                                     '/%s Observations Achieved' % nobs,fontsize=4)
                     height += 1
+            axs.vlines((Time(current_day,format='iso')-start).jd,0,height,color='black',alpha=0.15)
             axs.set_yticks(y_positions,y_labels,fontsize=4)
             axs.set_xticks([0,85,171],['Feb 7','May 03','Jul 28'])
             axs.set_title('Cadence for Program %s' % program)
