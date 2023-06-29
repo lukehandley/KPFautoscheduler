@@ -14,6 +14,7 @@ from itertools import permutations
 import csv
 import logging
 import plotting
+import accounting
 
 
 logger = logging.getLogger(__name__)
@@ -412,7 +413,7 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
             t = Time(t,format='jd')
 
             R = len(nightly_targets)+2
-            T = int(dur/60)
+            T = math.ceil(dur/(60*15))
             slots = range(T)
 
             min_az = 5.3
@@ -423,18 +424,18 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
             #else_min_alt = 40
             max_alt = 90
 
-            min_time = []
-            max_time = []
-            s = []
+            e_i = []
+            l_i = []
+            s_i = []
             for i in range(R):
                 if i == 0 or i == R-1:
-                    min_time.append(0)
-                    max_time.append(T)
-                    s.append(0)
+                    e_i.append(0)
+                    l_i.append((stop-t[0]).jd*24*60)
+                    s_i.append(0)
                 else:
                     targ = ind_to_id[i]
                     exp = all_targets_frame.loc[targ,'discretized_duration']
-                    s.append(exp)
+                    s_i.append(exp)
                     ra,dec = get_ra_dec(all_targets_frame,targ)
                     coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
                     target = apl.FixedTarget(name=targ, coord=coords)
@@ -443,23 +444,21 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
                     az=AZ.az.deg
                     deck = np.where((az >= min_az) & (az <= max_az))
                     deck_height = np.where((alt <= max_alt) & (alt >= min_alt))
+                    first = np.intersect1d(deck,deck_height)
                     not_deck_1 = np.where((az < min_az))
                     not_deck_2 = np.where((az > max_az))
                     not_deck_height = np.where((alt <= max_alt) & (alt >= else_min_alt))
-                    first = np.intersect1d(deck,deck_height)
                     second = np.intersect1d(not_deck_1,not_deck_height)
                     third = np.intersect1d(not_deck_2,not_deck_height)
                     good = np.concatenate((first,second,third))
                     if len(good > 0):
-                        min_time.append(good[0]+exp)
-                        if good[-1] < T:
-                            max_time.append(good[-1])
-                        elif good[-1] >= T:
-                            max_time.append(T)
+                        e_i.append(np.round(((t[good[0]]+TimeDelta(s_i[i]*60,format='sec'))-t[0]).jd*24*60,1))
+                        if t[good[-1]].jd < stop.jd:
+                            l_i.append(np.round((t[good[-1]]-t[0]).jd*24*60,1))
+                        elif t[good[-1]].jd >= stop.jd:
+                            l_i.append(np.round((stop-t[0]).jd*24*60,1))
                     else:
-                        print(ind_to_id[i])
-                        min_time.append(0)
-                        max_time.append(0)
+                        print('Error, target {} does not meet observability requirements'.format(all_targets_frame.loc[ind_to_id[i],'Starname']))
             
             def to_wrap_frame(angle):
                 angle += 90
@@ -467,7 +466,7 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
                     angle -= 360
                 return angle
             
-            start_slots = t[:-1]
+            start_slots = Time(np.linspace(start.jd,stop.jd,T,endpoint=False),format='jd')
             logger.info('Calculating Distance Tensor for qn {}'.format(qn))
             
             coordinate_matrix = []
@@ -502,23 +501,25 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
             dist = defaultdict(float)
             for i in range(len(start_slots)):
                 for targ1,targ2 in permutations(range(R),2):
-                    dist[(targ1,targ2,i)] = distance(targ1,targ2,i)
+                    dist[(targ1,targ2,i)] = np.round(distance(targ1,targ2,i)/60,1)
 
             #Time windows
             w = []
-            for m in range(T+1):
-                w.append(m)
+            for m in range(T):
+                w.append(np.round((start_slots[m] - start_slots[0]).jd*24*60,1))
+            w.append(np.round((stop - start_slots[0]).jd*24*60,1))
 
-            ####Variables####
-
+            ####Model and Variables####
             Mod = Model('TDTSP')
             Mod.Params.OutputFlag = output_flag
 
             yi = Mod.addVars(range(R),vtype=GRB.BINARY,name='yi')
             xijm = Mod.addVars(range(R),range(R),range(T),vtype=GRB.BINARY,name='xijm')
-            ti = Mod.addVars(range(R),vtype=GRB.INTEGER,lb=0,name='ti')
-            #tijm = Mod.addVars(range(R),range(R),range(T),vtype=GRB.BINARY,name='tijm')
+            tijm = Mod.addVars(range(R),range(R),range(T),vtype=GRB.CONTINUOUS,name='tijm')
+            ti = Mod.addVars(range(R),vtype=GRB.CONTINUOUS,lb=0,name='ti')
 
+            tijmdef = Mod.addConstrs((ti[i] == gp.quicksum(tijm[i,j,m] for j in range(R)[1:] for m in range(T)) 
+                                for i in range(R)[:-1]),'tijm_def')
             start_origin = Mod.addConstr(gp.quicksum(xijm[0,j,m] for j in range(R) for m in range(T)) == 1,
                                'start_origin')
             end_origin = Mod.addConstr(gp.quicksum(xijm[i,R-1,m] for i in range(R) for m in range(T)) == 1,
@@ -528,20 +529,17 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
             flow_constr = Mod.addConstrs(((gp.quicksum(xijm[i,k,m] for i in range(R)[:-1] for m in range(T))
                                - gp.quicksum(xijm[k,j,m] for j in range(R)[1:] for m in range(T)) == 0)
                               for k in range(R)[:-1][1:]), 'flow_constr')
-            exp_constr = Mod.addConstrs((ti[j] >= gp.quicksum((m + dist[(i,j,m)]/60 + s[j])*xijm[i,j,m] 
-                                                      for m in range(T) for i in range(R)[:-1])
-                               for j in range(R)[1:])
-                              , 'exp_constr')
-            t_min = Mod.addConstrs((ti[i] >= gp.quicksum(w[m]*xijm[i,j,m] for j in range(R)[1:]
-                                                 for m in range(T))
-                             for i in range(R)[:-1]),'t_min')
-            t_max = Mod.addConstrs((ti[i] <= gp.quicksum(w[m+1]*xijm[i,j,m] for j in range(R)[1:]
-                                                 for m in range(T))
-                             for i in range(R)[:-1]),'t_max')
-            rise_constr = Mod.addConstrs((ti[i] >= min_time[i]*yi[i] for i in range(R)),'rise_constr')
-            set_constr = Mod.addConstrs((ti[i] <= max_time[i]*yi[i] for i in range(R)),'set_constr')
+            exp_constr = Mod.addConstrs((ti[j] >= tijm[i,j,m] + (dist[(i,j,m)] + s_i[j])*xijm[i,j,m] 
+                             for i in range(R)[:-1] for j in range(R)[1:] for m in range(T))
+                          , 'exp_constr')
+            t_min = Mod.addConstrs(((tijm[i,j,m] >= w[m]*xijm[i,j,m]) for j in range(R) for m in range(T)
+                             for i in range(R)),'t_min')
+            t_max = Mod.addConstrs((tijm[i,j,m] <= w[m+1]*xijm[i,j,m] for j in range(R) for m in range(T) 
+                             for i in range(R)),'t_max')
+            rise_constr = Mod.addConstrs((ti[i] >= e_i[i]*yi[i] for i in range(R)),'rise_constr')
+            set_constr = Mod.addConstrs((ti[i] <= l_i[i]*yi[i] for i in range(R)),'set_constr')
             priority_param = 50
-            slew_param = 1/360
+            slew_param = 1/100
 
             Mod.setObjective(priority_param*gp.quicksum(yi[j] for j in range(R)) 
                              -slew_param *gp.quicksum(dist[(i,j,m)]*xijm[i,j,m] for i in range(R)[:-1] 
@@ -557,7 +555,7 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
             for i in range(R)[1:][:-1]:
                 if np.round(yi[i].X,0) == 1:
                     v = ti[i]
-                    scheduled_targets.append((int(v.VarName[3:-1]),int(v.X)))
+                    scheduled_targets.append((int(v.VarName[3:-1]),int(np.round(v.X))))
 
             start_times = []
             unordered_times = []
@@ -579,7 +577,7 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
                 for pair in scheduled_targets:
                     targ=pair[0]
                     time=t[pair[1]]
-                    exp=s[targ]
+                    exp=s_i[targ]
                     targ_list.append(targ)
                     names.append(all_targets_frame.loc[ind_to_id[targ],'Starname'])
                     time1=time-TimeDelta(60*exp,format='sec')
@@ -642,7 +640,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
     #Retrieve the night allocations as csv from jump-config, drop the RM observation nights not part of Community Cadence
     obs_plan = pd.read_csv(allocated_nights)
     obs_plan = obs_plan[obs_plan['Date'] != '2022-02-09']
-    obs_plan = obs_plan[obs_plan['Date'] != '2022-06-24']
+    #obs_plan = obs_plan[obs_plan['Date'] != '2022-06-24']
     obs_plan = obs_plan[obs_plan['Date'] != '2022-07-06']
     obs_plan.reset_index(inplace=True,drop=True)
 
@@ -1002,6 +1000,8 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
                         obs = int(scheduled_targets[j][0])
                         s.append(all_targets_frame.loc[obs,'request_number'])
                 starlists.append(s)
+
+            accounting.completion_logs(all_targets_frame,observed_dict,starlists,current_day)
 
             if plot_results:
                 #Plot program CDF's
