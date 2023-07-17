@@ -12,8 +12,7 @@ parser.add_argument('-a','--allocated_nights', help='Path to night allocations',
                 default='2023_data/hires_schedule_2023A.csv')
 parser.add_argument('-m','--marked_scripts', help='Path to script directory',
                 default='2023_data/MarkedScripts')
-parser.add_argument('-d','--current_day', help='Date to be scheduled YYYY-MM-DD. Must be in allocated_nights',
-                default='2023-02-07')
+parser.add_argument('-d','--schedule_dates',action='append',help='Date(s) to be scheduled as YYYY-MM-DD. Must be in allocated_nights')
 parser.add_argument('-g','--gurobi_output',action='store_true', help='Activate Gurobi console outputs',
                 default=False)
 parser.add_argument('-e','--equalize',action='store_true',help='EXPERIMENTAL: Alter Objective to prioritize program equity',
@@ -26,6 +25,6 @@ args = parser.parse_args()
 
 #Call the scheduling function
 optimize.semester_schedule(args.observers_sheet,args.twilight_times,args.allocated_nights,
-                        args.marked_scripts,args.current_day,args.gurobi_output,args.equalize,args.plot_results)
+                        args.marked_scripts,args.schedule_dates,args.gurobi_output,args.equalize,args.plot_results)
 
 

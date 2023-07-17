@@ -467,6 +467,9 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
                 return angle
             
             start_slots = Time(np.linspace(start.jd,stop.jd,T,endpoint=False),format='jd')
+            #Move to middle of slot for coordinates
+            shift = (end.jd-start.jd)/(2*T)
+            start_slots += shift
             logger.info('Calculating Distance Tensor for qn {}'.format(qn))
             
             coordinate_matrix = []
@@ -631,9 +634,19 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
         #Turn all the nights targets into starlists   
         write_starlist(all_targets_frame,ordered_requests,condition,current_day)
 
-def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scripts,current_day,output_flag,
+def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scripts,schedule_dates,output_flag,
                                                                                     equalize_programs,plot_results):
+    print(schedule_dates)
 
+    if len(schedule_dates) == 1:
+        high_production_mode = False
+        current_day = schedule_dates
+    if len(schedule_dates) > 1:
+        high_production_mode = True
+        current_day = schedule_dates[0]
+
+    print('high_production_mode = ' + str(high_production_mode))
+    
     ############Load Observer information and data files, Pandas is an easy way to manage this############
     keck = apl.Observer.at_site('W. M. Keck Observatory')
 
@@ -641,7 +654,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
     obs_plan = pd.read_csv(allocated_nights)
     obs_plan = obs_plan[obs_plan['Date'] != '2022-02-09']
     #obs_plan = obs_plan[obs_plan['Date'] != '2022-06-24']
-    obs_plan = obs_plan[obs_plan['Date'] != '2022-07-06']
+    #obs_plan = obs_plan[obs_plan['Date'] != '2022-07-06']
     obs_plan.reset_index(inplace=True,drop=True)
 
     #Retrieve the generated twilight times information and the HIRES observers sheet as csv's
@@ -688,6 +701,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
     dup = all_targets_frame[all_targets_frame.duplicated(subset='Starname',keep=False)]
     all_targets_frame = all_targets_frame.drop(dup[dup['N_obs(full_semester)'] == 1].index.tolist())
     all_targets_frame = all_targets_frame[all_targets_frame['Done'] != 'done']
+    all_targets_frame = all_targets_frame[all_targets_frame['N_obs(full_semester)'] > 0]
 
     #Finally assign a unique identifier to each request to be used in lookup tables
     all_targets_frame.reset_index(inplace=True,drop=True)
@@ -757,21 +771,26 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
 
     ############Account for weather losses############
     np.random.seed(20)
-    day_buffer = 3
-    ind = obs_plan[obs_plan['Date'] == current_day].index.values[0] + day_buffer
-
-    #Move forward a bit in time before sampling out quarter nights
-    protected = plan[plan['Date'] == obs_plan.loc[ind,'Date']].index.values[0]
-    weathered_slots = []
-
-    #Randomly remove 30% of total quarter nights to force the optimizer to work harder
-    for slot in slots[protected:]:
-        if np.random.randint(10) < 3:
-            weathered_slots.append(slot)
+    day_buffer = 4
+    if high_production_mode == False:
+        ind = obs_plan[obs_plan['Date'] == current_day].index.values[0] + day_buffer
+    if high_production_mode == True:
+        ind = obs_plan[obs_plan['Date'] == schedule_dates[-1]].index.values[0] + day_buffer
     
-    #Remove possible reservations from sampled out nights
-    for targ in reservation_dict.keys():
-        reservation_dict[targ] = [item for item in reservation_dict[targ] if item not in weathered_slots]
+
+    if ind in obs_plan.index.values:
+        #Move forward a bit in time before sampling out quarter nights
+        protected = plan[plan['Date'] == obs_plan.loc[ind,'Date']].index.values[0]
+        weathered_slots = []
+
+        #Randomly remove 30% of total quarter nights to force the optimizer to work harder
+        for slot in slots[protected:]:
+            if np.random.randint(10) < 3:
+                weathered_slots.append(slot)
+        
+        #Remove possible reservations from sampled out nights
+        for targ in reservation_dict.keys():
+            reservation_dict[targ] = [item for item in reservation_dict[targ] if item not in weathered_slots]
 
     #Cadenced observations are much higher priority when it comes to placement in the semester
     priority_dict = defaultdict(int)
@@ -826,6 +845,7 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
         
         #Special rules will be applied to the observing night we want to retrieve a schedule for
         next_slots = plan[plan['Date'] == current_day].index.values
+        fill_slots = plan[plan['Date'].isin(schedule_dates)].index.values
 
         #Force the next night to contain an amount of stars necessary for different conditions
         if condition_type == 'nominal':
@@ -844,13 +864,11 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
             ub = 0.5
             mag_lim = 11
             outpfile = '2023A_poor.csv'
-        fill_above = m.addConstr((gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration'] 
-                            for r in target_ids for t in next_slots) >= 
-                                lb * sum(interval_dict[t] for t in next_slots))
+        fill_above = m.addConstrs((gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration'] 
+                            for r in target_ids) >= lb * interval_dict[t] for t in fill_slots)
                                 ,'constr_fill_above')
-        fill_below = m.addConstr((gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration'] 
-                            for r in target_ids for t in next_slots) <= 
-                                ub * sum(interval_dict[t] for t in next_slots))
+        fill_below = m.addConstrs((gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration'] 
+                            for r in target_ids) <= ub * interval_dict[t] for t in fill_slots)
                                 ,'constr_fill_below')
         
         #Magnitude limitation can be turned on using this code
@@ -1001,11 +1019,17 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
                         s.append(all_targets_frame.loc[obs,'request_number'])
                 starlists.append(s)
 
-            accounting.completion_logs(all_targets_frame,observed_dict,starlists,current_day)
+            #TODO update accounting logs for high production mode
+            #accounting.completion_logs(all_targets_frame,observed_dict,starlists,current_day)
 
             if plot_results:
                 #Plot program CDF's
                 logger.info('Plotting Program CDFs')
+                if high_production_mode == True:
+                    for day in schedule_dates[1:]:
+                        plotpath = '{}_plots'.format(day)
+                        if not os.path.isdir(plotpath):
+                            os.mkdir(plotpath)
                 plotpath = '{}_plots'.format(current_day)
                 if not os.path.isdir(plotpath):
                     os.mkdir(plotpath)
@@ -1026,4 +1050,8 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
                 writer = csv.writer(f)
                 writer.writerows(starlists)
     
-    salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_results)
+    if high_production_mode == True:
+        for date_to_schedule in schedule_dates:
+            salesman_scheduler(all_targets_frame,plan,date_to_schedule,output_flag,plot_results)
+    if high_production_mode == False:
+        salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_results)
