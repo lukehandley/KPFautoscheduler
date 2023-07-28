@@ -200,14 +200,14 @@ def process_scripts(all_targets_frame,plan,marked_scripts,current_day):
 
     import os
     observed_dict = defaultdict(list)
-
+    current_slot = plan[plan['Date'] == current_day].index[0]
     #The Marked Scipts directory includes the lines from the previous nights in the semester organized into files
     #titled by date. i.e 'marked_scripts/2022-08-07.txt'
     #Note: these files should include only targets for that night, and none of the text/notes that follow
     directory = marked_scripts
     dates = []
     for filename in os.listdir(directory):
-        
+
         targ_per_script = 0
         fpath = os.path.join(directory, filename)
         with open(fpath) as f:
@@ -217,45 +217,46 @@ def process_scripts(all_targets_frame,plan,marked_scripts,current_day):
 
             #Parse the corresponding date
             day = f.name[:-4][-10:]
-            dates.append(day)
 
             #The observation is always assigned to the first qn of that date for simplicity. The date of observation
             #all that matters for the optimization, not the specific qn
             slot = plan[plan['Date'] == day].index[0]
-            good_lines = []
 
-            #lines that are marked are completed observations
-            for line in lines:
-                if (line[0] == 'x') or (line[0] == 'X'):
-                    good_lines.append(line)
+            #Ignore scripts past the simulation start date
+            if slot < current_slot:
+                dates.append(day)
+                good_lines = []
 
-            #Search for corresponding request by cross referencing name and program
-            #This is a uniqueness problem that still needs to be solved in Jump
-            for line in good_lines:
-                name = 'default'
-                program = 'default'
-                for item in line.split(' '):
+                #lines that are marked are completed observations
+                for line in lines:
+                    if (line[0] == 'x') or (line[0] == 'X'):
+                        good_lines.append(line)
+
+                #Search for corresponding request by cross referencing name and program
+                #This is a uniqueness problem that still needs to be solved in Jump
+                for line in good_lines:
+                    name = 'default'
+                    program = 'default'
+                    for item in line.split(' '):
+                        
+                        #Sift through the text to find valid name/program identifiers
+                        if item in all_targets_frame['Starname'].tolist():
+                            name = item
+                        if item in all_targets_frame['Program code'].tolist():
+                            program = item
                     
-                    #Sift through the text to find valid name/program identifiers
-                    if item in all_targets_frame['Starname'].tolist():
-                        name = item
-                    if item in all_targets_frame['Program code'].tolist():
-                        program = item
-                
-                #See if this target appears in our sheet
-                targ = all_targets_frame.loc[(all_targets_frame['Starname'] == name) 
-                                & (all_targets_frame['Program code'] == program)]['request_number'].values
-                
-                #If we can find it, append the corresponding qn identifier to the targets
-                #past observation dictionary
-                if targ.size > 0:
-                    targ_per_script += 1
-                    observed_dict[targ[0]].append(slot)
+                    #See if this target appears in our sheet
+                    targ = all_targets_frame.loc[(all_targets_frame['Starname'] == name) 
+                                    & (all_targets_frame['Program code'] == program)]['request_number'].values
+                    
+                    #If we can find it, append the corresponding qn identifier to the targets
+                    #past observation dictionary
+                    if targ.size > 0:
+                        targ_per_script += 1
+                        observed_dict[targ[0]].append(slot)
 
-        if targ_per_script == 0:
-            logger.warning('No targets recognized in {}'.format(filename))
-
-    current_slot = plan[plan['Date'] == current_day].index[0]
+                if targ_per_script == 0:
+                    logger.warning('No targets recognized in {}'.format(filename))
 
     for script_date in list(dict.fromkeys(plan[:current_slot].Date.tolist())):
         if script_date not in dates:
