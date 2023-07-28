@@ -636,16 +636,13 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
 
 def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scripts,schedule_dates,output_flag,
                                                                                     equalize_programs,plot_results):
-    print(schedule_dates)
 
     if len(schedule_dates) == 1:
         high_production_mode = False
-        current_day = schedule_dates
     if len(schedule_dates) > 1:
         high_production_mode = True
-        current_day = schedule_dates[0]
-
-    print('high_production_mode = ' + str(high_production_mode))
+    
+    current_day = schedule_dates[0]
     
     ############Load Observer information and data files, Pandas is an easy way to manage this############
     keck = apl.Observer.at_site('W. M. Keck Observatory')
