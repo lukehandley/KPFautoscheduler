@@ -10,6 +10,8 @@ $ git clone https://github.com/lukehandley/KPFautoscheduler.git
 
 #### Basic Requirements
 * numpy
+* matplotlib
+* imageio
 * astropy
 * astroplan
 * pandas
@@ -36,32 +38,41 @@ conda install -c gurobi gurobi
 Note that some external files may be downloaded while installing system requirements (i.e. ephemerides for the astroplan module)
 
 ### Using the scheduler
-Custom gurobi tutorials are included in /tutorials.
+Custom gurobi tutorials are included in /tutorials. A reduced form of the semester data (for easy tinkering) also lives here.
 
 View the available commands with:
 ```
 python scheduler.py -h
 ```
 
-You can run the scheduler with example data for the 2023A semester (valid through 2023-07-28). These are set as the default parameters, so to generate a schedule for a given night on HIRES run:
+You can run the scheduler with example data for the 2023A semester (valid through 2023-07-29). These are set as the default parameters, so to generate a 
+schedule for an allocated night on HIRES (simulating the given date and onwards), run:
 ```
 python scheduler.py -d 'YYYY-MM-DD'
 ```
+
+To initiate the 'high production mode' and generate fully formatted schedules for a sequence of consecutive nights, set the date parameter multiple times 
+to append them all.
+```
+python scheduler.py -d 'YYYY-MM-DD' -d 'YYYY-MM-DD'
+```
+And so on until every date is listed. Be sure to check there are no gaps between these dates in the schedule.
+
 
 #### Data Inputs
 * *observers_sheet* https://docs.google.com/spreadsheets/d/18r_xWaz26ya6sI0BQ6xpD3ibZLCwgkbjjAbwNmoxIUM/edit#gid=508439574
   * Requests/Cadence/Nobs/Exposure/Coordinates/Program included in optimization
   * Other columns needed for script formatting
 * *twilight_times*
-  * .csv with columns for twilight times for at least every day in the semester
-  * Its much easier to query these than calculate them, a function to create one of these with astroplan is included
+  * .csv with columns for twilight times for (at least) every day in the semester
+  * Its much easier to query these than calculate them, the script 'twilight_calculator' is included to create one of these with astroplan
 * *allocated_nights* https://github.com/California-Planet-Search/jump-config/tree/master/allocations/hires_j
   * Dates and start/stop markers for each quarter night
 * *marked_scripts*
   * Directory of text files of format 'YYYY--MM-DD.txt' from all previous dates in observing semester
   * Includes the marked starlist targets relevant to the observers sheet (i.e. above the line of X's)
-* *current_day*
-  * Date string in same format as above to generate a schedule for
+* *schedule_dates*
+  * Date strings in same format as above, which will be slew optimized and script formatted
  
 ## The Scheduler
 

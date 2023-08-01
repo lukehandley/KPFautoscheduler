@@ -1,7 +1,7 @@
 gurobipy==10.0.0
 pandas==1.4.1
 numpy==1.22.1
-matplotlib==3.5.1
+matplotlib==3.7.2
 astropy==5.0.1
 astroplan==0.8
 imageio==2.24.0
