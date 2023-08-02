@@ -800,7 +800,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
         #Force the next night to contain an amount of stars necessary for different conditions
         if condition_type == 'nominal':
             #These bound the size of the upcoming nights 'bin'
-            lb = 0.5
+            lb = 0.95
             ub = 1.0
             mag_lim = np.inf
             outpfile = '{}_2023A_nominal.csv'.format(instrument)
