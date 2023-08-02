@@ -1,0 +1,83 @@
+Date,Time,Dark,TelNr,Instrument,Account,PI,Institution,ProjCode,Notes,start,stop
+2023-08-01,10:28 - 15:06 ( 50%),0,1,KPF,kpf1,Jon Zink,CIT,C316,in queue,0.5,1
+2023-08-02,10:28 - 15:07 ( 50%),3,1,KPF,kpf1,Andrew Howard,CIT,C398,in queue,0.5,1
+2023-08-04,05:48 - 15:08 (100%),18,1,KPF,kpf1,Nicholas Saunders,UH,H390,Non-Queue-RM,0,1
+2023-08-05,10:28 - 15:08 ( 50%),25,1,KPF,kpf1,Fei Dai,NASA,N461,in queue,0.5,1
+2023-08-06,10:28 - 15:09 ( 50%),32,1,KPF,kpf1,Andrew Howard,CIT,C398,in queue,0.5,1
+2023-08-08,10:28 - 12:48 ( 25%),46,1,KPF,kpf1,Courtney Dressing,UCB,U151,in queue,0.5,0.75
+2023-08-09,10:27 - 15:10 ( 50%),54,1,KPF,kpf1,Heather Knutson,CIT,C382,RM event (+extra time),0.5,1
+2023-08-09,05:45 - 10:27 ( 50%),54,1,KPF,kpf1,Courtney Dressing,UCB,U151,in queue,0,0.5
+2023-08-10,05:44 - 15:10 (100%),63,1,KPF,kpf1,Andrew Howard,CIT,C400,Non-queue,0,1
+2023-08-12,10:27 - 15:11 ( 50%),82,1,KPF,kpf1,Erik Petigura,UCLA,U012,in queue,0.5,1
+2023-08-16,05:40 - 10:26 ( 50%),100,1,KPF,kpf1,Courtney Dressing,UCB,U151,in queue,0,0.5
+2023-08-17,05:39 - 10:26 ( 50%),94,1,KPF,kpf1,Fei Dai,NASA,N461,in queue,0,0.5
+2023-08-19,05:37 - 15:14 (100%),83,1,KPF,kpf1,Heather Knutson,CIT,C351,in queue,0,1
+2023-08-23,05:34 - 10:24 ( 50%),57,1,KPF,kpf1,Andrew Howard,CIT,C398,in queue,0,0.5
+2023-08-23,10:24 - 15:15 ( 50%),57,1,KPF,kpf1,Courtney Dressing,UCB,U151,in queue,0.5,1
+2023-08-24,05:33 - 10:24 ( 50%),49,1,KPF,kpf1,Fei Dai,NASA,N461,in queue,0,0.5
+2023-08-25,05:32 - 15:16 (100%),39,1,KPF,kpf1,Paul Robertson,UCI,U147,in queue,0,1
+2023-08-26,05:32 - 15:16 (100%),28,1,KPF,kpf1,Heather Knutson,CIT,C351,in queue,0,1
+2023-08-27,05:31 - 10:24 ( 50%),16,1,KPF,kpf1,Andrew Howard,CIT,C398,in queue,0,0.5
+2023-08-28,10:23 - 15:17 ( 50%),5,1,KPF,kpf1,Erik Petigura,UCLA,U012,in queue,0.5,1
+2023-08-28,05:30 - 10:23 ( 50%),5,1,KPF,kpf1,Courtney Dressing,UCB,U151,in queue,0,0.5
+2023-08-29,10:23 - 15:17 ( 50%),0,1,KPF,kpf1,Courtney Dressing,UCB,U151,in queue,0.5,1
+2023-08-30,07:55 - 15:17 ( 75%),0,1,KPF,kpf1,Casey Brinkman,UH,H376,in queue,0.25,1
+2023-08-30,05:28 - 07:55 ( 25%),0,1,KPF,kpf1,Fei Dai,NASA,N461,in queue,0,0.25
+2023-08-31,05:27 - 15:18 (100%),0,1,KPF,kpf1,Casey Brinkman,UH,H376,in queue,0,1
+2023-09-01,10:22 - 15:18 ( 50%),6,1,KPF,kpf1,Courtney Dressing,UCB,U151,in queue,0.5,1
+2023-09-02,10:22 - 15:18 ( 50%),13,1,KPF,kpf1,Lauren Weiss,Notre Dame,D317,in queue,0.5,1
+2023-09-03,10:22 - 15:19 ( 50%),19,1,KPF,kpf1,Joel Ong,UH,H357,in queue,0.5,1
+2023-09-04,10:21 - 15:19 ( 50%),27,1,KPF,kpf1,Fei Dai,NASA,N461,in queue,0.5,1
+2023-09-04,05:23 - 07:51 ( 25%),27,1,KPF,kpf1,Courtney Dressing,UCB,U151,in queue,0,0.25
+2023-09-05,05:22 - 15:19 (100%),34,1,KPF,kpf1,Paul Robertson,UCI,U147,in queue,0,1
+2023-09-06,05:21 - 10:20 ( 50%),42,1,KPF,kpf1,Heather Knutson,CIT,C382,"Mostly RM, contact: aaron.bello.arufe@jpl.nasa.gov",0,0.5
+2023-09-07,05:21 - 10:21 ( 50%),51,1,KPF,kpf1,Andrew Howard,CIT,C398,in queue,0,0.5
+2023-09-08,05:20 - 10:20 ( 50%),60,1,KPF,kpf1,Courtney Dressing,UCB,U151,in queue,0,0.5
+2023-09-09,10:19 - 15:20 ( 50%),69,1,KPF,kpf1,Heather Knutson,CIT,C382,"Mostly RM, contact: aaron.bello.arufe@jpl.nasa.gov",0.5,1
+2023-09-09,07:49 - 10:19 ( 25%),69,1,KPF,kpf1,Erik Petigura,UCLA,U012,in queue,0.25,0.5
+2023-09-09,05:19 - 07:49 ( 25%),69,1,KPF,kpf1,Courtney Dressing,UCB,U151,Mostly RM,0,0.25
+2023-09-10,05:18 - 10:19 ( 50%),78,1,KPF,kpf1,Lauren Weiss,Notre Dame,D317,in queue,0,0.5
+2023-09-11,05:17 - 15:21 (100%),87,1,KPF,kpf1,Andrew Howard,CIT,C400,Non-queue-RM,0,1
+2023-09-13,05:15 - 10:18 ( 50%),100,1,KPF,kpf1,Andrew Howard,CIT,C398,Non-queue-RM,0,0.5
+2023-09-16,05:12 - 10:17 ( 50%),94,1,KPF,kpf1,Erik Petigura,UCLA,U011,in queue,0,0.5
+2023-09-20,05:08 - 10:15 ( 50%),68,1,KPF,kpf1,Erik Petigura,UCLA,U012,in queue,0,0.5
+2023-09-21,05:07 - 10:15 ( 50%),59,1,KPF,kpf1,Jon Zink,CIT,C316,in queue,0,0.5
+2023-09-21,10:15 - 15:23 ( 50%),59,1,KPF,kpf1,Josh Winn,NASA,N133,Non-Queue-RM,0.5,1
+2023-09-22,07:40 - 12:48 ( 50%),49,1,KPF,kpf1,Josh Winn,NASA,N133,Non-Queue-RM,0.25,0.75
+2023-09-22,12:48 - 15:23 ( 25%),49,1,KPF,kpf1,Fei Dai,NASA,N461,in queue,0.75,1
+2023-09-22,05:06 - 07:40 ( 25%),49,1,KPF,kpf1,Fei Dai,NASA,N461,in queue,0,0.25
+2023-09-23,05:05 - 10:14 ( 50%),39,1,KPF,kpf1,Andrew Howard,CIT,C398,in queue,0,0.5
+2023-09-24,10:15 - 15:24 ( 50%),28,1,KPF,kpf1,Courtney Dressing,UCB,U157,Non-Queue-RM,0.5,1
+2023-10-15,10:08 - 15:29 ( 50%),98,1,KPF,kpf1,Fei Dai,NASA,N461,in queue,0.5,1
+2023-10-19,10:07 - 15:30 ( 50%),68,1,KPF,kpf1,Lynne Hillenbrand,CIT,C404,in queue,0.5,1
+2023-10-19,04:44 - 10:07 ( 50%),68,1,KPF,kpf1,Josh Winn,NASA,N133,Non-Queue-RM,0,0.5
+2023-10-21,10:07 - 15:31 ( 50%),48,1,KPF,kpf1,Samuel Yee,NASA,N226,Non-Queue-RM,0.5,1
+2023-11-05,04:35 - 10:06 ( 50%),55,1,KPF,kpf1,Samuel Yee,NASA,N226,Non-Queue-RM,0,0.5
+2023-11-07,04:34 - 10:06 ( 50%),70,1,KPF,kpf1,Heather Knutson,CIT,C382,RM event (+extra time),0,0.5
+2023-11-09,10:06 - 15:38 ( 50%),85,1,KPF,kpf1,Fei Dai,NASA,N461,in queue,0.5,1
+2023-11-13,10:06 - 15:40 ( 50%),100,1,KPF,kpf1,Jingwen Zhang,UH,H391,in queue,0.5,1
+2023-11-19,10:08 - 15:43 ( 50%),48,1,KPF,kpf1,Lynne Hillenbrand,CIT,C404,in queue,0.5,1
+2023-11-23,04:32 - 15:45 (100%),14,1,KPF,kpf1,Malena Rice,Yale(CIT),Y280,in queue,0,1
+2023-11-24,04:32 - 07:20 ( 25%),5,1,KPF,kpf1,Samuel Yee,NASA,N206,in queue,0,0.25
+2023-11-24,07:20 - 15:46 ( 75%),5,1,KPF,kpf1,Fei Dai,NASA,N461,in queue,0.25,1
+2023-11-27,07:20 - 15:47 ( 75%),0,1,KPF,kpf1,Paul Robertson,UCI,U150,Non-Queue,0.25,1
+2023-11-27,04:32 - 07:20 ( 25%),0,1,KPF,kpf1,Courtney Dressing,UCB,U151,in queue,0,0.25
+2023-12-03,04:33 - 10:12 ( 50%),42,1,KPF,kpf1,Katherine de Kleer,CIT,C393,Non-Queue-SP,0,0.5
+2023-12-03,10:12 - 15:51 ( 50%),42,1,KPF,kpf1,Jingwen Zhang,UH,H391,in queue,0.5,1
+2023-12-17,07:27 - 15:59 ( 75%),59,1,KPF,kpf1,Andrew Howard,CIT,C399,Non-Queue-RM,0.25,1
+2023-12-17,04:37 - 07:27 ( 25%),59,1,KPF,kpf1,Courtney Dressing,UCB,U151,in queue,0,0.25
+2023-12-20,04:39 - 16:00 (100%),34,1,KPF,kpf1,Nicholas Saunders,UH,H390,Non-Queue-RM,0,1
+2023-12-26,04:42 - 10:22 ( 50%),0,1,KPF,kpf1,Katherine de Kleer,CIT,C393,Non-Queue-SP,0,0.5
+2023-12-28,10:23 - 16:04 ( 50%),6,1,KPF,kpf1,Andrew Howard,CIT,C399,Non-Queue-RM,0.5,1
+2023-12-28,07:33 - 10:23 ( 25%),6,1,KPF,kpf1,Courtney Dressing,UCB,U151,in queue,0.25,0.5
+2023-12-29,10:24 - 16:04 ( 50%),14,1,KPF,kpf1,Fei Dai,NASA,N461,in queue,0.5,1
+2023-12-30,04:44 - 16:05 (100%),22,1,KPF,kpf1,Paul Robertson,UCI,U150,Non-Queue,0,1
+2023-12-31,04:45 - 10:25 ( 50%),29,1,KPF,kpf1,Courtney Dressing,UCB,U151,in queue,0,0.5
+2024-01-15,10:31 - 16:09 ( 50%),63,1,KPF,kpf1,Andrew Howard,CIT,C399,Non-Queue-RM,0.5,1
+2024-01-15,04:54 - 10:31 ( 50%),63,1,KPF,kpf1,Joel Ong,UH,H357,in queue,0,0.5
+2024-01-19,04:56 - 13:20 ( 75%),28,1,KPF,kpf1,Fei Dai,CIT,C354,in queue,0,0.75
+2024-01-19,13:20 - 16:09 ( 25%),28,1,KPF,kpf1,Samuel Yee,NASA,N206,in queue,0.75,1
+2024-01-21,04:57 - 10:33 ( 50%),11,1,KPF,kpf1,Courtney Dressing,UCB,U151,in queue,0,0.5
+2024-01-22,04:58 - 10:34 ( 50%),2,1,KPF,kpf1,Andrew Howard,CIT,C399,Non-Queue-RM,0,0.5
+2024-01-27,05:01 - 10:35 ( 50%),8,1,KPF,kpf1,Katherine de Kleer,CIT,C393,Non-Queue-SP,0,0.5
+2024-01-31,05:03 - 10:36 ( 50%),37,1,KPF,kpf1,Andrew Howard,CIT,C398,in queue,0,0.5
