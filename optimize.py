@@ -14,6 +14,7 @@ from itertools import permutations
 import csv
 import logging
 import plotting
+import formatting
 import accounting
 
 
@@ -42,10 +43,10 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame):
     #These coordinates designate observability at Keck
     min_az = 5.3
     max_az = 146.2
-    min_alt = 33.3
-    else_min_alt = 25
-    #min_alt = 40
-    #else_min_alt = 40
+    #min_alt = 33.3
+    #else_min_alt = 25
+    min_alt = 40
+    else_min_alt = 40
     max_alt = 85
 
     logger.info('Generating Reservation List...')
@@ -117,7 +118,7 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame):
                 d = np.concatenate((one,two))
             else:
                 d = a[b:c]
-            if (len(d) - np.bincount(d)[0]) >= len(d)/2 and moon_safe(moon,ra_dec_list[i]):
+            if (len(d) - np.bincount(d)[0]) >= len(d)/4 and moon_safe(moon,ra_dec_list[i]):
                 reservation_matrix[i,ind] = 1
 
 
@@ -200,62 +201,64 @@ def process_scripts(all_targets_frame,plan,marked_scripts,current_day):
 
     import os
     observed_dict = defaultdict(list)
-
+    current_slot = plan[plan['Date'] == current_day].index[0]
     #The Marked Scipts directory includes the lines from the previous nights in the semester organized into files
     #titled by date. i.e 'marked_scripts/2022-08-07.txt'
     #Note: these files should include only targets for that night, and none of the text/notes that follow
     directory = marked_scripts
     dates = []
-    for filename in os.listdir(directory):
-        
-        targ_per_script = 0
-        fpath = os.path.join(directory, filename)
-        with open(fpath) as f:
+    if len(os.listdir(marked_scripts)) > 0:
+        for filename in os.listdir(directory):
+            targ_per_script = 0
+            fpath = os.path.join(directory, filename)
+            with open(fpath) as f:
 
-            #Read in each processed script line
-            lines = f.readlines()
+                #Read in each processed script line
+                lines = f.readlines()
 
-            #Parse the corresponding date
-            day = f.name[:-4][-10:]
-            dates.append(day)
+                #Parse the corresponding date
+                day = f.name[:-4][-10:]
 
-            #The observation is always assigned to the first qn of that date for simplicity. The date of observation
-            #all that matters for the optimization, not the specific qn
-            slot = plan[plan['Date'] == day].index[0]
-            good_lines = []
-
-            #lines that are marked are completed observations
-            for line in lines:
-                if (line[0] == 'x') or (line[0] == 'X'):
-                    good_lines.append(line)
-
-            #Search for corresponding request by cross referencing name and program
-            #This is a uniqueness problem that still needs to be solved in Jump
-            for line in good_lines:
-                name = 'default'
-                program = 'default'
-                for item in line.split(' '):
-                    
-                    #Sift through the text to find valid name/program identifiers
-                    if item in all_targets_frame['Starname'].tolist():
-                        name = item
-                    if item in all_targets_frame['Program code'].tolist():
-                        program = item
+                #The observation is always assigned to the first qn of that date for simplicity. The date of observation
+                #all that matters for the optimization, not the specific qn
                 
-                #See if this target appears in our sheet
-                targ = all_targets_frame.loc[(all_targets_frame['Starname'] == name) 
-                                & (all_targets_frame['Program code'] == program)]['request_number'].values
-                
-                #If we can find it, append the corresponding qn identifier to the targets
-                #past observation dictionary
-                if targ.size > 0:
-                    targ_per_script += 1
-                    observed_dict[targ[0]].append(slot)
+                slot = plan[plan['Date'] == day].index[0]
 
-        if targ_per_script == 0:
-            logger.warning('No targets recognized in {}'.format(filename))
+                #Ignore scripts past the simulation start date
+                if slot < current_slot:
+                    dates.append(day)
+                    good_lines = []
 
-    current_slot = plan[plan['Date'] == current_day].index[0]
+                    #lines that are marked are completed observations
+                    for line in lines:
+                        if (line[0] == 'x') or (line[0] == 'X'):
+                            good_lines.append(line)
+
+                    #Search for corresponding request by cross referencing name and program
+                    #This is a uniqueness problem that still needs to be solved in Jump
+                    for line in good_lines:
+                        name = 'default'
+                        program = 'default'
+                        for item in line.split(' '):
+                            
+                            #Sift through the text to find valid name/program identifiers
+                            if item in all_targets_frame['Starname'].tolist():
+                                name = item
+                            if item in all_targets_frame['Program code'].tolist():
+                                program = item
+                        
+                        #See if this target appears in our sheet
+                        targ = all_targets_frame.loc[(all_targets_frame['Starname'] == name) 
+                                        & (all_targets_frame['Program code'] == program)]['request_number'].values
+                        
+                        #If we can find it, append the corresponding qn identifier to the targets
+                        #past observation dictionary
+                        if targ.size > 0:
+                            targ_per_script += 1
+                            observed_dict[targ[0]].append(slot)
+
+                    if targ_per_script == 0:
+                        logger.warning('No targets recognized in {}'.format(filename))
 
     for script_date in list(dict.fromkeys(plan[:current_slot].Date.tolist())):
         if script_date not in dates:
@@ -369,7 +372,7 @@ def moon_safe(moon,target_tuple):
     else:
         return False
             
-def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_results):
+def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag,plot_results):
     
     keck = apl.Observer.at_site('W. M. Keck Observatory')
     for condition in ['nominal']:
@@ -418,10 +421,10 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
 
             min_az = 5.3
             max_az = 146.2
-            min_alt = 33.3
-            else_min_alt = 25
-            #min_alt = 40
-            #else_min_alt = 40
+            #min_alt = 33.3
+            #else_min_alt = 25
+            min_alt = 40
+            else_min_alt = 40
             max_alt = 90
 
             e_i = []
@@ -632,80 +635,27 @@ def salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_resul
                 ordered_requests.append(ind_to_id[pair[0]])
 
         #Turn all the nights targets into starlists   
-        write_starlist(all_targets_frame,ordered_requests,condition,current_day)
+        formatting.write_starlist(instrument,all_targets_frame,ordered_requests,condition,current_day)
 
-def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scripts,schedule_dates,output_flag,
+def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights,marked_scripts,schedule_dates,output_flag,
                                                                                     equalize_programs,plot_results):
-    print(schedule_dates)
 
     if len(schedule_dates) == 1:
         high_production_mode = False
-        current_day = schedule_dates
     if len(schedule_dates) > 1:
         high_production_mode = True
-        current_day = schedule_dates[0]
-
-    print('high_production_mode = ' + str(high_production_mode))
+    
+    current_day = schedule_dates[0]
     
     ############Load Observer information and data files, Pandas is an easy way to manage this############
     keck = apl.Observer.at_site('W. M. Keck Observatory')
 
     #Retrieve the night allocations as csv from jump-config, drop the RM observation nights not part of Community Cadence
-    obs_plan = pd.read_csv(allocated_nights)
-    obs_plan = obs_plan[obs_plan['Date'] != '2022-02-09']
-    #obs_plan = obs_plan[obs_plan['Date'] != '2022-06-24']
-    #obs_plan = obs_plan[obs_plan['Date'] != '2022-07-06']
-    obs_plan.reset_index(inplace=True,drop=True)
+    obs_plan = formatting.format_allocated_nights(allocated_nights,instrument)
 
     #Retrieve the generated twilight times information and the HIRES observers sheet as csv's
     twilight_frame = pd.read_csv(twilight_times, parse_dates=True, index_col=0)
-    all_targets_frame = pd.read_csv(observers_sheet)
-    
-    #Turn the observers sheet into a dataframe that is simplified and useful for caluculations. This assumes the 
-    #sheet is left downloaded directly
-    all_targets_frame = all_targets_frame.drop([0,1,2,3,4])
-
-
-    ############Compute coordinates in decimal RA hours and decimal DEC deg############
-    all_targets_frame['ra'] = all_targets_frame['RAH'] + (1/60)*all_targets_frame['RAM'] + (1/3600)*all_targets_frame['RAS']
-
-    #Reading in dec can be troublesome
-    all_targets_frame['dec'] = '' 
-    for index,row in all_targets_frame.iterrows():
-        if row['DECD'][0] == '-' or row['DECD'][0] == '−':
-            dec = (int(row['DECD'][1:]) + (1/60)*row['DECM'] + (1/3600)*row['DECS'])
-            all_targets_frame.at[index,'dec'] = -np.abs(dec)
-        else:
-            dec = (int(row['DECD']) + (1/60)*row['DECM'] + (1/3600)*row['DECS'])
-            all_targets_frame.at[index,'dec'] = np.abs(dec)
-            
-    #For triple shots, we assume the total exposure time is triple the listed nominal for our calculations
-    for index,row in all_targets_frame.iterrows():
-        if row['N_obs'] == 3.0:
-            all_targets_frame.at[index,'T_exp(sec)'] = row['T_exp(sec)'] * 3
-    all_targets_frame['discretized_duration'] = all_targets_frame['T_exp(sec)'].apply(discretize)
-
-    #PI's may choose to input a minimum cadence for each target. If not, one will be generated
-    for index,row in all_targets_frame.iterrows():
-        if type(row['Cadence']) == str:
-            all_targets_frame.at[index,'Cadence'] = int(row['Cadence'])
-    all_targets_frame['N_obs(full_semester)'] = all_targets_frame['N_obs(full_semester)'].astype('int')
-
-
-    #Remove the RM targets corresponding to the RM nights
-    all_targets_frame = all_targets_frame[all_targets_frame['Starname'] != 'TIC69997672']
-    all_targets_frame = all_targets_frame[all_targets_frame['Starname'] != 'TIC230075120']
-    all_targets_frame = all_targets_frame[all_targets_frame['Starname'] != 'TIC139474683']
-
-    #Remove the duplicated targets from our list that are calibration shots not relevant to community cadence
-    dup = all_targets_frame[all_targets_frame.duplicated(subset='Starname',keep=False)]
-    all_targets_frame = all_targets_frame.drop(dup[dup['N_obs(full_semester)'] == 1].index.tolist())
-    all_targets_frame = all_targets_frame[all_targets_frame['Done'] != 'done']
-    all_targets_frame = all_targets_frame[all_targets_frame['N_obs(full_semester)'] > 0]
-
-    #Finally assign a unique identifier to each request to be used in lookup tables
-    all_targets_frame.reset_index(inplace=True,drop=True)
-    all_targets_frame['request_number'] = all_targets_frame.index.tolist()
+    all_targets_frame = formatting.format_observers_sheet(observers_sheet,instrument)
     
     '''#Targets forcefully scheduled will have different rules
     force_sched = all_targets_frame[(all_targets_frame['Include'] == 'Y') | 
@@ -850,20 +800,20 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
         #Force the next night to contain an amount of stars necessary for different conditions
         if condition_type == 'nominal':
             #These bound the size of the upcoming nights 'bin'
-            lb = 0.95
+            lb = 0.5
             ub = 1.0
             mag_lim = np.inf
-            outpfile = '2023A_nominal.csv'
+            outpfile = '{}_2023A_nominal.csv'.format(instrument)
         if condition_type == 'weathered':
             lb = 0.6
             ub = 0.8
             mag_lim = 12
-            outpfile = '2023A_weathered.csv'
+            outpfile = '{}_2023A_weathered.csv'.format(instrument)
         if condition_type == 'poor':
             lb = 0.3
             ub = 0.5
             mag_lim = 11
-            outpfile = '2023A_poor.csv'
+            outpfile = '{}_2023A_poor.csv'.format(instrument)
         fill_above = m.addConstrs((gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration'] 
                             for r in target_ids) >= lb * interval_dict[t] for t in fill_slots)
                                 ,'constr_fill_above')
@@ -1052,6 +1002,6 @@ def semester_schedule(observers_sheet,twilight_times,allocated_nights,marked_scr
     
     if high_production_mode == True:
         for date_to_schedule in schedule_dates:
-            salesman_scheduler(all_targets_frame,plan,date_to_schedule,output_flag,plot_results)
+            salesman_scheduler(instrument,all_targets_frame,plan,date_to_schedule,output_flag,plot_results)
     if high_production_mode == False:
-        salesman_scheduler(all_targets_frame,plan,current_day,output_flag,plot_results)
+        salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag,plot_results)
