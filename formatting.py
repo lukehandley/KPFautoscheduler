@@ -141,6 +141,9 @@ def write_starlist(instrument,frame,requests,condition,current_day):
         lines = []
         for index,row in formatted_frame.iterrows():
             #Just a bunch of string formatting. This prints standard starlists as ordered by the salesman optimization
+            #Remove spaces
+            row['Starname'] = row['Starname'].replace(" ", "")
+
             namestring = ' '*(16-len(row['Starname'][:16])) + row['Starname'][:16]
 
             rastring = ('0'*(2-len(str(int(row['RAH'])))) + str(int(row['RAH'])) + ' '
@@ -158,7 +161,7 @@ def write_starlist(instrument,frame,requests,condition,current_day):
                                 + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
                                     + '0'*(4-len(str(row['DECS']))) + str(int(row['DECS'])))
             
-            magstring = row['vmag='] + str(row['Vmag']) + ' '*(4-len(str(row['Vmag'])))
+            magstring = (row['vmag='] + str(np.round(float(row['Vmag']),1)) + ' '*(4-len(str(np.round(row['Vmag'],1)))))
             
             exposurestring = (' '*(4-len(str(int(row['T_exp(sec)'])))) + str(int(row['T_exp(sec)'])) + '/' 
                                 + str(int(row['T_max(sec)'])) + ' '*(4-len(str(int(row['T_max(sec)'])))))
@@ -191,7 +194,9 @@ def write_starlist(instrument,frame,requests,condition,current_day):
 
         lines = []
         for index,row in formatted_frame.iterrows():
-             #Just a bunch of string formatting. This prints standard starlists as ordered by the salesman optimization
+            #Just a bunch of string formatting. This prints standard starlists as ordered by the salesman optimization
+            #Remove spaces
+            row['Starname'] = row['Starname'].replace(" ", "")
             namestring = ' '*(16-len(row['Starname'][:16])) + row['Starname'][:16]
 
             rastring = ('0'*(2-len(str(int(row['RAH'])))) + str(int(row['RAH'])) + ' '
