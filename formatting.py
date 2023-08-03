@@ -10,6 +10,7 @@ def discretize(seconds):
     return np.round(seconds/60,1)
 
 def format_observers_sheet(observers_sheet,instrument):
+    pd.set_option('display.precision', 30)
     if instrument == 'HIRES':
         #Turn the observers sheet into a dataframe that is simplified and useful for caluculations. This assumes the 
         #sheet is left downloaded directly
@@ -36,11 +37,11 @@ def format_observers_sheet(observers_sheet,instrument):
         all_targets_frame['T_max(sec)'] = pd.to_numeric(all_targets_frame['T_max(sec)'])
         all_targets_frame['Cadence'] = pd.to_numeric(all_targets_frame['Cadence'])
 
+        all_targets_frame['discretized_duration'] = all_targets_frame['T_exp(sec)'].apply(discretize)
         #For triple shots, we assume the total exposure time is triple the listed nominal for our calculations
         for index,row in all_targets_frame.iterrows():
             if row['N_obs'] > 1:
-                all_targets_frame.at[index,'T_exp(sec)'] = row['T_exp(sec)'] * row['N_obs']
-        all_targets_frame['discretized_duration'] = all_targets_frame['T_exp(sec)'].apply(discretize)
+                all_targets_frame.at[index,'discretized_duration'] = row['discretized_duration'] * row['N_obs']
 
         #Remove the duplicated targets from our list that are calibration shots not relevant to community cadence
         dup = all_targets_frame[all_targets_frame.duplicated(subset='Starname',keep=False)]
@@ -58,7 +59,7 @@ def format_observers_sheet(observers_sheet,instrument):
     if instrument == 'KPF':
         #Turn the observers sheet into a dataframe that is simplified and useful for caluculations. This assumes the 
         #sheet is left downloaded directly
-        all_targets_frame = pd.read_csv(observers_sheet,dtype={'Gaia DR3.1': object})
+        all_targets_frame = pd.read_csv(observers_sheet,dtype={'Gaia_DR3_id': object})
         all_targets_frame = all_targets_frame.drop([0,1,2])
 
 
@@ -84,19 +85,19 @@ def format_observers_sheet(observers_sheet,instrument):
         all_targets_frame['Gmag'] = pd.to_numeric(all_targets_frame['Gmag'])
         all_targets_frame['Nvisits'] = all_targets_frame['Nvisits'].fillna(1)
 
+        all_targets_frame['discretized_duration'] = all_targets_frame['T_exp(sec)'].apply(discretize)
         #For triple shots or multi visit targets, we assume the total exposure time is multiplied by the number
         for index,row in all_targets_frame.iterrows():
             if row['Nobs per'] > 1:
-                all_targets_frame.at[index,'T_exp(sec)'] = row['T_exp(sec)'] * row['Nobs per']
+                all_targets_frame.at[index,'discretized_duration'] = row['discretized_duration'] * row['Nobs per']
                 #Iron out if Nobs semester should be divided by per obs
                 #all_targets_frame.at[index,'N_obs(full_semester)'] = row['N_obs(full_semester)']/row['Nobs per']
             try:
                 if row['Nvisits'] > 1:
-                    all_targets_frame.at[index,'T_exp(sec)'] = row['T_exp(sec)'] * row['Nvisits']
+                    all_targets_frame.at[index,'discretized_duration'] = row['discretized_duration'] * row['Nvisits']
             except:
                 if int(row['Nvisits'][-1]) > 1:
-                    all_targets_frame.at[index,'T_exp(sec)'] = row['T_exp(sec)'] * int(row['Nvisits'][-1])
-        all_targets_frame['discretized_duration'] = all_targets_frame['T_exp(sec)'].apply(discretize)
+                    all_targets_frame.at[index,'discretized_duration'] = row['discretized_duration'] * int(row['Nvisits'][-1])
 
         #Remove the RM targets corresponding to the RM nights
         all_targets_frame = all_targets_frame[(all_targets_frame['RM or'] != 'Y') & (all_targets_frame['RM or'] != 'y')]
@@ -113,7 +114,7 @@ def format_observers_sheet(observers_sheet,instrument):
         return all_targets_frame
 
 def format_allocated_nights(allocated_nights,instrument):
-    obs_plan = pd.read_csv(allocated_nights)
+    obs_plan = pd.read_csv(allocated_nights,dtype={'start': float, 'stop': float})
     if instrument == 'HIRES':
         obs_plan = obs_plan[obs_plan['Date'] != '2023-11-22']
         obs_plan = obs_plan[obs_plan['Date'] != '2022-12-02']
@@ -122,7 +123,7 @@ def format_allocated_nights(allocated_nights,instrument):
         return obs_plan
 
     if instrument == 'KPF':
-        obs_plan = obs_plan[obs_plan['Notes'] == 'in queue']
+        obs_plan = obs_plan[obs_plan['Queue'] == 'y']
         obs_plan.reset_index(inplace=True,drop=True)
 
         return obs_plan
@@ -183,7 +184,7 @@ def write_starlist(instrument,frame,requests,condition,current_day):
     if instrument == 'KPF':
         columns = ['Starname','RAH','RAM','RAS','DECD','DECM','DECS','epoch','jmag=','Jmag',
             'T_exp(sec)','T_max(sec)','Nobs per','Format1','Nvisits','Format2','Simulcal',
-            'gmag=','Gmag','Teff', 'Teff_val','Gaia DR3','Gaia DR3.1','Program code','Format3',
+            'gmag=','Gmag','Teff', 'Teff_val','Gaia_DR3','Gaia_DR3_id','Program code','Format3',
             'priority','Telescope','Comment']
         
         formatted_frame = frame.loc[requests][columns]
@@ -191,7 +192,7 @@ def write_starlist(instrument,frame,requests,condition,current_day):
         lines = []
         for index,row in formatted_frame.iterrows():
              #Just a bunch of string formatting. This prints standard starlists as ordered by the salesman optimization
-            namestring = ' '*(16-len(row['Starname'])) + row['Starname']
+            namestring = ' '*(16-len(row['Starname'][:16])) + row['Starname'][:16]
 
             rastring = ('0'*(2-len(str(int(row['RAH'])))) + str(int(row['RAH'])) + ' '
                             + '0'*(2-len(str(int(row['RAM'])))) + str(int(row['RAM'])) + ' '
@@ -226,7 +227,7 @@ def write_starlist(instrument,frame,requests,condition,current_day):
             
             teffstr = row['Teff'] + str(int(row['Teff_val'])) + ' '*(4-len(str(int(row['Teff_val']))))
             
-            gaiastring = row['Gaia DR3'] + ' ' + row['Gaia DR3.1']
+            gaiastring = str(row['Gaia_DR3']) + ' ' + str(int(row['Gaia_DR3_id'])) + ' '*(19-len(str(int(row['Gaia_DR3_id']))))
             
             programstring = row['Program code']
             

@@ -47,7 +47,7 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame):
     #else_min_alt = 25
     min_alt = 40
     else_min_alt = 40
-    max_alt = 85
+    max_alt = 90
 
     logger.info('Generating Reservation List...')
 
@@ -378,9 +378,10 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
     for condition in ['nominal']:
 
         logger.info('Building traveling salesman for condition: {}'.format(condition))
-
+        
         #Retrieve the conditions from respective csv's
-        file = open("2023A_{}.csv".format(condition), "r")
+        #We should consider a system for naming formats as semesters go by
+        file = open('{}_2023B_nominal.csv'.format(instrument), "r")
         blocked_targets = list(csv.reader(file, delimiter=","))
         file.close()
         for i in range(len(blocked_targets)):
@@ -391,7 +392,7 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
         ordered_requests = []       
         
         #Plot folder
-        plotpath = '{}_plots'.format(current_day)
+        plotpath = '{}_{}_plots'.format(instrument,current_day)
         
         #The path for each quarter night is computed independently
         for qn in plan[plan['Date'] == current_day].index.tolist(): 
@@ -803,17 +804,17 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
             lb = 0.95
             ub = 1.0
             mag_lim = np.inf
-            outpfile = '{}_2023A_nominal.csv'.format(instrument)
+            outpfile = '{}_2023B_nominal.csv'.format(instrument)
         if condition_type == 'weathered':
             lb = 0.6
             ub = 0.8
             mag_lim = 12
-            outpfile = '{}_2023A_weathered.csv'.format(instrument)
+            outpfile = '{}_2023B_weathered.csv'.format(instrument)
         if condition_type == 'poor':
             lb = 0.3
             ub = 0.5
             mag_lim = 11
-            outpfile = '{}_2023A_poor.csv'.format(instrument)
+            outpfile = '{}_2023B_poor.csv'.format(instrument)
         fill_above = m.addConstrs((gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration'] 
                             for r in target_ids) >= lb * interval_dict[t] for t in fill_slots)
                                 ,'constr_fill_above')
@@ -977,10 +978,10 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
                 logger.info('Plotting Program CDFs')
                 if high_production_mode == True:
                     for day in schedule_dates[1:]:
-                        plotpath = '{}_plots'.format(day)
+                        plotpath = '{}_{}_plots'.format(instrument,day)
                         if not os.path.isdir(plotpath):
                             os.mkdir(plotpath)
-                plotpath = '{}_plots'.format(current_day)
+                plotpath = '{}_{}_plots'.format(instrument,current_day)
                 if not os.path.isdir(plotpath):
                     os.mkdir(plotpath)
                 plotting.plot_program_cdf(plan,program_dict,targets_observed,Nobs,plotpath,current_day)

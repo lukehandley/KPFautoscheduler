@@ -13,7 +13,7 @@ parser.add_argument('-g','--gurobi_output',action='store_true', help='Activate G
 parser.add_argument('-e','--equalize',action='store_true',help='EXPERIMENTAL: Alter Objective to prioritize program equity',
                 default=False)
 parser.add_argument('-p','--plot_results',action='store_true', help='Turn on plotting for semester/upcoming quarter nights',
-                default=True)
+                default=False)
 
 args = parser.parse_args()
 
