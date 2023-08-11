@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -16,6 +17,7 @@ def format_observers_sheet(observers_sheet,instrument):
         #sheet is left downloaded directly
         all_targets_frame = pd.read_csv(observers_sheet)
         all_targets_frame = all_targets_frame.drop([0,1,2,3])
+        all_targets_frame['Starname'] = all_targets_frame['Starname'].str.slice(0, 16)
 
 
         ############Compute coordinates in decimal RA hours and decimal DEC deg############
@@ -24,6 +26,8 @@ def format_observers_sheet(observers_sheet,instrument):
         #Reading in dec can be troublesome
         all_targets_frame['dec'] = '' 
         for index,row in all_targets_frame.iterrows():
+            #Remove Spaces
+            row['Starname'] = row['Starname'].replace(" ", "")
             if row['DECD'] < 0:
                 dec = (np.abs((int(row['DECD']))) + (1/60)*row['DECM'] + (1/3600)*row['DECS'])
                 all_targets_frame.at[index,'dec'] = -np.abs(dec)
@@ -61,6 +65,7 @@ def format_observers_sheet(observers_sheet,instrument):
         #sheet is left downloaded directly
         all_targets_frame = pd.read_csv(observers_sheet,dtype={'Gaia_DR3_id': object})
         all_targets_frame = all_targets_frame.drop([0,1,2])
+        all_targets_frame['Starname'] = all_targets_frame['Starname'].str.slice(0, 16)
 
 
         ############Compute coordinates in decimal RA hours and decimal DEC deg############
@@ -69,6 +74,8 @@ def format_observers_sheet(observers_sheet,instrument):
         #Reading in dec can be troublesome
         all_targets_frame['dec'] = '' 
         for index,row in all_targets_frame.iterrows():
+            #Remove Spaces
+            row['Starname'] = row['Starname'].replace(" ", "")
             if row['DECD'] < 0:
                 dec = (np.abs((int(row['DECD']))) + (1/60)*row['DECM'] + (1/3600)*row['DECS'])
                 all_targets_frame.at[index,'dec'] = -np.abs(dec)
@@ -128,8 +135,12 @@ def format_allocated_nights(allocated_nights,instrument):
 
         return obs_plan
 
-def write_starlist(instrument,frame,requests,condition,current_day):
-    logger.info('Writing starlist to {}_{}_{}.txt'.format(instrument,current_day,condition))
+def write_starlist(instrument,frame,requests,condition,current_day,outputdir):
+    script_dir = os.path.join(outputdir,'{}_scripts'.format(instrument))
+    if not os.path.isdir(script_dir):
+        os.mkdir(script_dir)
+    script_file = os.path.join(script_dir,'{}_{}_{}.txt'.format(instrument,current_day,condition))
+    logger.info('Writing starlist to ' + script_file)
     if instrument == 'HIRES':
         #Retrieve columns from observers sheet that are relevant to the starlist
         columns = ['Starname','RAH','RAM','RAS','DECD','DECM','DECS','epoch','vmag=','Vmag',
@@ -141,28 +152,26 @@ def write_starlist(instrument,frame,requests,condition,current_day):
         lines = []
         for index,row in formatted_frame.iterrows():
             #Just a bunch of string formatting. This prints standard starlists as ordered by the salesman optimization
-            #Remove spaces
-            row['Starname'] = row['Starname'].replace(" ", "")
 
             namestring = ' '*(16-len(row['Starname'][:16])) + row['Starname'][:16]
 
             rastring = ('0'*(2-len(str(int(row['RAH'])))) + str(int(row['RAH'])) + ' '
                             + '0'*(2-len(str(int(row['RAM'])))) + str(int(row['RAM'])) + ' '
-                                + '0'*(4-len(str(row['RAS']))) + str(row['RAS']))
+                                + '0'*(4-len(str(np.round(row['RAS'],1)))) + str(np.round(row['RAS'],1)))
 
             starter = '+'
             if row['DECD'] < 0:
                 starter = '-'
                 decstring = (starter + '0'*(2-len(str(abs(int(row['DECD']))))) + str(abs(int(row['DECD']))) + ' '
                                 + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
-                                    + '0'*(4-len(str(row['DECS']))) + str(int(row['DECS'])))
+                                    + '0'*(2-len(str(int(row['DECS'])))) + str(int(row['DECS'])))
             else:
                 decstring = (starter + '0'*(2-len(str(abs(int(row['DECD']))))) + str(abs(int(row['DECD']))) + ' '
                                 + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
-                                    + '0'*(4-len(str(row['DECS']))) + str(int(row['DECS'])))
-            
+                                    + '0'*(2-len(str(int(row['DECS'])))) + str(int(row['DECS'])))
+
             magstring = (row['vmag='] + str(np.round(float(row['Vmag']),1)) + ' '*(4-len(str(np.round(row['Vmag'],1)))))
-            
+
             exposurestring = (' '*(4-len(str(int(row['T_exp(sec)'])))) + str(int(row['T_exp(sec)'])) + '/' 
                                 + str(int(row['T_max(sec)'])) + ' '*(4-len(str(int(row['T_max(sec)'])))))
 
@@ -173,15 +182,15 @@ def write_starlist(instrument,frame,requests,condition,current_day):
                         + magstring + ' ' + exposurestring + ' ' + countstring + ' ' + row['decker'] + ' ' + 
                         str(int(row['N_obs'])) + 'x' + ' ' + ' '*(3-len(row['Iodine'])) + row['Iodine']
                         + ' ' + row['Priority'] + ' ' + 
-                        row['Program code'] + ' ' + row['Telescope Propsoal Code'])
-                        
+                        row['Program code'] + ' '*(3-len(row['Program code'])) + ' ' + row['Telescope Propsoal Code'])
+
             if not pd.isnull(row['Comment']):
                 line += (' ' + str(row['Comment']))
             
             lines.append(line)
 
             #Formatted starlists appear as text files in the directory
-            with open('{}_{}_{}.txt'.format(instrument,current_day,condition), 'w') as f:
+            with open(script_file, 'w') as f:
                 f.write('\n'.join(lines))
 
     if instrument == 'KPF':
@@ -195,8 +204,7 @@ def write_starlist(instrument,frame,requests,condition,current_day):
         lines = []
         for index,row in formatted_frame.iterrows():
             #Just a bunch of string formatting. This prints standard starlists as ordered by the salesman optimization
-            #Remove spaces
-            row['Starname'] = row['Starname'].replace(" ", "")
+
             namestring = ' '*(16-len(row['Starname'][:16])) + row['Starname'][:16]
 
             rastring = ('0'*(2-len(str(int(row['RAH'])))) + str(int(row['RAH'])) + ' '
@@ -232,7 +240,7 @@ def write_starlist(instrument,frame,requests,condition,current_day):
             
             teffstr = row['Teff'] + str(int(row['Teff_val'])) + ' '*(4-len(str(int(row['Teff_val']))))
             
-            gaiastring = str(row['Gaia_DR3']) + ' ' + str(int(row['Gaia_DR3_id'])) + ' '*(19-len(str(int(row['Gaia_DR3_id']))))
+            gaiastring = 'Gaia DR3 ' + str(int(row['Gaia_DR3_id'])) + ' '*(19-len(str(int(row['Gaia_DR3_id']))))
             
             programstring = row['Program code']
             
@@ -249,5 +257,5 @@ def write_starlist(instrument,frame,requests,condition,current_day):
             lines.append(line)
 
             #Formatted starlists appear as text files in the directory
-            with open('{}_{}_{}.txt'.format(instrument,current_day,condition), 'w') as f:
+            with open(script_file, 'w') as f:
                 f.write('\n'.join(lines))

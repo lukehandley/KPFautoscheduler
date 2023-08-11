@@ -43,10 +43,10 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame):
     #These coordinates designate observability at Keck
     min_az = 5.3
     max_az = 146.2
-    #min_alt = 33.3
-    #else_min_alt = 25
-    min_alt = 40
-    else_min_alt = 40
+    min_alt = 33.3
+    else_min_alt = 25
+    #min_alt = 40
+    #else_min_alt = 40
     max_alt = 90
 
     logger.info('Generating Reservation List...')
@@ -231,8 +231,12 @@ def process_scripts(all_targets_frame,plan,marked_scripts,current_day):
 
                     #lines that are marked are completed observations
                     for line in lines:
-                        if (line[0] == 'x') or (line[0] == 'X'):
-                            good_lines.append(line)
+                        try:
+                            if (line[0][0] == 'x') or (line[0][0] == 'X'):
+                                good_lines.append(line)
+                        except:
+                            if (line[0] == 'x') or (line[0] == 'X'):
+                                good_lines.append(line)
 
                     #Search for corresponding request by cross referencing name and program
                     #This is a uniqueness problem that still needs to be solved in Jump
@@ -301,60 +305,6 @@ def get_ra_dec(all_targets_frame,id_num):
     
     return ra,dec
 
-def write_starlist(frame,requests,condition,current_day):
-
-    #Retrieve columns from observers sheet that are relevant to the starlist
-    columns = ['Starname','RAH','RAM','RAS','DECD','DECM','DECS','epoch','vmag=','Vmag',
-        'T_exp(sec)','T_max(sec)','Exp_meter_counts(k)','decker','N_obs','Iodine',
-        'Priority','Program code','Telescope Propsoal Code','Comment']
-
-    formatted_frame = frame.loc[requests][columns]
-
-    logger.info('Writing starlist to {}_{}.txt'.format(current_day,condition))
-    lines = []
-    for index,row in formatted_frame.iterrows():
-
-        #Just a bunch of string formatting. This prints standard starlists as ordered by the salesman optimization
-        namestring = ' '*(16-len(row['Starname'])) + row['Starname']
-        
-        rastring = ('0'*(2-len(str(int(row['RAH'])))) + str(int(row['RAH'])) + ' '
-                        + '0'*(2-len(str(int(row['RAM'])))) + str(int(row['RAM'])) + ' '
-                            + '0'*(4-len(str(row['RAS']))) + str(row['RAS']))
-        
-        starter = '+'
-        if row['DECD'][0] == '-' or row['DECD'][0] == '−':
-            starter = '-'
-            decstring = (starter + '0'*(2-len(str(abs(int(row['DECD'][1:]))))) + str(abs(int(row['DECD'][1:]))) + ' '
-                            + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
-                                + '0'*(4-len(str(row['DECS']))) + str(int(row['DECS'])))
-        else:
-            decstring = (starter + '0'*(2-len(str(abs(int(row['DECD']))))) + str(abs(int(row['DECD']))) + ' '
-                            + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
-                                + '0'*(4-len(str(row['DECS']))) + str(int(row['DECS'])))
-        
-        magstring = row['vmag='] + str(row['Vmag']) + ' '*(4-len(str(row['Vmag'])))
-        
-        exposurestring = (' '*(4-len(str(int(row['T_exp(sec)'])))) + str(int(row['T_exp(sec)'])) + '/' 
-                            + str(int(row['T_max(sec)'])) + ' '*(4-len(str(int(row['T_max(sec)'])))))
-        
-        countstring = (' '*(3-len(str(int(row['Exp_meter_counts(k)']))))
-                            + str(int(row['Exp_meter_counts(k)'])) + 'k')
-        
-        line = (namestring + ' ' + rastring + ' ' + decstring + ' ' + str(int(row['epoch'])) + ' '
-                    + magstring + ' ' + exposurestring + ' ' + countstring + ' ' + row['decker'] + ' ' + 
-                    str(int(row['N_obs'])) + 'x' + ' ' + ' '*(3-len(row['Iodine'])) + row['Iodine']
-                    + ' ' + row['Priority'] + ' ' + 
-                    row['Program code'] + ' ' + row['Telescope Propsoal Code'])
-        
-        if not pd.isnull(row['Comment']):
-            line += (' ' + str(row['Comment']))
-        
-        lines.append(line)
-
-        #Formatted starlists appear as text files in the directory
-        with open('{}_{}.txt'.format(current_day,condition), 'w') as f:
-            f.write('\n'.join(lines))
-
 def get_alt_az(frame,id_num,time,observatory):
     ra,dec = get_ra_dec(frame,id_num)
     
@@ -372,16 +322,16 @@ def moon_safe(moon,target_tuple):
     else:
         return False
             
-def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag,plot_results):
+def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag,plot_results,outputdir,time_limit):
     
     keck = apl.Observer.at_site('W. M. Keck Observatory')
     for condition in ['nominal']:
 
-        logger.info('Building traveling salesman for condition: {}'.format(condition))
+        logger.info('Building TTP for condition: {}'.format(condition))
         
         #Retrieve the conditions from respective csv's
         #We should consider a system for naming formats as semesters go by
-        file = open('{}_2023B_nominal.csv'.format(instrument), "r")
+        file = open(os.path.join(outputdir,'{}_2023B_nominal.csv'.format(instrument)), "r")
         blocked_targets = list(csv.reader(file, delimiter=","))
         file.close()
         for i in range(len(blocked_targets)):
@@ -392,7 +342,7 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
         ordered_requests = []       
         
         #Plot folder
-        plotpath = '{}_{}_plots'.format(instrument,current_day)
+        plotpath = os.path.join(outputdir,'{}_{}_plots'.format(instrument,current_day))
         
         #The path for each quarter night is computed independently
         for qn in plan[plan['Date'] == current_day].index.tolist(): 
@@ -422,10 +372,10 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
 
             min_az = 5.3
             max_az = 146.2
-            #min_alt = 33.3
-            #else_min_alt = 25
-            min_alt = 40
-            else_min_alt = 40
+            min_alt = 33.3
+            else_min_alt = 25
+            #min_alt = 40
+            #else_min_alt = 40
             max_alt = 90
 
             e_i = []
@@ -473,37 +423,34 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
             start_slots = Time(np.linspace(start.jd,stop.jd,T,endpoint=False),format='jd')
             #Move to middle of slot for coordinates
             shift = (end.jd-start.jd)/(2*T)
-            start_slots += shift
-            logger.info('Calculating Distance Tensor for qn {}'.format(qn))
-            
+            slot_times = start_slots + shift
             coordinate_matrix = []
-            coordinate_matrix.append(np.zeros(len(start_slots)))
+            coordinate_matrix.append([(0,0) for slot in slot_times])
             for i in range(len(nightly_targets)):
                 id_num = nightly_targets[i]
                 ra,dec = get_ra_dec(all_targets_frame,id_num)
                 coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
                 target = apl.FixedTarget(name=id_num, coord=coords)
-                coordinate_matrix.append(keck.altaz(start_slots,target).az.deg)
-            coordinate_matrix.append(np.zeros(len(start_slots)))
+                altaz = keck.altaz(slot_times,target)
+                coordinate_matrix.append([(item.alt.deg,item.az.deg) for item in altaz])
+            coordinate_matrix.append([(0,0) for slot in slot_times])
             coordinate_matrix = np.array(coordinate_matrix)
 
             def distance(targ1,targ2,slot):
-                if targ1 == 0 and targ2 == R-1:
-                    return 0
-                if targ1 == R-1 and targ2 == 0:
-                    return 0
                 if targ1 == 0 or targ1 == R-1:
-                    #return to_wrap_frame(coordinate_matrix[targ2,slot])
                     return 0
                 if targ2 == 0 or targ2 == R-1:
-                    #return to_wrap_frame(coordinate_matrix[targ1,slot])
                     return 0
-                t1 = to_wrap_frame(coordinate_matrix[targ1,slot])
-                t2 = to_wrap_frame(coordinate_matrix[targ2,slot])
+
+                alt1 = coordinate_matrix[targ1,slot][0]
+                alt2 = coordinate_matrix[targ2,slot][0]                             
+                az1 = to_wrap_frame(coordinate_matrix[targ1,slot][1])
+                az2 = to_wrap_frame(coordinate_matrix[targ2,slot][1])
+
 
                 #diff = (t1[0]-t2[0], t1[1]-t2[1])
                 #return math.sqrt(diff[0]*diff[0]+diff[1]*diff[1])
-                return np.abs(t1-t2)
+                return max(np.abs(alt1-alt2),np.abs(az1-az2))
 
             dist = defaultdict(float)
             for i in range(len(start_slots)):
@@ -517,7 +464,7 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
             w.append(np.round((stop - start_slots[0]).jd*24*60,1))
 
             ####Model and Variables####
-            Mod = Model('TDTSP')
+            Mod = Model('TTP')
             Mod.Params.OutputFlag = output_flag
 
             yi = Mod.addVars(range(R),vtype=GRB.BINARY,name='yi')
@@ -552,94 +499,108 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
                              -slew_param *gp.quicksum(dist[(i,j,m)]*xijm[i,j,m] for i in range(R)[:-1] 
                                            for j in range(R)[1:] for m in range(T))
                                 ,GRB.MAXIMIZE)
-            logger.info('Solving TDTSP for qn {}'.format(qn))
-            Mod.params.TimeLimit = 300
-            Mod.params.MIPGap = .0005
+            logger.info('Solving TTP for qn {}'.format(qn))
+            Mod.params.TimeLimit = time_limit
+            Mod.params.MIPGap = 0
             Mod.update()
             Mod.optimize()
+            try:
+                scheduled_targets = []
+                for i in range(R)[1:][:-1]:
+                    if np.round(yi[i].X,0) == 1:
+                        v = ti[i]
+                        scheduled_targets.append((int(v.VarName[3:-1]),int(np.round(v.X))))
 
-            scheduled_targets = []
-            for i in range(R)[1:][:-1]:
-                if np.round(yi[i].X,0) == 1:
-                    v = ti[i]
-                    scheduled_targets.append((int(v.VarName[3:-1]),int(np.round(v.X))))
+                start_times = []
+                unordered_times = []
 
-            start_times = []
-            unordered_times = []
-
-            for i in range(len(scheduled_targets)):
-                unordered_times.append(int(scheduled_targets[i][1]))
-            order = np.argsort(unordered_times)
-            scheduled_targets = [scheduled_targets[i] for i in order]
-            
-
-            if plot_results:
-                logger.info('Plotting qn {}'.format(qn))
-
-                obs_time=[]
-                az_path=[]
-                alt_path=[]
-                names=[]
-                targ_list=[]
-                for pair in scheduled_targets:
-                    targ=pair[0]
-                    time=t[pair[1]]
-                    exp=s_i[targ]
-                    targ_list.append(targ)
-                    names.append(all_targets_frame.loc[ind_to_id[targ],'Starname'])
-                    time1=time-TimeDelta(60*exp,format='sec')
-                    obs_time.append(time1.jd)
-                    obs_time.append(time.jd)
-                    az_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time1,keck)[1])
-                    az_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time,keck)[1])
-                    alt_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time1,keck)[0])
-                    alt_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time,keck)[0])
-                    
-                time_array = []
-                for i in range(len(obs_time)):
-                    if i % 2 == 0:
-                        time_array.append((obs_time[i] - obs_time[0])*1440)
-
-                time_counter = Time(obs_time[0],format='jd')
-                time_strings = []
-                tel_az = []
-                tel_zen = []
-                observed_at_time = []
-                while time_counter.jd < obs_time[-1]:
-                    time_strings.append(time_counter.isot)
-                    ind = np.flatnonzero(time_array <= (time_counter.jd - obs_time[0])*1440)[-1]
-                    req = ind_to_id[targ_list[ind]]
-                    observed_at_time.append(ind)
-                    tel_az.append(get_alt_az(all_targets_frame,req,time_counter,keck)[1] * (np.pi/180))
-                    tel_zen.append(90-get_alt_az(all_targets_frame,req,time_counter,keck)[0])
-                    time_counter += TimeDelta(30,format='sec')
-
-                time_counter = Time(obs_time[0],format='jd')
-                total_azimuth_list = []
-                total_zenith_list = []
-                while time_counter.jd < obs_time[-1]:
-                    azimuth_list = []
-                    zenith_list = []
-                    for targ in targ_list:
-                        azimuth_list.append(get_alt_az(all_targets_frame,ind_to_id[targ],time_counter,keck)[1] * (np.pi/180))
-                        zenith_list.append(90-get_alt_az(all_targets_frame,ind_to_id[targ],time_counter,keck)[0])
-                    total_azimuth_list.append(azimuth_list)
-                    total_zenith_list.append(zenith_list)
-                    time_counter += TimeDelta(30,format='sec')
+                for i in range(len(scheduled_targets)):
+                    unordered_times.append(int(scheduled_targets[i][1]))
+                order = np.argsort(unordered_times)
+                scheduled_targets = [scheduled_targets[i] for i in order]
                 
-                plotting.plot_path_2D(obs_time,az_path,alt_path,names,targ_list,
-                                    plotpath,current_day,int(plan.loc[qn,'stop']*4))
-                plotting.animate_telescope(time_strings,total_azimuth_list,total_zenith_list,
-                                        tel_az,tel_zen,observed_at_time,plotpath,int(plan.loc[qn,'stop']*4))
-            
-            for pair in scheduled_targets:
-                ordered_requests.append(ind_to_id[pair[0]])
+
+                if plot_results:
+                    logger.info('Plotting qn {}'.format(qn))
+
+                    obs_time=[]
+                    az_path=[]
+                    alt_path=[]
+                    names=[]
+                    targ_list=[]
+                    for pair in scheduled_targets:
+                        targ=pair[0]
+                        time=t[pair[1]]
+                        exp=s_i[targ]
+                        targ_list.append(targ)
+                        names.append(all_targets_frame.loc[ind_to_id[targ],'Starname'])
+                        time1=time-TimeDelta(60*exp,format='sec')
+                        obs_time.append(time1.jd)
+                        obs_time.append(time.jd)
+                        az_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time1,keck)[1])
+                        az_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time,keck)[1])
+                        alt_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time1,keck)[0])
+                        alt_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time,keck)[0])
+                        
+                    time_array = []
+                    for i in range(len(obs_time)):
+                        if i % 2 == 0:
+                            time_array.append((obs_time[i] - obs_time[0])*1440)
+
+                    start = Time(obs_time[0],format='jd')
+                    stop = Time(obs_time[-1],format='jd')
+                    step = TimeDelta(2,format='sec')
+                    t = np.arange(start.jd,stop.jd,step.jd)
+                    t = Time(t,format='jd')
+                            
+                    time_counter = Time(obs_time[0],format='jd')
+                    time_strings = t.isot
+                    observed_at_time = []
+                    tel_targs = []
+                    while time_counter.jd < obs_time[-1]:
+                        ind = np.flatnonzero(time_array <= (time_counter.jd - obs_time[0])*1440)[-1]
+                        req = ind_to_id[targ_list[ind]]
+                        observed_at_time.append(ind)
+                        ra,dec = get_ra_dec(all_targets_frame,req)
+                        coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
+                        target = apl.FixedTarget(name=targ, coord=coords)
+                        tel_targs.append(target)
+                        time_counter += TimeDelta(2,format='sec')
+
+                    AZ1 = keck.altaz(t, tel_targs, grid_times_targets=False)
+                    tel_az = np.round(AZ1.az.rad,2)
+                    tel_zen = 90 - np.round(AZ1.alt.deg,2)
+                    target_list = []
+                    for targ in targ_list:
+                        ra,dec = get_ra_dec(all_targets_frame,ind_to_id[targ])
+                        coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
+                        target = apl.FixedTarget(name=targ, coord=coords)
+                        target_list.append(target)
+                        
+                    AZ = keck.altaz(t, target_list, grid_times_targets=True)
+
+                    total_azimuth_list = []
+                    total_zenith_list = []
+
+                    for i in range(len(AZ[0])):
+                        total_azimuth_list.append(np.round(AZ[:,i].az.rad,2))
+                        total_zenith_list.append(90-np.round(AZ[:,i].alt.deg,2))
+                    
+                    plotting.plot_path_2D(obs_time,az_path,alt_path,names,targ_list,
+                                        plotpath,current_day,int(plan.loc[qn,'stop']*4))
+                    plotting.animate_telescope(time_strings,total_azimuth_list,total_zenith_list,
+                                            tel_az,tel_zen,observed_at_time,plotpath,int(plan.loc[qn,'stop']*4))
+                
+                for pair in scheduled_targets:
+                    ordered_requests.append(ind_to_id[pair[0]])
+            except:
+                logger.critical('No incumbent solution for qn {}, omitting from script. Try increasing time_limit parameter.')
 
         #Turn all the nights targets into starlists   
-        formatting.write_starlist(instrument,all_targets_frame,ordered_requests,condition,current_day)
+        formatting.write_starlist(instrument,all_targets_frame,ordered_requests,condition,current_day,outputdir)
 
 def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights,marked_scripts,schedule_dates,output_flag,
-                                                                                    equalize_programs,plot_results):
+                                                                            equalize_programs,plot_results,outputdir,time_limit):
 
     if len(schedule_dates) == 1:
         high_production_mode = False
@@ -804,23 +765,32 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
             lb = 0.95
             ub = 1.0
             mag_lim = np.inf
-            outpfile = '{}_2023B_nominal.csv'.format(instrument)
+            outpfile = os.path.join(outputdir,'{}_2023B_nominal.csv'.format(instrument))
         if condition_type == 'weathered':
             lb = 0.6
             ub = 0.8
             mag_lim = 12
-            outpfile = '{}_2023B_weathered.csv'.format(instrument)
+            outpfile = os.path.join(outputdir,'{}_2023B_weathered.csv'.format(instrument))
         if condition_type == 'poor':
             lb = 0.3
             ub = 0.5
             mag_lim = 11
-            outpfile = '{}_2023B_poor.csv'.format(instrument)
+            outpfile = os.path.join(outputdir,'{}_2023B_poor.csv'.format(instrument))
         fill_above = m.addConstrs((gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration'] 
                             for r in target_ids) >= lb * interval_dict[t] for t in fill_slots)
                                 ,'constr_fill_above')
         fill_below = m.addConstrs((gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration'] 
                             for r in target_ids) <= ub * interval_dict[t] for t in fill_slots)
                                 ,'constr_fill_below')
+        
+        #These alternate fill constraints will fill fill the total interval duration, not each one individually. Useful
+        #if a single quarter night is struggling to get filled
+        #fill_above = m.addConstr((gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration'] 
+        #                    for r in target_ids for t in fill_slots) >= lb * sum(interval_dict[t] for t in fill_slots))
+        #                        ,'constr_fill_above')
+        #fill_below = m.addConstr((gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration'] 
+        #                    for r in target_ids for t in fill_slots) <= ub * sum(interval_dict[t] for t in fill_slots))
+        #                        ,'constr_fill_below')
         
         #Magnitude limitation can be turned on using this code
         #for r in all_targets_frame[all_targets_frame['Vmag'] > mag_lim].index.values:
@@ -911,8 +881,8 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
                     - cadence_scalar * gp.quicksum(Drdt[r,dt] * dt * 1/(Nobs[r]) for r in cadenced_obs for dt in dtdict.keys())
                     , GRB.MAXIMIZE)
 
-        #Optimization almost always complete or plateaued within 6 minutes
-        m.Params.TimeLimit = 300
+        #Optimization almost always complete or plateaued within 5 minutes
+        m.Params.TimeLimit = time_limit
         m.update()
         m.optimize()
 
@@ -978,10 +948,10 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
                 logger.info('Plotting Program CDFs')
                 if high_production_mode == True:
                     for day in schedule_dates[1:]:
-                        plotpath = '{}_{}_plots'.format(instrument,day)
+                        plotpath = os.path.join(outputdir,'{}_{}_plots'.format(instrument,day))
                         if not os.path.isdir(plotpath):
                             os.mkdir(plotpath)
-                plotpath = '{}_{}_plots'.format(instrument,current_day)
+                plotpath = os.path.join(outputdir,'{}_{}_plots'.format(instrument,current_day))
                 if not os.path.isdir(plotpath):
                     os.mkdir(plotpath)
                 plotting.plot_program_cdf(plan,program_dict,targets_observed,Nobs,plotpath,current_day)
@@ -1003,6 +973,6 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
     
     if high_production_mode == True:
         for date_to_schedule in schedule_dates:
-            salesman_scheduler(instrument,all_targets_frame,plan,date_to_schedule,output_flag,plot_results)
+            salesman_scheduler(instrument,all_targets_frame,plan,date_to_schedule,output_flag,plot_results,outputdir,time_limit)
     if high_production_mode == False:
-        salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag,plot_results)
+        salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag,plot_results,outputdir,time_limit)
