@@ -1,0 +1,15 @@
+x         T005961 23 16 51.9 +05 41 45 2000 jmag=7.9   300/300  1of2 sc=y 1x gmag=9.9  Teff=3900 Gaia DR3 2664042942398600064 FD p1 N461 Observe 2x per night, separate by 3hr
+x         T005530 00 25 57.2 -05 41 49 2000 jmag=10.2  900/900  1of2 sc=y 1x gmag=12.3 Teff=3900 Gaia DR3 2431638070123733120 FD p1 N461 Observe 2x per night, separate by 3hr
+x         T001749 18 50 57.1 +64 25 09 2000 jmag=11.1  720/720  1of2 sc=y 1x gmag=13.2 Teff=3923 Gaia DR3 2253774094189458432 HK p1 C351 M dwarf with three small planets, TTVs measured with Palomar (PI Mike Greklek-McKeon), everynight
+x         T006324 22 03 22.7 +67 29 55 2000 jmag=9.4   900/900  2of2 sc=y 1x gmag=12.2 Teff=3300 Gaia DR3 2220012421430629632 FD p1 N461 Observe 2x per night         
+x       HIP117249 23 46 29.0 +81 22 41 2000 jmag=7.3   120/120  1of1 sc=y 1x gmag=7.8  Teff=7665 Gaia DR3 2286390900469275136 JW p2 H391 TOI-6246
+x         T006324 22 03 22.7 +67 29 55 2000 jmag=9.4   900/900  1of2 sc=y 1x gmag=12.2 Teff=3300 Gaia DR3 2220012421430629632 FD p1 N461 Observe 2x per night
+x         T001749 18 50 57.1 +64 25 09 2000 jmag=11.1  720/720  2of3 sc=y 1x gmag=13.2 Teff=3923 Gaia DR3 2253774094189458432 HK p1 C351 M dwarf with three small planets, TTVs measured with Palomar (PI Mike Greklek-McKeon), everynight
+x          K00148 19 56 33.4 +40 56 56 2000 jmag=11.7  900/900  1of1 sc=y 1x gmag=13.1 Teff=5118 Gaia DR3 2075112109039378688 EP p1 U012 Kepler-48, observe every night we are on the telescope until mid-dec
+xxxxxxx            4614 00 49 06.3 +57 48 54 2000 jmag=2.4    12/12   1of1 sc=y 5x gmag=3.3  Teff=5880 GaiaDR3 425040000962559616  AH p1 C39899  #TWILIGHT
+         T005530 00 25 57.2 -05 41 49 2000 jmag=10.2  900/900  2of2 sc=y 1x gmag=12.3 Teff=3900 Gaia DR3 2431638070123733120 FD p1 N461 Observe 2x per night, separate by 3hr         
+            4628 00 48 23.0 +05 16 50 2000 jmag=4.4    36/36   1of1 sc=y 2x gmag=5.5  Teff=4960 GaiaDR3 2552925644460225152 AH p1 C398
+         T005961 23 16 51.9 +05 41 45 2000 jmag=7.9   300/300  2of2 sc=y 1x gmag=9.9  Teff=3900 Gaia DR3 2664042942398600064 FD p1 N461 Observe 2x per night, separate by 3hr
+            4628 00 48 24.2 +05 16 23 2000 jmag=4.4    45/45   1of1 sc=y 3x gmag=5.5  Teff=4943 Gaia DR3 2552925644460225152  TW p3 T999  #TWILIGHT IF SOUTH
+           10700 01 44 01.3 -15 55 55 2000 jmag=3.5    30/30   1of1 sc=y 3x gmag=3.3  Teff=4943 Gaia DR3 2452378776434477184  TW p3 T999  #TWILIGHT IF SOUTH
+            9407 01 34 31.6 +68 56 56 2000 jmag=5.2   300/300  1of1 sc=y 1x gmag=6.4  Teff=5560 Gaia DR3 532057254394731776   TW p3 T999  #TWILIGHT
