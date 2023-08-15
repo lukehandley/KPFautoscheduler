@@ -594,7 +594,7 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
                 for pair in scheduled_targets:
                     ordered_requests.append(ind_to_id[pair[0]])
             except:
-                logger.critical('No incumbent solution for qn {}, omitting from script. Try increasing time_limit parameter.')
+                logger.critical('No incumbent solution for qn {}, omitting from script. Try increasing time_limit parameter.'.format(qn))
 
         #Turn all the nights targets into starlists   
         formatting.write_starlist(instrument,all_targets_frame,ordered_requests,condition,current_day,outputdir)
@@ -888,17 +888,18 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
 
         #Often, for good conditions, with our hard cadence cap it may not be easy to schedule a full night
         while m.Status == GRB.INFEASIBLE:
-            #Remove the constraint so it can be redone
-            m.remove(constr_min_slotsep)
             relax_coeff -= 0.1
-            constr_min_slotsep = m.addConstrs((Drdt[r,dt] == 0 for r in cadenced_obs for dt in dtdict.keys() 
-                                        if dt < relaxed_minimum(min_separations[r],relax_coeff)), 'constr_min_slot_sep')
-
             #It's possible the solve issue isn't with our fill constraints
             #If so, this allows us to view our limiting constraints that break the model
             if relax_coeff <= 0:
                 logger.error('Issue with solve for condition {}. Proceeding to IIS computation'.format(condition_type))
                 break
+            
+            #Remove the constraint so it can be redone
+            m.remove(constr_min_slotsep)
+            constr_min_slotsep = m.addConstrs((Drdt[r,dt] == 0 for r in cadenced_obs for dt in dtdict.keys() 
+                                        if dt < relaxed_minimum(min_separations[r],relax_coeff)), 'constr_min_slot_sep')
+
             m.update()
             m.optimize()
         
