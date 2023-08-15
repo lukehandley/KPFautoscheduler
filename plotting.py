@@ -116,6 +116,8 @@ def plot_program_cdf(plan,program_dict,targets_observed,Nobs,outputdir,current_d
 
     fig,axs = plt.subplots(1)
     fig.patch.set_alpha(1)
+    colors = plt.cm.rainbow(np.linspace(0, 1, len(program_dict.keys())))
+    i = 0
     for program in program_dict.keys():
         tot_obs = sum(Nobs[r] for r in program_dict[program])
         starting_date = plan.loc[0,'Date']
@@ -130,7 +132,8 @@ def plot_program_cdf(plan,program_dict,targets_observed,Nobs,outputdir,current_d
                         targets.append(targ)
             x.append((Time(date,format='iso') - Time(starting_date,format='iso')).jd)
             y.append((len(targets)/tot_obs)*100)
-        plt.plot(x,y,label=program)
+        plt.plot(x,y,label=program,color=colors[i])
+        i += 1
     axs.vlines((Time(current_day,format='iso') - Time(starting_date,format='iso')).jd,0,100,color='black',linestyles='dashed')
     axs.set_xticks([0,50,100,150,185])
     axs.set_ylim(-5,105)
