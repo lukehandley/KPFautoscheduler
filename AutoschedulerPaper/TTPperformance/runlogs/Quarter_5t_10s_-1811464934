@@ -1,0 +1,47 @@
+
+Gurobi 9.5.1 (win64) logging started Sun Jul 23 20:13:21 2023
+
+Set parameter LogFile to value "TTPperformance/runlogs/Quarter_5t_10s_-1811464934"
+Gurobi Optimizer version 9.5.1 build v9.5.1rc2 (win64)
+Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
+Optimize a model with 1379 rows, 995 columns and 4495 nonzeros
+Model fingerprint: 0x94073d1a
+Variable types: 498 continuous, 497 integer (497 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 1e+02]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Presolve removed 839 rows and 591 columns
+Presolve time: 0.06s
+Presolved: 540 rows, 404 columns, 3900 nonzeros
+Variable types: 204 continuous, 200 integer (200 binary)
+
+Root relaxation: objective 1.497625e+00, 307 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    1.49763    0   19          -    1.49763      -     -    0s
+     0     0    3.83911    0   10          -    3.83911      -     -    0s
+     0     0    3.89827    0   13          -    3.89827      -     -    0s
+H    0     0                       4.7000000    4.07645  13.3%     -    0s
+H    0     0                       4.4100000    4.07645  7.56%     -    0s
+     0     0    4.07645    0   24    4.41000    4.07645  7.56%     -    0s
+     0     0    4.08885    0   23    4.41000    4.08885  7.28%     -    0s
+     0     0    4.09213    0   20    4.41000    4.09213  7.21%     -    0s
+     0     0    4.18247    0   21    4.41000    4.18247  5.16%     -    0s
+
+Cutting planes:
+  Gomory: 2
+  Cover: 2
+  MIR: 4
+  Flow cover: 10
+
+Explored 1 nodes (501 simplex iterations) in 0.25 seconds (0.08 work units)
+Thread count was 12 (of 12 available processors)
+
+Solution count 2: 4.41 4.7 
+
+Optimal solution found (tolerance 0.00e+00)
+Best objective 4.410000000000e+00, best bound 4.410000000000e+00, gap 0.0000%

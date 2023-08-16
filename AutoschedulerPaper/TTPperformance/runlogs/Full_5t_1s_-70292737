@@ -1,0 +1,33 @@
+
+Gurobi 9.5.1 (win64) logging started Sun Jul 23 22:26:35 2023
+
+Set parameter LogFile to value "TTPperformance/runlogs/Full_5t_1s_-70292737"
+Gurobi Optimizer version 9.5.1 build v9.5.1rc2 (win64)
+Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
+Optimize a model with 173 rows, 113 columns and 445 nonzeros
+Model fingerprint: 0xfbcf6aff
+Variable types: 57 continuous, 56 integer (56 binary)
+Coefficient statistics:
+  Matrix range     [8e-02, 5e+02]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Presolve removed 121 rows and 63 columns
+Presolve time: 0.00s
+Presolved: 52 rows, 50 columns, 204 nonzeros
+Variable types: 27 continuous, 23 integer (23 binary)
+
+Root relaxation: objective 4.178906e+00, 60 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 infeasible    0               - infeasible      -     -    0s
+
+Explored 1 nodes (91 simplex iterations) in 0.04 seconds (0.00 work units)
+Thread count was 12 (of 12 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -

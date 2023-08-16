@@ -1,0 +1,62 @@
+
+Gurobi 9.5.1 (win64) logging started Sun Jul 23 21:42:31 2023
+
+Set parameter LogFile to value "TTPperformance/runlogs/Half_5t_10s_1842150225"
+Gurobi Optimizer version 9.5.1 build v9.5.1rc2 (win64)
+Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
+Optimize a model with 1379 rows, 995 columns and 4495 nonzeros
+Model fingerprint: 0x6dccfb51
+Variable types: 498 continuous, 497 integer (497 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 3e+02]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Presolve removed 800 rows and 544 columns
+Presolve time: 0.04s
+Presolved: 579 rows, 451 columns, 4257 nonzeros
+Variable types: 228 continuous, 223 integer (223 binary)
+
+Root relaxation: objective 9.003840e-01, 320 iterations, 0.02 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.90038    0   19          -    0.90038      -     -    0s
+     0     0    3.86961    0   17          -    3.86961      -     -    0s
+     0     0    4.17585    0   21          -    4.17585      -     -    0s
+     0     0    4.20754    0   19          -    4.20754      -     -    0s
+     0     0    4.38687    0   21          -    4.38687      -     -    0s
+     0     0    4.40075    0   17          -    4.40075      -     -    0s
+     0     0    4.40317    0   19          -    4.40317      -     -    0s
+     0     0    4.40342    0   19          -    4.40342      -     -    0s
+     0     0    4.46317    0   18          -    4.46317      -     -    0s
+     0     0    4.46834    0   22          -    4.46834      -     -    0s
+     0     0    4.47043    0   21          -    4.47043      -     -    0s
+     0     0    4.47090    0   21          -    4.47090      -     -    0s
+     0     0    4.48010    0   21          -    4.48010      -     -    0s
+     0     0    4.48255    0   24          -    4.48255      -     -    0s
+     0     0    4.48262    0   25          -    4.48262      -     -    0s
+     0     0    4.51714    0   27          -    4.51714      -     -    0s
+     0     0    4.51714    0   27          -    4.51714      -     -    0s
+     0     2    4.52085    0   27          -    4.52085      -     -    0s
+*  349   120              12       6.7500000    4.80332  28.8%  16.7    0s
+H  416   104                       6.6400000    4.80462  27.6%  16.5    0s
+*  906    56              21       6.4500000    5.77612  10.4%  13.7    0s
+
+Cutting planes:
+  Gomory: 3
+  Cover: 4
+  MIR: 31
+  Flow cover: 21
+  GUB cover: 1
+  Inf proof: 8
+  Relax-and-lift: 7
+
+Explored 995 nodes (13731 simplex iterations) in 0.57 seconds (0.41 work units)
+Thread count was 12 (of 12 available processors)
+
+Solution count 3: 6.45 6.64 6.75 
+
+Optimal solution found (tolerance 0.00e+00)
+Best objective 6.450000000000e+00, best bound 6.450000000000e+00, gap 0.0000%

@@ -1,0 +1,48 @@
+
+Gurobi 9.5.1 (win64) logging started Thu Jul 20 16:27:29 2023
+
+Set parameter LogFile to value "TTPperformance/runlogs/Quarter_20t_1s_-687982578"
+Gurobi Optimizer version 9.5.1 build v9.5.1rc2 (win64)
+Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
+Optimize a model with 1538 rows, 1013 columns and 5005 nonzeros
+Model fingerprint: 0xd6fe380e
+Variable types: 507 continuous, 506 integer (506 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+02]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Presolve removed 696 rows and 173 columns
+Presolve time: 0.05s
+Presolved: 842 rows, 840 columns, 6413 nonzeros
+Variable types: 420 continuous, 420 integer (420 binary)
+
+Root relaxation: objective 5.560620e+00, 580 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    5.56062    0   33          -    5.56062      -     -    0s
+H    0     0                      19.5700000    5.56062  71.6%     -    0s
+H    0     0                      16.2800000    6.68000  59.0%     -    0s
+     0     0    6.68000    0   24   16.28000    6.68000  59.0%     -    0s
+H    0     0                       7.8900000    6.68000  15.3%     -    0s
+     0     0    6.68518    0   39    7.89000    6.68518  15.3%     -    0s
+     0     0    6.68518    0   36    7.89000    6.68518  15.3%     -    0s
+H    0     0                       7.7000000    6.68518  13.2%     -    0s
+     0     0    6.72200    0   44    7.70000    6.72200  12.7%     -    0s
+
+Cutting planes:
+  Gomory: 12
+  Implied bound: 1
+  MIR: 11
+  Flow cover: 16
+  RLT: 3
+
+Explored 1 nodes (1474 simplex iterations) in 0.34 seconds (0.10 work units)
+Thread count was 12 (of 12 available processors)
+
+Solution count 4: 7.7 7.89 16.28 19.57 
+
+Optimal solution found (tolerance 0.00e+00)
+Best objective 7.700000000000e+00, best bound 6.730000000000e+00, gap 12.5974%

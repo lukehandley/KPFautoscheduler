@@ -1,0 +1,10 @@
+,Duration,NumberTargets,NumberSlots,NumberScheduled,RealSlewTime(min),RealMedianSlew(sec),TauSlewTime(min),TauMedianSlew(sec),LogFile
+0,Quarter,5,1,5,8.497499999999999,102.505,5.3,64.19999999999999,TTPperformance/runlogs/Quarter_5t_1s_99209885
+1,Quarter,5,5,5,8.642500000000002,104.91,4.65,60.900000000000006,TTPperformance/runlogs/Quarter_5t_5s_265852851
+2,Quarter,5,10,5,8.643166666666668,104.91,4.91,65.1,TTPperformance/runlogs/Quarter_5t_10s_577208850
+3,Half,5,1,5,3.7376666666666667,65.025,3.5,57.6,TTPperformance/runlogs/Half_5t_1s_-1334716181
+4,Half,5,5,5,3.799,66.58500000000001,3.55,61.5,TTPperformance/runlogs/Half_5t_5s_417890580
+5,Half,5,10,5,3.7376666666666667,65.025,3.6799999999999997,63.89999999999999,TTPperformance/runlogs/Half_5t_10s_-1261306510
+6,Full,5,1,5,2.730166666666667,30.115,6.69,108.30000000000001,TTPperformance/runlogs/Full_5t_1s_1869054230
+7,Full,5,5,5,2.7263333333333333,30.055,2.27,28.8,TTPperformance/runlogs/Full_5t_5s_1704681744
+8,Full,5,10,5,2.726666666666667,30.055,2.4899999999999998,29.4,TTPperformance/runlogs/Full_5t_10s_908472414

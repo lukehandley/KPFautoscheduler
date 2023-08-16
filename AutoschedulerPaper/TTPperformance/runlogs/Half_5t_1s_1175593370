@@ -1,0 +1,48 @@
+
+Gurobi 9.5.1 (win64) logging started Mon Jul 24 08:17:38 2023
+
+Set parameter LogFile to value "TTPperformance/runlogs/Half_5t_1s_1175593370"
+Gurobi Optimizer version 9.5.1 build v9.5.1rc2 (win64)
+Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
+Optimize a model with 173 rows, 113 columns and 445 nonzeros
+Model fingerprint: 0x4612219a
+Variable types: 57 continuous, 56 integer (56 binary)
+Coefficient statistics:
+  Matrix range     [2e-01, 3e+02]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Presolve removed 114 rows and 56 columns
+Presolve time: 0.00s
+Presolved: 59 rows, 57 columns, 228 nonzeros
+Variable types: 29 continuous, 28 integer (28 binary)
+Found heuristic solution: objective 8.6300000
+Found heuristic solution: objective 7.6400000
+
+Root relaxation: objective 3.126052e+00, 47 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    3.12605    0   11    7.64000    3.12605  59.1%     -    0s
+H    0     0                       7.5900000    3.12605  58.8%     -    0s
+H    0     0                       7.4500000    5.47158  26.6%     -    0s
+     0     0    5.58309    0   17    7.45000    5.58309  25.1%     -    0s
+     0     0    6.60996    0   17    7.45000    6.60996  11.3%     -    0s
+
+Cutting planes:
+  Gomory: 4
+  Cover: 3
+  Implied bound: 1
+  MIR: 6
+  Flow cover: 7
+  RLT: 3
+  Relax-and-lift: 2
+
+Explored 1 nodes (78 simplex iterations) in 0.09 seconds (0.00 work units)
+Thread count was 12 (of 12 available processors)
+
+Solution count 4: 7.45 7.59 7.64 8.63 
+
+Optimal solution found (tolerance 0.00e+00)
+Best objective 7.450000000000e+00, best bound 7.450000000000e+00, gap 0.0000%
