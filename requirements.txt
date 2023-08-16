@@ -1,9 +1,9 @@
-python==3.9.4
-gurobipy==9.5.1
+gurobipy==10.0.0
 pandas==1.4.1
 numpy==1.22.1
-matplotlib==3.5.1
+matplotlib==3.7.2
 astropy==5.0.1
 astroplan==0.8
+imageio==2.24.0
 ipykernel==6.9.1
 jupyter_client==7.1.2
