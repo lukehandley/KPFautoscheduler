@@ -10,6 +10,10 @@ from astropy.time import TimeDelta
 import astropy.units as u
 import pandas as pd
 import math
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 def plot_path_2D(obs_time,az_path,alt_path,names,targ_list,outputdir,current_day,quarter):
 
@@ -58,52 +62,62 @@ def plot_path_2D(obs_time,az_path,alt_path,names,targ_list,outputdir,current_day
     plt.close()
 
 def animate_telescope(time_strings,total_azimuth_list,total_zenith_list,tel_az,tel_zen,
-                      observed_at_time,outputdir,quarter):
+                      observed_at_time,plotpath,quarter):
            
     theta = np.arange(5.3/180, 146.2/180, 1./180)*np.pi
     total_azimuth_list = np.array(total_azimuth_list)
-    total_zenith_list = np.array(total_zenith_list)    
+    total_zenith_list = np.array(total_zenith_list)
+    tel_ims_dir = os.path.join(plotpath,'tel_ims')
+    if not os.path.isdir(tel_ims_dir):
+        os.mkdir(tel_ims_dir)
     
     filenames = []
     for i in range(len(time_strings)):
-        fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
-        ax.set_ylim(0,70)
-        ax.set_title(time_strings[i])
-        ax.set_yticklabels([])
-        ax.fill_between(theta,56.7,70,color = 'red',alpha=.7)
-        #ax.fill_between(np.arange(0,2,1/180)*np.pi,50,70,color= 'red',alpha=.4)
-        ax.set_theta_zero_location('N')
-        observed_list = observed_at_time[:i]
-        for j in set(observed_list):
-            ax.scatter(total_azimuth_list[i][j],total_zenith_list[i][j],color='orange',marker='*')
-        for j in set(observed_at_time):
-            if j not in set(observed_list):
-                ax.scatter(total_azimuth_list[i][j],total_zenith_list[i][j],color='white',marker='*')
-        ax.plot(tel_az[:i],tel_zen[:i],color='orange')
-        ax.set_facecolor('black')
+        if i % 60 == 0:
+            fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
+            ax.set_ylim(0,70)
+            ax.set_title(time_strings[i])
+            ax.set_yticklabels([])
+            ax.fill_between(theta,56.7,70,color = 'red',alpha=.7)
+            #ax.fill_between(np.arange(0,2,1/180)*np.pi,50,70,color= 'red',alpha=.4)
+            ax.set_theta_zero_location('N')
+            observed_list = observed_at_time[:i]
+            for j in set(observed_list):
+                ax.scatter(total_azimuth_list[i][j],total_zenith_list[i][j],color='orange',marker='*')
+            for j in set(observed_at_time):
+                if j not in set(observed_list):
+                    ax.scatter(total_azimuth_list[i][j],total_zenith_list[i][j],color='white',marker='*')
+            ax.plot(tel_az[:i],tel_zen[:i],color='orange')
+            ax.set_facecolor('black')
 
-        # create file name and append it to a list
-        filename = f'{i}.png'
-        filenames.append(filename)
+            # create file name and append it to a list
+            filename = f'{i}.png'
+            filenames.append(filename)
 
-        # save frame
-        plt.savefig(os.path.join(outputdir,filename),dpi=100)
-        plt.close()
+            # save frame
+            plt.savefig(os.path.join(tel_ims_dir,filename),dpi=100)
+            plt.close()
 
     # build gif
-    with imageio.get_writer(os.path.join(outputdir,'Animation_Quarter_{}.gif'.format(quarter)), mode='I') as writer:
+    with imageio.get_writer(os.path.join(plotpath,'Animation_Quarter_{}.gif'.format(quarter)), mode='I') as writer:
         for filename in filenames:
-            image = imageio.imread(os.path.join(outputdir,filename))
+            image = imageio.imread(os.path.join(tel_ims_dir,filename))
             writer.append_data(image)
 
     # Remove files
     for filename in set(filenames):
-        os.remove(os.path.join(outputdir,filename))
+        os.remove(os.path.join(tel_ims_dir,filename))
+    try:
+        os.remove(tel_ims_dir)
+    except:
+        logger.debug('Cannot remove redundant tel_ims directory due to file permissions')
 
 def plot_program_cdf(plan,program_dict,targets_observed,Nobs,outputdir,current_day):
 
     fig,axs = plt.subplots(1)
     fig.patch.set_alpha(1)
+    colors = plt.cm.rainbow(np.linspace(0, 1, len(program_dict.keys())))
+    i = 0
     for program in program_dict.keys():
         tot_obs = sum(Nobs[r] for r in program_dict[program])
         starting_date = plan.loc[0,'Date']
@@ -118,7 +132,8 @@ def plot_program_cdf(plan,program_dict,targets_observed,Nobs,outputdir,current_d
                         targets.append(targ)
             x.append((Time(date,format='iso') - Time(starting_date,format='iso')).jd)
             y.append((len(targets)/tot_obs)*100)
-        plt.plot(x,y,label=program)
+        plt.plot(x,y,label=program,color=colors[i])
+        i += 1
     axs.vlines((Time(current_day,format='iso') - Time(starting_date,format='iso')).jd,0,100,color='black',linestyles='dashed')
     axs.set_xticks([0,50,100,150,185])
     axs.set_ylim(-5,105)

@@ -28,7 +28,11 @@ You can install everything at once with pip using:
 pip install -r requirements.txt
 ```
  
-On Conda installing gurobipy will require first setting up the channel, then installing using:
+For Conda users, start by setting up a new environment in python 3.9:
+```
+conda create -n kpfauto python=3.9
+```
+Installing gurobipy will require first setting up the channel, then installing using:
 ```
 conda config --add channels https://conda.anaconda.org/gurobi
 ```
@@ -38,18 +42,27 @@ conda install -c gurobi gurobi
 Note that some external files may be downloaded while installing system requirements (i.e. ephemerides for the astroplan module)
 
 ### Using the scheduler
-Custom gurobi tutorials are included in /tutorials. A reduced form of the semester data (for easy tinkering) also lives here.
+Custom gurobi tutorials are included in /tutorials. A reduced form of the HIRES semester data in 2023A (for easy tinkering) also lives here.
 
 View the available commands with:
 ```
 python scheduler.py -h
 ```
 
-You can run the scheduler with example data for the 2023A semester (valid through 2023-07-29). These are set as the default parameters, so to generate a 
-schedule for an allocated night on HIRES (simulating the given date and onwards), run:
+You can run the scheduler with data for the 2023B semester. These are set as the default parameters, so to generate a schedule for an allocated night on HIRES or KPF (simulating the given date and onwards), run:
 ```
-python scheduler.py -d 'YYYY-MM-DD'
+python scheduler.py -i 'INSTRUMENT' -d 'YYYY-MM-DD'
 ```
+Where INSTRUMENT is replaced by HIRES or KPF. The proper data directories will be automatically selected.
+
+To initiate the 'high production mode' and generate fully formatted schedules for a sequence of nights, set the date parameter multiple times 
+to append them all.
+```
+python scheduler.py -i 'INSTRUMENT' -d 'YYYY-MM-DD' -d 'YYYY-MM-DD'
+```
+And so on until every date is listed. Be sure to check there are no gaps between these dates (in the CPS observing schedule, they need not 
+be consecutive dates in the year).
+
 
 To initiate the 'high production mode' and generate fully formatted schedules for a sequence of consecutive nights, set the date parameter multiple times 
 to append them all.
@@ -82,16 +95,12 @@ to construct a mathematical formulation of the scheduling problem. This problem 
 using a third party solver (Gurobi) in real time.
 
 This framework adapts throughout the semester based upon current progress. Completed observations are read from *marked_scripts*, and the
-scheduler will construct an optimal semester plan moving forward. It generates three potential plans for the possibility of different weather conditions
-(nominal, weathered, poor) in the upcoming night for observers to swap between at their convenience. 
+scheduler will construct an optimal semester plan moving forward. It generates three potential plans for the possibility of different weather conditions (nominal, weathered, poor) in the upcoming night for observers to swap between at their convenience. 
 
-Targets are binned into discretized quarter nights, and those from the next upcoming night are run through an additional optimization. The scheduler
-solves a complex formulation of the traveling salesman problem to minimize the slews for the next night. The ordered list is then automatically formatted
-into scripts.
+Targets are binned into discretized quarter nights, and those from the next upcoming night are run through an additional optimization. The scheduler solves a complex formulation of the traveling salesman problem to minimize the slews for the next night. The ordered list is then automatically formatted into scripts.
 
 #### Outputs
-* A csv is created for each weather condition for *current_day* and saved to the current directory for inspection. Each row represents a quarter night
-slot, and listed values are the assigned request numbers (indeces in *observers_sheet*) to that quarter night. These are purely for inspection/debugging.
+* A csv is created for each weather condition for *current_day* and saved to the current directory for inspection. Each row represents a quarter night slot, and listed values are the assigned request numbers (indeces in *observers_sheet*) to that quarter night. These are purely for inspection/debugging.
 * A text file for *current_day* from each of the semester schedules formatted as a starlist using the column values from *observers_sheet*.
 
 Note that *current_day* is the allocated night you are planning for and must exist in *allocated_nights*
@@ -123,7 +132,7 @@ The process for updating data for each new day:
   generally discouraged as it can reduce total scheduled observations
 
 * Script Processing
-  * Reads and understands current semester progress, then reacts with optimality
+  * Reads and understands current semester progress, then sources a new optimal schedule for the remaining dates
 
 
 

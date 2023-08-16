@@ -1,0 +1,26 @@
+x         hr5107 13 34 41.6 -00 35 45 2000  vmag=3.37   2500  250k B5 1x  in p2 BS T999 Start in North Wrap at 1252 UT. LST twi, mid, dawn  08 17  12 52  18 12  Moon 1643-2557
+x         119130 13 41 30.3 -09 56 46 2000 vmag=9.9   316500  125k B5 1x  in p1 WW U156 everynight, HD 119130. Water world candidate
+x   TIC425914815 18 49 14.1 +33 58 03 2000 vmag=13.6  510810   10k C2 1x out p2 LB C253
+x    TIC28772706 18 52 13.7 +34 25 27 2000 vmag=14.2  9301230  10k C2 1x out p2 LB C253
+x         K00975 19 09 26.8 +38 42 50 2000 vmag=8.2   135500  250k B5 1x  in p1 WW U156 everynight, Kepler-21. Water world candidate. Note nearby companions sep=0.7, deltaK=4mag, and sep=1.1, deltaK=9mag. U156 target list add-on
+x        GJ9522A 15 31 47.2 +47 03 24 2000 vmag=10.5  264350   60k C2 1x  in p1 WW U156 everynight,  TOI-1411. Water worldsuper-Mercury candidate. Slightly active host. Multiple exposures per night are okay when possible (should be spaced by ~3 hrs or more)
+x       HIP73136 14 56 48.4 +74 54 03 2000 vmag=6.8   38500   250k B5 3x  in p2 MH 8UMi
+x         118203 13 34 02.3 +53 43 41 2000 vmag=8.1   116500  250k B5 1x  in p1 JW 
+        T001272 13 16 47.1 +49 51 39 2000 vmag=11.9  9392700  60k C2 1x  in p2 DG U008
+x   TIC307958020 17 07 22.3 +62 28 32 2000 vmag=9.0   276350  250k B5 1x  in p1 SG N085
+  TYC3895-361-1 17 09 19.4 +56 59 24 2000 vmag=11.8   145250  10k C2 1x out p3 MH BINRecon
+  TYC3898-689-1 17 06 30.1 +58 25 14 2000 vmag=11.3   92250   10k C2 1x out p3 MH BINRecon
+x  TYC4198-449-1 17 17 56.2 +60 10 26 2000 vmag=10.5   44150   10k C2 1x out p3 MH BINRecon
+x        T005731 17 20 23.7 +52 26 01 2000 vmag=12.2  132300   10k C2 1x out p2 PD U157
+x         K00275 19 01 14.7 +47 50 54 2000 vmag=11.7  7971000  60k C2 1x  in p1 WW U156 everynight, Kepler-129. Water world candidate
+x         K00365 19 49 56.7 +49 37 24 2000 vmag=11.3  552800   60k C2 1x  in p1 WW U156 everynight, Kepler-538. Water world candidate
+x         K00260 19 17 23.4 +44 12 31 2000 vmag=10.5  264350   60k C2 1x  in p1 WW U156 everynight, Kepler-126. Water worldsuper-Mercury candidates
+   TIC120182387 18 57 20.6 +38 31 23 2000 vmag=15.7 18001800   5k C2 1x out p2 LB C253
+x   TIC376847633 18 21 21.4 +69 22 14 2000 vmag=10.9  900900  120k C2 1x  in p1 PD U157
+x         156279 17 12 23.2 +63 21 11 2000  vmag=8.1  118500  250k C2 1x  in p3 TW T999  Twilight sequence, be here at 12deg twilight.
+x         164595 18 00 38.6 +29 34 23 2000  vmag=7.1   48500  250k C2 1x  in p3 TW T999
+x         158633 17 24 58.0 +67 18 24 2000  vmag=6.4   26500  250k C2 1x  in p3 TW T999
+x         159222 17 32 00.5 +34 16 18 2000  vmag=6.6   30500  250k C2 1x  in p3 TW T999
+x         160693 17 39 35.9 +37 10 42 2000  vmag=8.4  154500  250k C2 1x  in p3 TW T999
+x         161797 17 46 27.0 +27 42 57 2000  vmag=3.4    2500  250k C2 3x  in p3 TW T999
+x         hr6827 18 11 07.1 +60 24 34 2000  vmag=6.5   28500  250k C2 1x  in p2 BS T999 End 20min past 12 deg.
