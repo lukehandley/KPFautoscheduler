@@ -28,7 +28,7 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame):
     keckapy = apy.coordinates.EarthLocation.of_site('Keck Observatory')
 
     dates = plan.Date.to_list()
-    
+
     #The minimium separation list will contain either the PI specified cadence, or one generated if necessary
     min_separations = []
 
@@ -123,7 +123,7 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame):
 
 
     logger.info('Reservations done')
-    
+
     return reservation_matrix,min_separations
 
 def calculate_intervals(plan,twilight_frame):
@@ -148,7 +148,7 @@ def calculate_intervals(plan,twilight_frame):
         length2 = np.round((morning_twilight-day_start).jd*24*60,0)*60
         night_starts.append((day_start+TimeDelta(length1,format='sec')).jd)
         night_ends.append((day_start+TimeDelta(length2,format='sec')).jd)
-    
+
     #Find the duration of each night
     durations = []
     for i in range(len(dates)):
@@ -167,7 +167,7 @@ def calculate_intervals(plan,twilight_frame):
         start = night_starts[i] + diff*starts[i]
         end = (Time(start,format='jd') + TimeDelta(60*(durations[i]),format='sec')).jd
         interval_starts.append(start)
-        interval_stops.append(end) 
+        interval_stops.append(end)
     for i in range(1,len(interval_stops)):
         start_min = int(np.round((Time(interval_starts[i],format='jd')-
             Time(plan.Date.values[i],format='iso',scale='utc')).jd * 24*60,0))
@@ -296,22 +296,22 @@ def coordinates(frame,plan,targ,qn):
     coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
     target = apl.FixedTarget(name=name, coord=coords)
     AZ = observatory.altaz(time, target)
-    
+
     return AZ
 
 def get_ra_dec(all_targets_frame,id_num):
     ra = all_targets_frame.loc[id_num,'ra']
     dec = all_targets_frame.loc[id_num,'dec']
-    
+
     return ra,dec
 
 def get_alt_az(frame,id_num,time,observatory):
     ra,dec = get_ra_dec(frame,id_num)
-    
+
     coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
     target = apl.FixedTarget(name=id_num, coord=coords)
     AZ = observatory.altaz(time, target)
-    
+
     return AZ.alt.deg,AZ.az.deg
 
 def moon_safe(moon,target_tuple):
@@ -339,13 +339,13 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
             for j in range(len(blocked_targets[i])):
                 blocked_targets[i][j] = int(blocked_targets[i][j])
 
-        ordered_requests = []       
-        
+        ordered_requests = []
+
         #Plot folder
         plotpath = os.path.join(outputdir,'{}_{}_plots'.format(instrument,current_day))
         
         #The path for each quarter night is computed independently
-        for qn in plan[plan['Date'] == current_day].index.tolist(): 
+        for qn in plan[plan['Date'] == current_day].index.tolist():
 
             nightly_targets = blocked_targets[qn]
 
@@ -413,13 +413,13 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
                             l_i.append(np.round((stop-t[0]).jd*24*60,1))
                     else:
                         print('Error, target {} does not meet observability requirements'.format(all_targets_frame.loc[ind_to_id[i],'Starname']))
-            
+
             def to_wrap_frame(angle):
                 angle += 90
                 if angle >= 360:
                     angle -= 360
                 return angle
-            
+
             start_slots = Time(np.linspace(start.jd,stop.jd,T,endpoint=False),format='jd')
             #Move to middle of slot for coordinates
             shift = (end.jd-start.jd)/(2*T)
@@ -472,7 +472,7 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
             tijm = Mod.addVars(range(R),range(R),range(T),vtype=GRB.CONTINUOUS,name='tijm')
             ti = Mod.addVars(range(R),vtype=GRB.CONTINUOUS,lb=0,name='ti')
 
-            tijmdef = Mod.addConstrs((ti[i] == gp.quicksum(tijm[i,j,m] for j in range(R)[1:] for m in range(T)) 
+            tijmdef = Mod.addConstrs((ti[i] == gp.quicksum(tijm[i,j,m] for j in range(R)[1:] for m in range(T))
                                 for i in range(R)[:-1]),'tijm_def')
             start_origin = Mod.addConstr(gp.quicksum(xijm[0,j,m] for j in range(R) for m in range(T)) == 1,
                                'start_origin')
@@ -483,20 +483,20 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
             flow_constr = Mod.addConstrs(((gp.quicksum(xijm[i,k,m] for i in range(R)[:-1] for m in range(T))
                                - gp.quicksum(xijm[k,j,m] for j in range(R)[1:] for m in range(T)) == 0)
                               for k in range(R)[:-1][1:]), 'flow_constr')
-            exp_constr = Mod.addConstrs((ti[j] >= tijm[i,j,m] + (dist[(i,j,m)] + s_i[j])*xijm[i,j,m] 
+            exp_constr = Mod.addConstrs((ti[j] >= tijm[i,j,m] + (dist[(i,j,m)] + s_i[j])*xijm[i,j,m]
                              for i in range(R)[:-1] for j in range(R)[1:] for m in range(T))
                           , 'exp_constr')
             t_min = Mod.addConstrs(((tijm[i,j,m] >= w[m]*xijm[i,j,m]) for j in range(R) for m in range(T)
                              for i in range(R)),'t_min')
-            t_max = Mod.addConstrs((tijm[i,j,m] <= w[m+1]*xijm[i,j,m] for j in range(R) for m in range(T) 
+            t_max = Mod.addConstrs((tijm[i,j,m] <= w[m+1]*xijm[i,j,m] for j in range(R) for m in range(T)
                              for i in range(R)),'t_max')
             rise_constr = Mod.addConstrs((ti[i] >= e_i[i]*yi[i] for i in range(R)),'rise_constr')
             set_constr = Mod.addConstrs((ti[i] <= l_i[i]*yi[i] for i in range(R)),'set_constr')
             priority_param = 50
             slew_param = 1/100
 
-            Mod.setObjective(priority_param*gp.quicksum(yi[j] for j in range(R)) 
-                             -slew_param *gp.quicksum(dist[(i,j,m)]*xijm[i,j,m] for i in range(R)[:-1] 
+            Mod.setObjective(priority_param*gp.quicksum(yi[j] for j in range(R))
+                             -slew_param *gp.quicksum(dist[(i,j,m)]*xijm[i,j,m] for i in range(R)[:-1]
                                            for j in range(R)[1:] for m in range(T))
                                 ,GRB.MAXIMIZE)
             logger.info('Solving TTP for qn {}'.format(qn))
@@ -606,9 +606,9 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
         high_production_mode = False
     if len(schedule_dates) > 1:
         high_production_mode = True
-    
+
     current_day = schedule_dates[0]
-    
+
     ############Load Observer information and data files, Pandas is an easy way to manage this############
     keck = apl.Observer.at_site('W. M. Keck Observatory')
 
@@ -620,7 +620,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
     all_targets_frame = formatting.format_observers_sheet(observers_sheet,instrument)
     
     '''#Targets forcefully scheduled will have different rules
-    force_sched = all_targets_frame[(all_targets_frame['Include'] == 'Y') | 
+    force_sched = all_targets_frame[(all_targets_frame['Include'] == 'Y') |
                                         (all_targets_frame['Include'] == 'y')].index.tolist()'''
 
     #Create simplified 'plan' dataframe of quarter nights with columns date, start, and stop
@@ -671,7 +671,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
     #Remove reservations that occur before the current day unless actually took place
     starting_slot = plan[plan['Date'] == current_day].index[0]
     for targ in reservation_dict.keys():
-        reservation_dict[targ] = [item for item in reservation_dict[targ] 
+        reservation_dict[targ] = [item for item in reservation_dict[targ]
                             if item >= starting_slot or item in observed_dict[targ]]
 
     #Account for observations that took place that we may not have calculated to be possible
@@ -688,7 +688,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
         ind = obs_plan[obs_plan['Date'] == current_day].index.values[0] + day_buffer
     if high_production_mode == True:
         ind = obs_plan[obs_plan['Date'] == schedule_dates[-1]].index.values[0] + day_buffer
-    
+
 
     if ind in obs_plan.index.values:
         #Move forward a bit in time before sampling out quarter nights
@@ -699,7 +699,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
         for slot in slots[protected:]:
             if np.random.randint(10) < 3:
                 weathered_slots.append(slot)
-        
+
         #Remove possible reservations from sampled out nights
         for targ in reservation_dict.keys():
             reservation_dict[targ] = [item for item in reservation_dict[targ] if item not in weathered_slots]
@@ -724,20 +724,20 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
         #Determine the size of our qn buckets
         interval_dict = defaultdict(int)
         for index, row in plan.iterrows():
-            interval_dict[index] = (int(np.round((Time(row['qn_stop'],format='jd') - 
+            interval_dict[index] = (int(np.round((Time(row['qn_stop'],format='jd') -
                                             Time(row['qn_start'],format='jd')).jd * 24 * 60,0)))
 
         #Group together our community cadence targets for the optimizer
-        cadenced_obs = all_targets_frame[(all_targets_frame['N_obs(full_semester)'] > 1) 
+        cadenced_obs = all_targets_frame[(all_targets_frame['N_obs(full_semester)'] > 1)
                                     & (all_targets_frame['Program code'] != 'Ex')].index.tolist()
-        
-        #yrt = 1 if target r is scheduled to quarter night t  
+
+        #yrt = 1 if target r is scheduled to quarter night t
         yrt = m.addVars(target_ids,slots, vtype = GRB.BINARY, name = 'Yrt')
         for r in target_ids:
             for t in slots:
                 if t not in reservation_dict[r]:
                     m.addConstr((yrt[r,t] == 0),'constr_observable_{}_{}'.format(r,t))
-        
+
         #If the observers make the mistake of overobserving, we need to increase Nobs to avoid model breakdown
         #by constraint 'constr_num_obs'
         for r in observed_dict.keys():
@@ -748,13 +748,13 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
 
         #Less than or equal to sum of durations assigned to each quarter night
         constr_lim_dur = m.addConstrs(
-                (gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration'] 
+                (gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration']
                             for r in target_ids) <= interval_dict[t] for t in slots[starting_slot:]),'constr_lim_dur')
 
         #Don't overschedule the number of observations for a target to be greater than those requested
         constr_lim_obs = m.addConstrs(
                 (yrt.sum(r,'*') <= Nobs[r] for r in target_ids), 'constr_num_obs')
-        
+
         #Special rules will be applied to the observing night we want to retrieve a schedule for
         next_slots = plan[plan['Date'] == current_day].index.values
         fill_slots = plan[plan['Date'].isin(schedule_dates)].index.values
@@ -779,7 +779,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
         fill_above = m.addConstrs((gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration'] 
                             for r in target_ids) >= lb * interval_dict[t] for t in fill_slots)
                                 ,'constr_fill_above')
-        fill_below = m.addConstrs((gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration'] 
+        fill_below = m.addConstrs((gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration']
                             for r in target_ids) <= ub * interval_dict[t] for t in fill_slots)
                                 ,'constr_fill_below')
         
@@ -807,44 +807,44 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
                         m.addGenConstrAnd(Brtt[r,t,t2],[yrt[r,t],yrt[r,t2]],
                                     "slotdiff_and_{}_{}_{}".format(r,t,t2))
                         #Variabled activated if and only if both corresponding slots are occupied by the target
-        
+
         #Assign a day duration between any two given quarter nights
         dtdict = defaultdict(list)
         for t in slots:
             for t2 in slots:
-                if ((t2 <= t) and (t2 >= starting_slot or t >= starting_slot)): 
+                if ((t2 <= t) and (t2 >= starting_slot or t >= starting_slot)):
 
                     #simplified to days between the date the quarter nights occur
                     dt = np.abs(int((Time(plan.loc[t2,'Date'],format='iso',scale='utc')
                                     -Time(plan.loc[t,'Date'],format='iso',scale='utc')).jd))
                     dtdict[dt].append((t,t2))
 
-        #Drdt = 1 if target r is scheduled to two slots with interval dt between them           
+        #Drdt = 1 if target r is scheduled to two slots with interval dt between them
         Drdt = m.addVars(cadenced_obs,dtdict.keys(), vtype=GRB.BINARY)
         for r in cadenced_obs:
             for dt in dtdict.keys():
 
                 #This is activated for ANY two slots that produce this difference dt
-                m.addGenConstrOr(Drdt[r,dt], 
+                m.addGenConstrOr(Drdt[r,dt],
                 [Brtt[r,t,t2] for (t,t2) in dtdict[dt]],
                     "slot_dt_indicator_{}_{}".format(r,dt))
 
         #These constraints are built on interface from the human schedulers
         #They may enforce that a target must or must not be scheduled in the next night
-        dont_sched = all_targets_frame[(all_targets_frame['Include'] == 'N') | 
+        dont_sched = all_targets_frame[(all_targets_frame['Include'] == 'N') |
                                         (all_targets_frame['Include'] == 'n')].index.tolist()
         dont_include = m.addConstrs((yrt[r,t] == 0 for r in dont_sched for t in next_slots)
                                     ,'dont_sched_{}_{}'.format(r,t))
-        
+
         '''for r in force_sched:
             #Require that the request can go through only if it is also observable
             if can_force(next_slots,reservation_dict[r]):
                 m.addConstr((gp.quicksum(yrt[r,t] for t in next_slots) == 1),
                             'forced_sched_{}_{}'.format(r,next_slots[0]))'''
-                
+
         #This activates the minimum slot separation constraint
         relax_coeff = 1
-        constr_min_slotsep = m.addConstrs((Drdt[r,dt] == 0 for r in cadenced_obs for dt in dtdict.keys() 
+        constr_min_slotsep = m.addConstrs((Drdt[r,dt] == 0 for r in cadenced_obs for dt in dtdict.keys()
                                        if dt < relaxed_minimum(min_separations[r],relax_coeff)), 'constr_min_slot_sep')
 
 
@@ -864,7 +864,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
                 p_divisor = sum(Nobs[r] for r in program_dict[program])
                 m.addConstr((dev[program] == ((yp[program]/p_divisor) - (ytot/t_divisor))),'calc_dev')
                 m.addGenConstrAbs(abs_dev[program],dev[program],'dev_to_abs')
-        
+
         #These scalars should be adjusted through trial and error, and are dependent on model size.
         cadence_scalar = 1/800
         program_scalar = 600
@@ -902,12 +902,12 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
 
             m.update()
             m.optimize()
-        
+
         #Search out model issues
         if m.Status == GRB.INFEASIBLE:
             logger.info('Model remains infeasible. Searching for invalid constraints')
             conflicting_constraints(m,300)
-        
+
         if m.Status != GRB.INFEASIBLE:
             #Create lists of target ids that correspond to each quarter night slot
             scheduled_targets = []
@@ -924,12 +924,12 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
                 unordered_times.append(int(scheduled_targets[i][1]))
             order = np.argsort(unordered_times)
             scheduled_targets = [scheduled_targets[i] for i in order]
-            
+
             targets_observed = defaultdict(list)
             for i in range(len(scheduled_targets)):
                 slot = int(scheduled_targets[i][1])
                 targets_observed[slot].append(int(scheduled_targets[i][0]))
-            
+
             #Create nightly lists of star requests to be assigned there
             starlists = []
             for i in range(len(plan)):
@@ -957,7 +957,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
                     os.mkdir(plotpath)
                 plotting.plot_program_cdf(plan,program_dict,targets_observed,Nobs,plotpath,current_day)
                 #plotting.plot_one_cdf(plan,program_dict,targets_observed,Nobs,plotpath,current_day,'DG')
-                
+
                 #Plot target cadence by program
                 logger.info('Plotting Program Cadences')
                 plotting.plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,
@@ -971,7 +971,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
             with open(outpfile, "w", newline="") as f:
                 writer = csv.writer(f)
                 writer.writerows(starlists)
-    
+
     if high_production_mode == True:
         for date_to_schedule in schedule_dates:
             salesman_scheduler(instrument,all_targets_frame,plan,date_to_schedule,output_flag,plot_results,outputdir,time_limit)
