@@ -1,0 +1,16 @@
+x         166620 18 09 36.8 +38 27 17 2000 jmag=4.8    315/315 1of1 sc=y 1x  gmag=6.1 Teff=0    Gaia DR3 4610177733290768896  C4 p1 C000  # comment SNR=1331 K2V, very stable NEID GTO target
+x         157214 17 20 39.8 +32 27 40 2000 jmag=4.2    172/172 1of1 sc=y 3x  gmag=5.4 Teff=0    Gaia DR3 1333760419707327744  C4 p1 C000  # comment observe SE!; note 3x exposures; G0V,
+x        T001749 18 50 57.1 +64 25 09 2000 jmag=11.1  720/720  1of2 sc=y 1x gmag=13.2 Teff=3923 Gaia DR3 2253774094189458432 HK p1 C351 M dwarf with three small planets, TTVs measured with Palomar (PI Mike Greklek-McKeon), everynight
+x         T001279 12 20 14.4 +56 12 05 2000 jmag=9.3   600/600  1of1 sc=y 1x gmag=10.5 Teff=5414 Gaia DR3 1574358783911530624 TK p1 U151
+         T001249 13 22 14.4 +66 18 30 2000 jmag=9.5   600/600  1of1 sc=y 1x gmag=10.7 Teff=5502 Gaia DR3 1678371724905519744 TK p1 U151
+         T005799 20 06 31.2 +15 59 24 2000 jmag=9.7   600/600  1of1 sc=y 1x gmag=12.3 Teff=3521 Gaia DR3 1807887150930343424 TK p1 U151
+x       MASCARA-1 21 10 12.4  10 44 20 2000 jmag=7.8  300/300   1of1 sc=n 9x gmag=8.3  Teff=7490 Gaia DR3 1744911763437512064 AH p1 C400
+         T006324 22 03 22.7 +67 29 55 2000 jmag=9.4   900/900  1of2 sc=y 1x gmag=12.2 Teff=3300 Gaia DR3 2220012421430629632 FD p1 N461 Observe 2x per night
+x           15337 02 27 28.3 -27 38 12 2000 jmag=7.5   200/200  1of1 sc=y 1x gmag=8.8  Teff=5175 Gaia DR3 5068777809824975872 JW p2 H391 companion at 1.5 arcsec, observe brighter component. 
+x           20781 03 20 03.4 -28 47 03 2000 jmag=7.0    97/97   1of1 sc=n 1x gmag=8.2  Teff=5342 Gaia DR3 5060105897197110144 MR p2 Y280 ideally observed back-to-back with HD 20782; goal SNR=200
+x           20782 03 20 04.0 -28 51 16 2000 jmag=6.3    47/47   1of1 sc=n 1x gmag=7.2  Teff=5782 Gaia DR3 5060104351007433472 MR p2 Y280 ideally observed back-to-back with HD 20781; goal SNR=200
+xxxxx           26965 04 15 16.3 -07 39 10 2000 jmag=2.9    12/12   1of1 sc=y 4x gmag=4.2  Teff=5133 GaiaDR3 3195919528989223040 AH p1 C398
+           22049 03 32 55.8 -09 27 30 2000 jmag=2.2    30/30   1of1 sc=y 6x gmag=3.4  Teff=5041 Gaia DR3 5164707970261890560 PR p1 U147 Eps Eri
+            9407 01 34 31.6 +68 56 56 2000 jmag=5.2   300/300  1of1 sc=y 1x gmag=6.4  Teff=5560 Gaia DR3 532057254394731776   TW p3 T999  #TWILIGHT
+            4628 00 48 24.2 +05 16 23 2000 jmag=4.4    45/45   1of1 sc=y 3x gmag=5.5  Teff=4943 Gaia DR3 2552925644460225152  TW p3 T999  #TWILIGHT IF SOUTH
+x (12)           10700 01 44 01.3 -15 55 55 2000 jmag=3.5    30/30   1of1 sc=y 3x gmag=3.3  Teff=4943 Gaia DR3 2452378776434477184  TW p3 T999  #TWILIGHT IF SOUTH

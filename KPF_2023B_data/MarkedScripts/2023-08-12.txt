@@ -1,0 +1,33 @@
+         202772B 21 18 47.8 -26 36 58 2000 jmag=10.0  570/570  1of1 sc=n 1x gmag=10.0 Teff=5987 Gaia DR3 6790773586276283648 MR p2 Y280 ideally observed back-to-back with HD 202772 A; goal SNR=200
+x         T005961 23 16 51.9 +05 41 45 2000 jmag=7.9   300/300  1of2 sc=y 1x gmag=9.9  Teff=3900 Gaia DR3 2664042942398600064 FD p1 N461 Observe 2x per night, separate by 3hr
+x            4628 00 48 23.0 +05 16 50 2000 jmag=4.4    36/36   1of1 sc=y 2x gmag=5.5  Teff=4960 Gaia DR3 2552925644460225152 AH p1 C398
+x         T006324 22 03 22.7 +67 29 55 2000 jmag=9.4   900/900  1of2 sc=y 1x gmag=12.2 Teff=3300 Gaia DR3 2220012421430629632 FD p1 N461 Observe 2x per night
+x         T001749 18 50 57.1 +64 25 09 2000 jmag=11.1  720/720  1of3 sc=y 1x gmag=13.2 Teff=3923 Gaia DR3 2253774094189458432 HK p1 C351 M dwarf with three small planets, TTVs measured with Palomar (PI Mike Greklek-McKeon), everynight
+          157214 17 20 39.8 +32 27 40 2000 jmag=4.2    172/172 1of1 sc=y 3x  gmag=5.4 Teff=0    Gaia DR3 1333760419707327744  C4 p1 C000  # comment observe SE!; note 3x exposures; G0V,
+x 2M18470628+43403 18 47 06.3 +43 40 34 2000 jmag=11.0  478/500  1of1 sc=y 1x gmag=11.0 Teff=4325 Gaia DR3 2105255190248353792 JO p2 H357
+x 2M19315759+46223 19 31 57.6 +46 22 33 2000 jmag=11.0  475/500  1of1 sc=y 1x gmag=11.0 Teff=4471 Gaia DR3 2128271129715505280 JO p2 H357
+x        KOI-0270 19 34 55.9 +41 54 03 2000 jmag=10.1  120/120  1of1 sc=y 1x gmag=11.5 Teff=5588 Gaia DR3 2077618037775709568 IB p2 U011
+x        KOI-3864 19 33 22.8 +39 15 28 2000 jmag=11.5  120/120  1of1 sc=y 1x gmag=12.9 Teff=5011 Gaia DR3 2052368955838887808 IB p2 U011
+x         T001749 18 50 57.1 +64 25 09 2000 jmag=11.1  720/720  2of3 sc=y 1x gmag=13.2 Teff=3923 Gaia DR3 2253774094189458432 HK p1 C351 M dwarf with three small planets, TTVs measured with Palomar (PI Mike Greklek-McKeon), everynight
+x 2M19410755+39205 19 41 07.6 +39 20 58 2000 jmag=11.4  656/700  1of1 sc=y 1x gmag=11.4 Teff=4494 Gaia DR3 2076193723545609472 JO p2 H357
+x          K00148 19 56 33.4 +40 56 56 2000 jmag=11.7  900/900  1of1 sc=y 1x gmag=13.1 Teff=5118 Gaia DR3 2075112109039378688 EP p1 U012 Kepler-48, observe every night we are on the telescope until mid-dec
+x         T005799 20 06 31.2 +15 59 24 2000 jmag=9.7   600/600  1of1 sc=y 1x gmag=12.3 Teff=3521 Gaia DR3 1807887150930343424 TK p1 U151
+x         T005927 21 04 34.0 +34 20 41 2000 jmag=11.6  180/180  1of1 sc=y 1x gmag=12.5 Teff=6503 Gaia DR3 1866383707833637248 SY p2 N206
+x         T006026 00 00 52.8 +35 45 00 2000 jmag=8.0   300/300  1of1 sc=y 1x gmag=9.6  Teff=4540 Gaia DR3 2877050883371424768 TK p1 U151
+x 2M02484368+31065 02 48 43.7 +31 06 55 2000 jmag=6.6    12/100  1of1 sc=y 1x gmag=6.6  Teff=4580 Gaia DR3 130173900330982016  JO p2 H357
+xxx           10476 01 42 29.8 +20 15 51 2000 jmag=3.8    27/27   1of1 sc=y 3x gmag=5.0  Teff=5200 Gaia DR3 96331172942614528   AH p1 C398
+x           12572 02 03 37.3 +21 16 54 2000 jmag=7.9   300/300  1of1 sc=y 1x gmag=9.0  Teff=5599 Gaia DR3 94468978202180352   TK p1 U151
+x         T006324 22 03 22.7 +67 29 55 2000 jmag=9.4   900/900  2of2 sc=y 1x gmag=12.2 Teff=3300 Gaia DR3 2220012421430629632 FD p1 N461 Observe 2x per night
+x            6061 01 02 24.0 +37 11 07 2000 jmag=7.7   300/300  1of1 sc=y 1x gmag=8.7  Teff=5972 Gaia DR3 369669965470499456  TK p1 U151
+x (8)           19373 03 09 04.0 +49 36 47 2000 jmag=3.1    12/12   1of1 sc=y 8x gmag=3.9  Teff=5940 Gaia DR3 436648129327098496  AH p1 C398
+x         T005530 00 25 57.2 -05 41 49 2000 jmag=10.2  900/900  2of2 sc=y 1x gmag=12.3 Teff=3900 Gaia DR3 2431638070123733120 FD p1 N461 Observe 2x per night, separate by 3hr
+x 2M04425197+07233 04 42 52.0 +07 23 37 2000 jmag=10.9  433/500  1of1 sc=y 1x gmag=10.9 Teff=4602 Gaia DR3 3289139045369149696 JO p2 H357
+xxxxx           26965 04 15 12.8 -07 40 31 2000 jmag=2.9    52/52   1of1 sc=y 5x gmag=4.2  Teff=5107 Gaia DR3 3195919528989223040 PR p1 U147
+           20781 03 20 03.4 -28 47 03 2000 jmag=7.0    97/97   1of1 sc=n 1x gmag=8.2  Teff=5342 Gaia DR3 5060105897197110144 MR p2 Y280 ideally observed back-to-back with HD 20782; goal SNR=200
+       HIP115594 23 24 55.1 -38 09 39 2000 jmag=8.4   360/360  1of1 sc=y 1x gmag=9.5  Teff=6200 Gaia DR3 6550557886476222336 JW p2 H391 companion at 0.7'', observe NW component, 
+         T005530 00 25 57.2 -05 41 49 2000 jmag=10.2  900/900  1of2 sc=y 1x gmag=12.3 Teff=3900 Gaia DR3 2431638070123733120 FD p1 N461 Observe 2x per night, separate by 3hr
+         T005961 23 16 51.9 +05 41 45 2000 jmag=7.9   300/300  2of2 sc=y 1x gmag=9.9  Teff=3900 Gaia DR3 2664042942398600064 FD p1 N461 Observe 2x per night, separate by 3hr
+x        Ori40003 05 35 15.5 -05 25 14 2000 jmag=10.0 1200/1800 1of1 sc=n 1x gmag=13.1 Teff=3800 Gaia DR3 3017360966647238272 LH p 1 C404         
+            9407 01 34 31.6 +68 56 56 2000 jmag=5.2   300/300  1of1 sc=y 1x gmag=6.4  Teff=5560 Gaia DR3 532057254394731776   TW p3 T999  #TWILIGHT
+            4628 00 48 24.2 +05 16 23 2000 jmag=4.4    45/45   1of1 sc=y 3x gmag=5.5  Teff=4943 Gaia DR3 2552925644460225152  TW p3 T999  #TWILIGHT IF SOUTH
+           10700 01 44 01.3 -15 55 55 2000 jmag=3.5    30/30   1of1 sc=y 3x gmag=3.3  Teff=4943 Gaia DR3 2452378776434477184  TW p3 T999  #TWILIGHT IF SOUTH
