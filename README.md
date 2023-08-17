@@ -64,6 +64,14 @@ And so on until every date is listed. Be sure to check there are no gaps between
 be consecutive dates in the year).
 
 
+To initiate the 'high production mode' and generate fully formatted schedules for a sequence of consecutive nights, set the date parameter multiple times 
+to append them all.
+```
+python scheduler.py -d 'YYYY-MM-DD' -d 'YYYY-MM-DD'
+```
+And so on until every date is listed. Be sure to check there are no gaps between these dates in the schedule.
+
+
 #### Data Inputs
 * *observers_sheet* https://docs.google.com/spreadsheets/d/18r_xWaz26ya6sI0BQ6xpD3ibZLCwgkbjjAbwNmoxIUM/edit#gid=508439574
   * Requests/Cadence/Nobs/Exposure/Coordinates/Program included in optimization
