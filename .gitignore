@@ -3,3 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 untracked_data/
+untracked_notebooks/
+AutoschedulerPaper/ignored
+.ipynb_checkpoints/
+EPRV/
