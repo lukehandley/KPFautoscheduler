@@ -15,7 +15,7 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-def plot_path_2D(obs_time,az_path,alt_path,names,targ_list,outputdir,current_day,quarter):
+def plot_path_2D(obs_time,az_path,alt_path,names,targ_list,outputdir,current_day):
 
     fig, axs = plt.subplots(2,sharex=True,sharey=False,figsize = (14,8))
     fig.patch.set_alpha(1)
@@ -57,12 +57,12 @@ def plot_path_2D(obs_time,az_path,alt_path,names,targ_list,outputdir,current_day
     axs[1].set(ylabel='Elevation Angle (Deg)')
     #axs[2].set(ylabel='Airmass')
     axs[1].set(xlabel='Observation Time (JD)')
-    plt.title('Telescope Path {} Quarter {}'.format(current_day,quarter))
-    plt.savefig(os.path.join(outputdir,'Telescope_Path_Quarter_{}'.format(quarter)))
+    plt.title('Telescope Path {}'.format(current_day))
+    plt.savefig(os.path.join(outputdir,'Telescope_Path'))
     plt.close()
 
 def animate_telescope(time_strings,total_azimuth_list,total_zenith_list,tel_az,tel_zen,
-                      observed_at_time,plotpath,quarter):
+                      observed_at_time,plotpath):
            
     theta = np.arange(5.3/180, 146.2/180, 1./180)*np.pi
     total_azimuth_list = np.array(total_azimuth_list)
@@ -99,7 +99,7 @@ def animate_telescope(time_strings,total_azimuth_list,total_zenith_list,tel_az,t
             plt.close()
 
     # build gif
-    with imageio.get_writer(os.path.join(plotpath,'Animation_Quarter_{}.gif'.format(quarter)), mode='I') as writer:
+    with imageio.get_writer(os.path.join(plotpath,'Observing_Animation.gif'), mode='I') as writer:
         for filename in filenames:
             image = imageio.imread(os.path.join(tel_ims_dir,filename))
             writer.append_data(image)
