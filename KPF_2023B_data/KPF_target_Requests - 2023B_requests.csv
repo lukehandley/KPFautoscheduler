@@ -1,217 +1,218 @@
-Time(sec)_full_semester,Slew+readout(sec),Time_per_night(sec),N_obs(full_semester),Starname,RAH,RAM,RAS,DECD,DECM,DECS,epoch,jmag=,Jmag,T_exp(sec),T_max(sec),Nobs per,Format1,Nvisits,Format2,Simulcal,gmag=,Gmag,Teff,Teff_val,Gaia_DR3,Gaia_DR3_id,Program code,Format3,priority,Telescope,Comment,Include,Done,Cadence,IntraNightCadence,RM or
-Exposure time + overhead,240,,requested ,,,,,,,,,,,nominal,maximum,Visit,,per night,,,,,,,,,(for script),,,Propsoal Code,,Y/N,y/n,min separation,min separation,other Non-Queue
-Formula,leave blank,Formula,,,,,,,,,,static,,,,,static,,static,,static,,static,,static,,,static,,,,,,in days (integer),in hours (integers),y/n
-do not change,do not change,do not change,,,,,,,,,31,,,,,,,,,,,,,,,,,,,,,,,,,
-3744,,48,13,185144,19,32,22.0,69,39,40,2000,jmag=,3.40,16,16,3,x,1of2,simulcal=,y,gmag=,4.5,Teff=,5300,Gaia DR3,2261614264931057664,AH,p,1,C011,SigDra - everynight [EXAMPLE LINE],N,Y,1,,n
-9867,,519,13,149026,16,30,30.0,38,20,50,2000,jmag=,7.10,519,519,1,x,1of3,simulcal=,n,gmag=,8.0,Teff=,6100,Gaia DR3,1331356474971716992,AH,p,1,C015,Known planet (2.9 day orbit) [EXAMPLE LINE],N,Y,5,,n
-25920,,1200,18,Ori40003,05,35,15.55,-05,25,14,2000,jmag=,10.00,1200,1800,1,x,1,simulcal=,n,gmag=,13.1,Teff=,3800,Gaia DR3,3017360966647238272,LH,p,1,C404,"pre-ms stellar quadruple system; goal is every night during september with either kpf or hires, EveryNight",y,n,1,,n
-60480,,720,63,T001749,18,50,57.07,64,25,09,2000,jmag=,11.10,720,720,1,x,3,simulcal=,y,gmag=,13.2,Teff=,3923,Gaia DR3,2253774094189458432,HK,p,1,C351,"M dwarf with three small planets, TTVs measured with Palomar (PI Mike Greklek-McKeon), everynight",y,n,1,,n
-4972800,,8640,560,219134,23,13,20.9,57,10,11,2000,jmag=,3.90,120,120,72,x,4,simulcal=,y,gmag=,5.2,Teff=,4700,Gaia DR3,2009481748875806976,HK,p,1,C382,Measurement of sodium absorption during transit of hot super-Earth HD 219134b; needs continuous observation during transit (1h) + ~2.5h of out-of-transit baseline,y,n,0,,y
-29520,,1400,18,K00319,18,49,34,43,53,22,2000,jmag=,11.50,1400,1400,1,x,1,simulcal=,y,gmag=,12.7,Teff=,5460,Gaia DR3,2105362903731391744,JZ,p,1,C316,"Kepler Field star, which is only obserable in the early months of the semester.",y,n,2,,n
-28800,,1200,20,K00117,19,48,06.8,48,12,31,2000,jmag=,11.39,1200.0,1200.0,1,x,1,simulcal=,y,gmag=,12.5,Teff=,5861,Gaia DR3,2086625752425381632,LW,p,1,D317,Kepler107,,,1,,n
-7200,,1200,5,K00701,18,52,51.1,45,20,59,2000,jmag=,12.26,1200.0,1200.0,1,x,1,simulcal=,y,gmag=,13.7,Teff=,4862,Gaia DR3,2107001283431633408,LW,p,2,D317,Kepler62,,,15,,n
-25000,,260,50,26965,4,15,12.8,-7,40,31,2000,jmag=,2.93,52,52,5,x,1,simulcal=,y,gmag=,4.2,Teff=,5107,Gaia DR3,3195919528989223040,PR,p,1,U147,,y,,1,,n
-21000,,180,50,22049,03,32,55.8,-09,27,30,2000,jmag=,2.23,30,30,6,x,1,simulcal=,y,gmag=,3.4,Teff=,5041,Gaia DR3,5164707970261890560,PR,p,1,U147,Eps Eri,y,,1,,n
-17520,,17280,1,34411,05,19,8.5,40,05,57,2000,jmag=,3.61,18,18,960,x,1,simulcal=,y,gmag=,4.5,Teff=,5784,Gaia DR3,188771135583573504,PR,p,1,U150,observing 8 full hours in fast readout mode to detect p-modes within single night,y,,,,y
-13740,,13500,1,26965,4,15,12.8,-7,40,31,2000,jmag=,2.93,12,12,1125,x,1,simulcal=,y,gmag=,4.2,Teff=,5107,Gaia DR3,3195919528989223040,PR,p,1,U150,observing 7.5 full hours in fast readout mode to detect p-modes within single night,y,,,,y
-3600,,120,10,HIP102295A,20,43,38.8,19,43,41,2000,jmag=,7.20,120,120,1,x,,simulcal=,y,gmag=,8.1,Teff=,5608,Gaia DR3,1814257343328666624,JW,p,2,H391,observe SE component,,,,,n
-1760,,200,4,15337,02,27,28.3,-27,38,12,2000,jmag=,7.50,200,200,1,x,1,simulcal=,y,gmag=,8.8,Teff=,5175,Gaia DR3,5068777809824976256,JW,p,2,H391,"companion at 1.5 arcsec, observe brighter component. ",,,,,n
-1200,,360,2,HIP57386,11,45,55.5,11,22,15,2000,jmag=,8.40,360,360,1,x,1,simulcal=,y,gmag=,9.2,Teff=,6379,Gaia DR3,3913486896315719424,JW,p,2,H391,"companion at 0.7'', observe brighter component (SW)",,,,,n
-2520,,180,6,HIP64573,13,14,09.7,-16,33,35,2000,jmag=,8.60,180,180,1,x,1,simulcal=,y,gmag=,8.6,Teff=,5344,Gaia DR3,3511580658668406528,JW,p,2,H391,"companion at 1.7'', observe NE component",,,,,n
-2880,,240,6,HIP93711,19,04,54.7,79,45,23,2000,jmag=,7.80,240,240,1,x,1,simulcal=,y,gmag=,9.3,Teff=,4603,Gaia DR3,2294924072772825088,JW,p,2,H391,,,,,,n
-1680,,180,4,TIC286132427,09,46,53.9,-04,17,53,2000,jmag=,7.50,180,180,1,x,1,simulcal=,y,gmag=,8.5,Teff=,5815,Gaia DR3,3825847092208384640,JW,p,2,H391,"companion at 1.75'', observe brighter component",,,,,n
-4320,,300,8,HIP26250,05,35,27.8,21,17,39,2000,jmag=,8.00,300,300,1,x,1,simulcal=,y,gmag=,9.0,Teff=,6169,Gaia DR3,3402980516507429888,JW,p,2,H391,,,,,,n
-5760,,480,8,HIP24007,05,09,34.8,24,19,27,2000,jmag=,8.60,480,480,1,x,1,simulcal=,y,gmag=,10.2,Teff=,5125,Gaia DR3,3418915433588729856,JW,p,2,H391,"companion at 1 arcsec, observe the East component, rotate the slit to avoid comapnion",,,,,n
-6800,,100,20,73344,08,38,45.5,23,41,07,2000,jmag=,5.80,100,100,1,x,1,simulcal=,y,gmag=,6.7,Teff=,6061,Gaia DR3,666427539629086976,JW,p,1,H391,TOI-5140,,,,,n
-1680,,180,4,118203,13,34,02.3,53,43,41,2000,jmag=,6.80,180,180,1,x,1,simulcal=,y,gmag=,7.8,Teff=,5837,Gaia DR3,1560420854826284928,JW,p,2,H391,,,,,,n
-7200,,360,12,96735,11,08,55.9,34,18,11,2000,jmag=,7.70,360,360,1,x,1,simulcal=,y,gmag=,8.8,Teff=,5690,Gaia DR3,761300339243646848,JW,p,2,H391,,,,,,n
-3000,,260,6,HIP115594,23,24,55.1,-38,09,39,2000,jmag=,8.40,360,360,1,x,1,simulcal=,y,gmag=,9.5,Teff=,6200,Gaia DR3,6550557886476222336,JW,p,2,H391,"companion at 0.7'', observe NW component, ",,,,,n
-5880,,600,7,HIP112486,22,47,05.0,29,51,17,2000,jmag=,10.20,600,600,1,x,1,simulcal=,y,gmag=,11.4,Teff=,5278,Gaia DR3,1887706880428475520,JW,p,2,H391,"a close companion at 2 arcsec, rotate the slit to avoid the companion",,,,,n
-720,,120,2,HIP117249,23,46,29,81,22,41,2000,jmag=,7.30,120,120,1,x,1,simulcal=,y,gmag=,7.8,Teff=,7665,Gaia DR3,2286390900469275136,JW,p,2,H391,TOI-6246,,,,,n
-720,,120,2,HIP45961,09,22,23,-06,03,38,2000,jmag=,6.80,120,120,1,x,1,simulcal=,y,gmag=,7.3,Teff=,7707,Gaia DR3,5746169949987879680,JW,p,2,H391,TOI-6260,,,,,n
-720,,120,2,HIP49508,10,6,30,03,28,27,2000,jmag=,7.00,120,120,1,x,1,simulcal=,y,gmag=,7.8,Teff=,6387,Gaia DR3,3836824650659925120,JW,p,2,H391,TOI-6265,,,,,n
-15240,,15000,1,T002364,05,56,31.2,-05,00,43,2000,jmag=,10.90,300,300,50,x,1,simulcal=,y,gmag=,12.1,Teff=,5300,Gaia DR3,3022644120017418496,SY,p,1,N226,"RM on 2023-10-21, transit time UT 1035-1450 + pre- and post-transit baseline",y,,,,y
-15240,,15000,1,T002374,21,17,59.6,-22,00,59,2000,jmag=,10.40,300,300,50,x,1,simulcal=,y,gmag=,11.8,Teff=,4900,Gaia DR3,6828814283414902912,SY,p,1,N226,"RM on 2023-11-06, transit time UT 0435-0736 + pre- and post-transit baseline",y,,,,y
-2220,,130,6,T005865,20,44,53.1,06,38,29,2000,jmag=,10.80,130,130,1,x,1,simulcal=,y,gmag=,11.8,Teff=,6044,Gaia DR3,1748010152845985920,SY,p,2,N206,,y,,,,n
-2520,,180,6,T005927,21,4,34,34,20,41,2000,jmag=,11.60,180,180,1,x,1,simulcal=,y,gmag=,12.5,Teff=,6503,Gaia DR3,1866383707833637248,SY,p,2,N206,,y,,,,n
-2520,,180,6,T003519,20,32,18.7,21,20,42,2000,jmag=,11.40,180,180,1,x,1,simulcal=,y,gmag=,12.5,Teff=,5870,Gaia DR3,1818385764677637376,SY,p,2,N206,"Note 5mag fainter companions 1.2"" NW and 2.2"" W ",y,,,,n
-2520,,180,6,T005105,09,4,40.8,20,55,53,2000,jmag=,11.60,180,180,1,x,1,simulcal=,y,gmag=,12.5,Teff=,6356,Gaia DR3,684753439229558656,SY,p,2,N206,,y,,,,n
-1832,,1592,1,XO-2N,07,48,6.42,50,13,31,2000,jmag=,9.70,1592,1592,1,x,1,simulcal=,n,gmag=,11.0,Teff=,5340,Gaia DR3,934346809278715776,MR,p,2,Y280,ideally observed back-to-back with XO-2S; northwest component of binary system; goal SNR=200,y,N,,nan,n
-1494,,1254,1,XO-2S,07,48,7.43,50,13,01,2000,jmag=,9.70,1254,1254,1,x,1,simulcal=,n,gmag=,10.9,Teff=,5374,Gaia DR3,934346740559239296,MR,p,2,Y280,ideally observed back-to-back with XO-2N; southeast component of binary system; goal SNR=200,y,N,,nan,n
-710,,470,1,HAT-P-1,22,57,46.89,38,40,30,2000,jmag=,9.20,470,470,1,x,1,simulcal=,n,gmag=,10.2,Teff=,5980,Gaia DR3,1928431764627661440,MR,p,2,Y280,ideally observed back-to-back with ADS16402A; northeast component of binary system; goal SNR=200,y,N,,nan,n
-629,,389,1,ADS16402A,22,57,45.96,38,40,27,2000,jmag=,8.70,389,389,1,x,1,simulcal=,n,gmag=,9.6,Teff=,6251,Gaia DR3,1928431764627661312,MR,p,2,Y280,ideally observed back-to-back with HAT-P-1; southwest component of binary system; goal SNR=200,y,N,,nan,n
-1260,,1020,1,WASP-85A,11,43,37.93,06,33,50,2000,jmag=,9.30,1020,1020,1,x,1,simulcal=,n,gmag=,10.6,Teff=,6112,Gaia DR3,3909745223886018432,MR,p,2,Y280,ideally observed back-to-back with WASP-85 B; northwest component of binary system; goal SNR=200,y,N,,nan,n
-2478,,2238,1,WASP-85B,11,43,38.11,06,33,49,2000,jmag=,11.6,746,746,3,x,1,simulcal=,n,gmag=,11.6,Teff=,5378,Gaia DR3,3909745223886018560,MR,p,2,Y280,"ideally observed back-to-back with WASP-85 A; southeast component of binary system; goal SNR=200, Texp = 2237s total",y,N,,nan,n
-948,,708,1,WASP-77A,02,28,37.33,-07,03,38,2000,jmag=,8.80,708,708,1,x,1,simulcal=,n,gmag=,10.1,Teff=,5617,Gaia DR3,5178405479961698048,MR,p,2,Y280,ideally observed back-to-back with WASP-77 B; northwest component of binary system; goal SNR=200,y,N,,nan,n
-3192,,2952,1,WASP-77B,02,28,37.42,-07,03,41,2000,jmag=,11.8,984,984,3,x,1,simulcal=,n,gmag=,11.8,Teff=,4810,Gaia DR3,5178405479961475712,MR,p,2,Y280,"ideally observed back-to-back with WASP-77 A; southeast component of binary system; goal SNR=200, Total Texp=2951",y,N,,nan,n
-1685,,1445,1,HAT-P-4A,15,19,46.36,36,13,46,2000,jmag=,10.10,1445,1445,1,x,1,simulcal=,n,gmag=,11.1,Teff=,5860,Gaia DR3,1291120362349158016,MR,p,2,Y280,ideally observed back-to-back with HAT-P-4 B; northwest component of binary system; goal SNR=200,y,N,,nan,n
-2196,,1956,1,HAT-P-4B,15,19,59.99,36,12,18,2000,jmag=,10.50,652,652,3,x,1,simulcal=,n,gmag=,11.4,Teff=,5989,Gaia DR3,1291119606434912384,MR,p,2,Y280,"ideally observed back-to-back with HAT-P-4 A;  southeast component of binary system; goal SNR=200, Texp =1956",y,N,,nan,n
-1719,,1479,1,WASP-173A,23,36,40.49,-34,36,41,2000,jmag=,10.40,1479,1479,1,x,1,simulcal=,n,gmag=,11.4,Teff=,5800,Gaia DR3,2323985539482908416,MR,p,2,Y280,ideally observed back-to-back with WASP-173 B; northwest component of binary system; goal SNR=200,y,N,,nan,n
-3735,,3495,1,WASP-173B,23,36,40.95,-34,36,43,2000,jmag=,10.80,1165,1165,3,x,1,simulcal=,n,gmag=,12.0,Teff=,5444,Gaia DR3,2323985535188372480,MR,p,2,Y280,"ideally observed back-to-back with WASP-173 A; southeast component of binary system; goal SNR=200, Total Texp=3493",y,N,,nan,n
-345,,105,1,202772A,21,18,47.9,-26,36,59,2000,jmag=,7.23,105,105,1,x,1,simulcal=,n,gmag=,8.2,Teff=,6272,Gaia DR3,6790773586275235200,MR,p,2,Y280,ideally observed back-to-back with HD 202772 B; southeast component of binary system; goal SNR=200,y,N,,nan,n
-810,,570,1,202772B,21,18,47.81,-26,36,58,2000,jmag=,10.0,570,570,1,x,1,simulcal=,n,gmag=,10.0,Teff=,5987,Gaia DR3,6790773586276283648,MR,p,2,Y280,ideally observed back-to-back with HD 202772 A; northwest component of binary system; goal SNR=200,y,N,,nan,n
-829,,589,1,WASP-94A,20,55,7.98,-34,08,09,2000,jmag=,9.20,589,589,1,x,1,simulcal=,n,gmag=,10.0,Teff=,6170,Gaia DR3,6780546169634170496,MR,p,2,Y280,ideally observed back-to-back with WASP-94 B; west component of binary system; goal SNR=200,y,N,,nan,n
-1143,,903,1,WASP-94B,20,55,9.19,-34,08,09,2000,jmag=,9.50,903,903,1,x,1,simulcal=,n,gmag=,10.4,Teff=,6040,Gaia DR3,6780546169633474944,MR,p,2,Y280,ideally observed back-to-back with WASP-94 A; east component of binary system; goal SNR=200,y,N,,nan,n
-693,,453,1,KOI-13A,19,7,53.13,46,52,06,2000,jmag=,9.50,453,453,1,x,1,simulcal=,n,gmag=,10.4,Teff=,7650,Gaia DR3,2130632159136095104,MR,p,2,Y280,ideally observed back-to-back with KOI-13 B; southeast component of binary system; goal SNR=200,y,N,,nan,n
-1128,,888,1,KOI-13B,19,7,53.02,46,52,06,2000,jmag=,10.6,888,888,1,x,1,simulcal=,n,gmag=,10.6,Teff=,7063,Gaia DR3,2130632159130638464,MR,p,2,Y280,ideally observed back-to-back with KOI-13 A; northwest component of binary system; goal SNR=200,y,N,,nan,n
-287,,47,1,20782,03,20,3.99,-28,51,16,2000,jmag=,6.30,47,47,1,x,1,simulcal=,n,gmag=,7.2,Teff=,5782,Gaia DR3,5060104351007433472,MR,p,2,Y280,ideally observed back-to-back with HD 20781; southeast component of binary system; goal SNR=200,y,N,,nan,n
-337,,97,1,20781,03,20,3.35,-28,47,03,2000,jmag=,7.00,97,97,1,x,1,simulcal=,n,gmag=,8.2,Teff=,5342,Gaia DR3,5060105897197110144,MR,p,2,Y280,ideally observed back-to-back with HD 20782; northwest component of binary system; goal SNR=200,y,N,,nan,n
-390,,150,1,KELT-2A,06,10,39.37,30,57,26,2000,jmag=,7.70,150,150,1,x,1,simulcal=,n,gmag=,8.6,Teff=,6327,Gaia DR3,3438059369839738624,MR,p,2,Y280,ideally observed back-to-back with KELT-2 B; southeast component of binary system; goal SNR=200,y,N,,nan,n
-3726,,3486,1,KELT-2B,06,10,39.28,30,57,28,2000,jmag=,12.0,1162,1162,3,x,1,simulcal=,n,gmag=,12.0,Teff=,5247,Gaia DR3,3438059442854472832,MR,p,2,Y280,"ideally observed back-to-back with KELT-2 A; northwest component of binary system; goal SNR=200, Texp=3484",y,N,,nan,n
-478,,238,1,80606,09,22,37.67,50,36,14,2000,jmag=,7.70,238,238,1,x,1,simulcal=,n,gmag=,8.8,Teff=,5561,Gaia DR3,1019003226022657920,MR,p,2,Y280,ideally observed back-to-back with HD 80607;northeast component of binary system; goal SNR=200,y,N,,nan,n
-455,,215,1,80607,09,22,39.82,50,36,14,2000,jmag=,7.80,215,215,1,x,1,simulcal=,n,gmag=,9.0,Teff=,5538,Gaia DR3,1019003329101872896,MR,p,2,Y280,ideally observed back-to-back with HD 80606; southwest component of binary system; goal SNR=200,y,N,,nan,n
-690,,450,1,TIC139474683,05,52,30.44,07,57,09,2000,jmag=,10.86,450,600,1,x,1,simulcal=,y,gmag=,12.2,Teff=,5988,Gaia DR3,3323055543114557184,NS,p,1,H390,RM Dec 20,Y,N,,nan,y
-760,,520,1,TIC256722647,21,58,15.34,71,07,54,2000,jmag=,11.08,520,750,1,x,1,simulcal=,y,gmag=,12.5,Teff=,5761,Gaia DR3,2224458777730383616,NS,p,1,H390,"RM Aug 4, transit 0945-1443 UTC, 1.5h baseline",Y,N,,nan,y
-7775,,71,25,93963,10,51,6.41,25,38,28,2000,jmag=,8.11,71,71,1,x,5,simulcal=,y,gmag=,9.0,Teff=,5987,Gaia DR3,729899906357408768,CB,p,1,H376,Observe w cadence of ~5 RVs/night separated by ~1 hr (25 RVs total),Y,N,,1,n
-22960,,334,40,GJ3929 ,15,58,18.62,35,24,29,2000,jmag=,8.69,334,334,1,x,4,simulcal=,y,gmag=,11.5,Teff=,3384,Gaia DR3,1372215976327300480,CB,p,1,H376,Observe w cadence of 4 RVs/night separated by >1 hr (40 RVs total),Y,N,,1,n
-23600,,940,20,Kepler-99,19,49,25.52,41,18,14,2000,jmag=,11.02,940,940,1,x,2,simulcal=,y,gmag=,12.5,Teff=,5054.63,Gaia DR3,2076871091425583232,CB,p,2,H376,Observe w cadence of 2 RVs/night separated by as much as possible (>3 hours) (20 RVs total),Y,N,,3,n
-7500,,260,15,T001444,20,21,53.98,70,56,37,2000,jmag=,9.47,260,260,1,x,5,simulcal=,y,gmag=,10.6,Teff=,5430,Gaia DR4,2274696151198328960,CB,p,3,H376,Observe w cadence of ~5 RVs/night separated by ~1 hr (15 RVs total),Y,N,,1,n
-51300,,900,45,K00148,19,56,33.4,40,56,56,2000,jmag=,11.70,900,900,1,x,1,simulcal=,y,gmag=,13.1,Teff=,5118,Gaia DR3,2075112109039378688,EP,p,1,U012,"Kepler-48, observe every night we are on the telescope until mid-dec",Y,N,1,,n
-114000,,900,100,T006324,22,3,22.7,67,29,55,2000,jmag=,9.40,900,900,1,x,2,simulcal=,y,gmag=,12.2,Teff=,3300,Gaia DR3,2220012421430629632,FD,p,1,N461,Observe 2x per night,y,n,0,3,n
-54000,,300,100,T005961,23,16,51.9,05,41,45,2000,jmag=,7.90,300,300,1,x,2,simulcal=,y,gmag=,9.9,Teff=,3900,Gaia DR3,2664042942398600064,FD,p,1,N461,"Observe 2x per night, separate by 3hr",y,n,0,3,n
-114000,,900,100,T005530,00,25,57.2,-05,41,49,2000,jmag=,10.20,900,900,1,x,2,simulcal=,y,gmag=,12.3,Teff=,3900,Gaia DR3,2431638070123733120,FD,p,1,N461,"Observe 2x per night, separate by 3hr",y,n,0,3,n
-569,,329,1,2M00284657+0321391,00,28,46.57,03,21,39,2000,jmag=,10.6,329,400,1,x,1,simulcal=,y,gmag=,10.6,Teff=,4636,Gaia DR3,2547892973582849920,JO,p,2,H357,,,,,nan,n
-621,,381,1,2M00434887+1846525,00,43,48.87,18,46,53,2000,jmag=,10.7,381,400,1,x,1,simulcal=,y,gmag=,10.7,Teff=,4347,Gaia DR3,2783161798769417600,JO,p,2,H357,,,,,nan,n
-252,,12,1,2M01225675+0725095,01,22,56.75,07,25,10,2000,jmag=,7.0,12,100,1,x,1,simulcal=,y,gmag=,7.0,Teff=,4360,Gaia DR3,2566277181659646208,JO,p,2,H357,,,,,nan,n
-581,,341,1,2M01404974+3310396,01,40,49.74,33,10,40,2000,jmag=,10.6,341,400,1,x,1,simulcal=,y,gmag=,10.6,Teff=,4582,Gaia DR3,317525287221684608,JO,p,2,H357,,,,,nan,n
-252,,12,1,2M02484368+3106550,02,48,43.68,31,06,55,2000,jmag=,6.6,12,100,1,x,1,simulcal=,y,gmag=,6.6,Teff=,4580,Gaia DR3,130173900330982016,JO,p,2,H357,,,,,nan,n
-475,,235,1,2M03590421+2505379,03,59,4.21,25,05,38,2000,jmag=,10.2,235,300,1,x,1,simulcal=,y,gmag=,10.2,Teff=,4377,Gaia DR3,66280626805140608,JO,p,2,H357,,,,,nan,n
-895,,655,1,2M04350942+5805101,04,35,9.42,58,05,10,2000,jmag=,11.4,655,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4368,Gaia DR3,278564401931982208,JO,p,2,H357,,,,,nan,n
-673,,433,1,2M04425197+0723374,04,42,51.97,07,23,37,2000,jmag=,10.9,433,500,1,x,1,simulcal=,y,gmag=,10.9,Teff=,4602,Gaia DR3,3289139045369149696,JO,p,2,H357,,,,,nan,n
-531,,291,1,2M05180911+2945556,05,18,9.11,29,45,56,2000,jmag=,10.5,291,300,1,x,1,simulcal=,y,gmag=,10.5,Teff=,4407,Gaia DR3,3446689745845534336,JO,p,2,H357,,,,,nan,n
-525,,285,1,2M05191492+2343580,05,19,14.92,23,43,58,2000,jmag=,10.4,285,300,1,x,1,simulcal=,y,gmag=,10.4,Teff=,4610,Gaia DR3,3417178239577007872,JO,p,2,H357,,,,,nan,n
-374,,134,1,2M07162622+2612379,07,16,26.22,26,12,38,2000,jmag=,9.7,134,200,1,x,1,simulcal=,y,gmag=,9.7,Teff=,4373,Gaia DR3,871280986973452672,JO,p,2,H357,,,,,nan,n
-907,,667,1,2M07312565+4303595,07,31,25.65,43,03,60,2000,jmag=,11.4,667,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4484,Gaia DR3,972933894978708224,JO,p,2,H357,,,,,nan,n
-382,,142,1,2M07340277+2939053,07,34,2.77,29,39,05,2000,jmag=,9.8,142,200,1,x,1,simulcal=,y,gmag=,9.8,Teff=,4800,Gaia DR3,879620954468113024,JO,p,2,H357,,,,,nan,n
-506,,266,1,2M07493694+1457293,07,49,36.94,14,57,29,2000,jmag=,10.4,266,300,1,x,1,simulcal=,y,gmag=,10.4,Teff=,4514,Gaia DR3,3164621037152175872,JO,p,2,H357,,,,,nan,n
-577,,337,1,2M07545153+4051467,07,54,51.53,40,51,47,2000,jmag=,10.6,337,400,1,x,1,simulcal=,y,gmag=,10.6,Teff=,4762,Gaia DR3,920702247935488896,JO,p,2,H357,,,,,nan,n
-452,,212,1,2M07552412+3917476,07,55,24.12,39,17,48,2000,jmag=,10.1,212,300,1,x,1,simulcal=,y,gmag=,10.1,Teff=,4403,Gaia DR3,919717429114017152,JO,p,2,H357,,,,,nan,n
-748,,508,1,2M07594433+1822344,07,59,44.33,18,22,34,2000,jmag=,11.1,508,600,1,x,1,simulcal=,y,gmag=,11.1,Teff=,4541,Gaia DR3,669166491812987904,JO,p,2,H357,,,,,nan,n
-736,,496,1,2M08064999+3322165,08,6,49.99,33,22,17,2000,jmag=,11.0,496,500,1,x,1,simulcal=,y,gmag=,11.0,Teff=,4408,Gaia DR3,902263369218625024,JO,p,2,H357,,,,,nan,n
-848,,608,1,2M08101129+3640502,08,10,11.29,36,40,50,2000,jmag=,11.3,608,700,1,x,1,simulcal=,y,gmag=,11.3,Teff=,4363,Gaia DR3,906323659500433664,JO,p,2,H357,,,,,nan,n
-881,,641,1,2M08123609+5337408,08,12,36.09,53,37,41,2000,jmag=,11.3,641,700,1,x,1,simulcal=,y,gmag=,11.3,Teff=,4574,Gaia DR3,1031840951989590272,JO,p,2,H357,,,,,nan,n
-478,,238,1,2M08271362+4128326,08,27,13.62,41,28,33,2000,jmag=,10.2,238,300,1,x,1,simulcal=,y,gmag=,10.2,Teff=,4424,Gaia DR3,914771516574592896,JO,p,2,H357,,,,,nan,n
-359,,119,1,2M08363324+1516597,08,36,33.24,15,16,60,2000,jmag=,9.6,119,200,1,x,1,simulcal=,y,gmag=,9.6,Teff=,4517,Gaia DR3,657626292645182080,JO,p,2,H357,,,,,nan,n
-928,,688,1,2M09244286+3520321,09,24,42.86,35,20,32,2000,jmag=,11.4,688,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4866,Gaia DR3,798565884982660096,JO,p,2,H357,,,,,nan,n
-938,,698,1,2M09280412+2725458,09,28,4.12,27,25,46,2000,jmag=,11.4,698,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4632,Gaia DR3,694541639634307712,JO,p,2,H357,,,,,nan,n
-785,,545,1,2M10160829+4424400,10,16,8.29,44,24,40,2000,jmag=,11.1,545,600,1,x,1,simulcal=,y,gmag=,11.1,Teff=,4837,Gaia DR3,809059005482867840,JO,p,2,H357,,,,,nan,n
-376,,136,1,2M10214349+3631535,10,21,43.49,36,31,54,2000,jmag=,9.7,136,200,1,x,1,simulcal=,y,gmag=,9.7,Teff=,4586,Gaia DR3,753931687192476288,JO,p,2,H357,,,,,nan,n
-472,,232,1,2M10292571+3631444,10,29,25.71,36,31,44,2000,jmag=,10.2,232,300,1,x,1,simulcal=,y,gmag=,10.2,Teff=,4593,Gaia DR3,754439734579243776,JO,p,2,H357,,,,,nan,n
-660,,420,1,2M11111316+0658099,11,11,13.16,06,58,10,2000,jmag=,10.8,420,500,1,x,1,simulcal=,y,gmag=,10.8,Teff=,4480,Gaia DR3,3818092992611836672,JO,p,2,H357,,,,,nan,n
-807,,567,1,2M11482364+3504215,11,48,23.64,35,04,22,2000,jmag=,11.2,567,600,1,x,1,simulcal=,y,gmag=,11.2,Teff=,4442,Gaia DR3,4031253937499438848,JO,p,2,H357,,,,,nan,n
-383,,143,1,2M12165297+0541261,12,16,52.97,05,41,26,2000,jmag=,9.8,143,200,1,x,1,simulcal=,y,gmag=,9.8,Teff=,4627,Gaia DR3,3894478985971517056,JO,p,2,H357,,,,,nan,n
-806,,566,1,2M12192916+0030384,12,19,29.16,00,30,38,2000,jmag=,11.2,566,600,1,x,1,simulcal=,y,gmag=,11.2,Teff=,4532,Gaia DR3,3698298726865928192,JO,p,2,H357,,,,,nan,n
-715,,475,1,2M12230871+4527544,12,23,8.71,45,27,54,2000,jmag=,11.0,475,500,1,x,1,simulcal=,y,gmag=,11.0,Teff=,4268,Gaia DR3,1544750550683288832,JO,p,2,H357,,,,,nan,n
-756,,516,1,2M12373781+4539492,12,37,37.81,45,39,49,2000,jmag=,11.1,516,600,1,x,1,simulcal=,y,gmag=,11.1,Teff=,4700,Gaia DR3,1541305334078958848,JO,p,2,H357,,,,,nan,n
-572,,332,1,2M12442019+4619140,12,44,20.19,46,19,14,2000,jmag=,10.6,332,400,1,x,1,simulcal=,y,gmag=,10.6,Teff=,4583,Gaia DR3,1542616639134835968,JO,p,2,H357,,,,,nan,n
-530,,290,1,2M13034595+2837205,13,3,45.95,28,37,21,2000,jmag=,10.5,290,300,1,x,1,simulcal=,y,gmag=,10.5,Teff=,4517,Gaia DR3,1461221030278712064,JO,p,2,H357,,,,,nan,n
-575,,335,1,2M13564919+2429274,13,56,49.19,24,29,27,2000,jmag=,10.6,335,400,1,x,1,simulcal=,y,gmag=,10.6,Teff=,4562,Gaia DR3,1257953594096532480,JO,p,2,H357,,,,,nan,n
-601,,361,1,2M14025529+2434102,14,2,55.29,24,34,10,2000,jmag=,10.7,361,400,1,x,1,simulcal=,y,gmag=,10.7,Teff=,4562,Gaia DR3,1257816464380723328,JO,p,2,H357,,,,,nan,n
-254,,14,1,2M14062615+3050475,14,6,26.15,30,50,48,2000,jmag=,7.2,14,100,1,x,1,simulcal=,y,gmag=,7.2,Teff=,4669,Gaia DR3,1454245453633192576,JO,p,2,H357,,,,,nan,n
-932,,692,1,2M14292053+0929377,14,29,20.53,09,29,38,2000,jmag=,11.4,692,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4443,Gaia DR3,1176314546496417280,JO,p,2,H357,,,,,nan,n
-409,,169,1,2M14321303+4536295,14,32,13.03,45,36,30,2000,jmag=,9.9,169,200,1,x,1,simulcal=,y,gmag=,9.9,Teff=,4467,Gaia DR3,1494347975593649920,JO,p,2,H357,,,,,nan,n
-870,,630,1,2M14355973+5321429,14,35,59.73,53,21,43,2000,jmag=,11.3,630,700,1,x,1,simulcal=,y,gmag=,11.3,Teff=,4534,Gaia DR3,1606734556626908416,JO,p,2,H357,,,,,nan,n
-799,,559,1,2M14454102+3407192,14,45,41.02,34,07,19,2000,jmag=,11.2,559,600,1,x,1,simulcal=,y,gmag=,11.2,Teff=,4687,Gaia DR3,1292848932067458048,JO,p,2,H357,,,,,nan,n
-669,,429,1,2M14513461+1709364,14,51,34.61,17,09,36,2000,jmag=,10.9,429,500,1,x,1,simulcal=,y,gmag=,10.9,Teff=,4420,Gaia DR3,1188218443494278016,JO,p,2,H357,,,,,nan,n
-433,,193,1,2M15031027+2618462,15,3,10.27,26,18,46,2000,jmag=,10.0,193,200,1,x,1,simulcal=,y,gmag=,10.0,Teff=,4657,Gaia DR3,1268024536491723520,JO,p,2,H357,,,,,nan,n
-832,,592,1,2M15061530+5348151,15,6,15.3,53,48,15,2000,jmag=,11.2,592,600,1,x,1,simulcal=,y,gmag=,11.2,Teff=,4674,Gaia DR3,1600003793118466176,JO,p,2,H357,,,,,nan,n
-644,,404,1,2M15392086+4745238,15,39,20.86,47,45,24,2000,jmag=,10.8,404,500,1,x,1,simulcal=,y,gmag=,10.8,Teff=,4301,Gaia DR3,1401159589135954432,JO,p,2,H357,,,,,nan,n
-568,,328,1,2M15393148+2902081,15,39,31.48,29,02,08,2000,jmag=,10.6,328,400,1,x,1,simulcal=,y,gmag=,10.6,Teff=,4772,Gaia DR3,1272856855736663040,JO,p,2,H357,,,,,nan,n
-476,,236,1,2M16003799+4724117,16,0,37.99,47,24,12,2000,jmag=,10.2,236,300,1,x,1,simulcal=,y,gmag=,10.2,Teff=,4649,Gaia DR3,1398884081103135744,JO,p,2,H357,,,,,nan,n
-539,,299,1,2M16004908+4647072,16,0,49.08,46,47,07,2000,jmag=,10.5,299,300,1,x,1,simulcal=,y,gmag=,10.5,Teff=,4577,Gaia DR3,1398717333292238848,JO,p,2,H357,,,,,nan,n
-634,,394,1,2M16052028+2959488,16,5,20.28,29,59,49,2000,jmag=,10.8,394,400,1,x,1,simulcal=,y,gmag=,10.8,Teff=,4593,Gaia DR3,1320316278715947392,JO,p,2,H357,,,,,nan,n
-949,,709,1,2M16241551+2637281,16,24,15.51,26,37,28,2000,jmag=,11.5,709,800,1,x,1,simulcal=,y,gmag=,11.5,Teff=,4445,Gaia DR3,1305000356620687488,JO,p,2,H357,,,,,nan,n
-394,,154,1,2M16250656+3002259,16,25,6.56,30,02,26,2000,jmag=,9.8,154,200,1,x,1,simulcal=,y,gmag=,9.8,Teff=,4284,Gaia DR3,1318101346902484352,JO,p,2,H357,,,,,nan,n
-752,,512,1,2M16411431+7634328,16,41,14.31,76,34,33,2000,jmag=,11.1,512,600,1,x,1,simulcal=,y,gmag=,11.1,Teff=,4710,Gaia DR3,1703467837291943936,JO,p,2,H357,,,,,nan,n
-454,,214,1,2M16442562+4326502,16,44,25.62,43,26,50,2000,jmag=,10.1,214,300,1,x,1,simulcal=,y,gmag=,10.1,Teff=,4449,Gaia DR3,1357601061612512128,JO,p,2,H357,,,,,nan,n
-462,,222,1,2M17203767+5802115,17,20,37.67,58,02,12,2000,jmag=,10.2,222,300,1,x,1,simulcal=,y,gmag=,10.2,Teff=,4435,Gaia DR3,1433209391013360384,JO,p,2,H357,,,,,nan,n
-718,,478,1,2M18470628+4340344,18,47,6.28,43,40,34,2000,jmag=,11.0,478,500,1,x,1,simulcal=,y,gmag=,11.0,Teff=,4325,Gaia DR3,2105255190248353792,JO,p,2,H357,,,,,nan,n
-400,,160,1,2M19052715+4422517,19,5,27.15,44,22,52,2000,jmag=,9.9,160,200,1,x,1,simulcal=,y,gmag=,9.9,Teff=,4630,Gaia DR3,2106098068990306304,JO,p,2,H357,,,,,nan,n
-739,,499,1,2M19093571+4930362,19,9,35.71,49,30,36,2000,jmag=,11.0,499,500,1,x,1,simulcal=,y,gmag=,11.0,Teff=,4684,Gaia DR3,2132809192158414464,JO,p,2,H357,,,,,nan,n
-939,,699,1,2M19200011+4149074,19,20,0.11,41,49,07,2000,jmag=,11.4,699,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4406,Gaia DR3,2101864571264254080,JO,p,2,H357,,,,,nan,n
-501,,261,1,2M19234503+3744304,19,23,45.03,37,44,30,2000,jmag=,10.3,261,300,1,x,1,simulcal=,y,gmag=,10.3,Teff=,4309,Gaia DR3,2052547793971117056,JO,p,2,H357,,,,,nan,n
-715,,475,1,2M19315759+4622327,19,31,57.59,46,22,33,2000,jmag=,11.0,475,500,1,x,1,simulcal=,y,gmag=,11.0,Teff=,4471,Gaia DR3,2128271129715505280,JO,p,2,H357,,,,,nan,n
-850,,610,1,2M19371802+3919430,19,37,18.02,39,19,43,2000,jmag=,11.3,610,700,1,x,1,simulcal=,y,gmag=,11.3,Teff=,4452,Gaia DR3,2052414207612692864,JO,p,2,H357,,,,,nan,n
-896,,656,1,2M19410755+3920580,19,41,7.55,39,20,58,2000,jmag=,11.4,656,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4494,Gaia DR3,2076193723545609472,JO,p,2,H357,,,,,nan,n
-844,,604,1,2M19485155+3942492,19,48,51.55,39,42,49,2000,jmag=,11.3,604,700,1,x,1,simulcal=,y,gmag=,11.3,Teff=,4546,Gaia DR3,2073644883794182912,JO,p,2,H357,,,,,nan,n
-805,,565,1,2M19525474+4432210,19,52,54.74,44,32,21,2000,jmag=,11.2,565,600,1,x,1,simulcal=,y,gmag=,11.2,Teff=,4740,Gaia DR3,2079266824180801536,JO,p,2,H357,,,,,nan,n
-886,,646,1,2M19550000+4434211,19,55,0,44,34,21,2000,jmag=,11.4,646,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4541,Gaia DR3,2079093376225156608,JO,p,2,H357,,,,,nan,n
-711,,471,1,2M22161177+5256226,22,16,11.77,52,56,23,2000,jmag=,10.9,471,500,1,x,1,simulcal=,y,gmag=,10.9,Teff=,5026,Gaia DR3,2004350603002238976,JO,p,2,H357,,,,,nan,n
-698,,458,1,2M23570064+5724573,23,57,0.64,57,24,57,2000,jmag=,10.9,458,500,1,x,1,simulcal=,y,gmag=,10.9,Teff=,4428,Gaia DR3,1998109500112204160,JO,p,2,H357,,,,,nan,n
-668,,428,1,2M23575198+5616414,23,57,51.98,56,16,41,2000,jmag=,10.9,428,500,1,x,1,simulcal=,y,gmag=,10.9,Teff=,4534,Gaia DR3,1994798801884205696,JO,p,2,H357,,,,,nan,n
-360,,120,1,KOI-0063,19,16,54.2808,49,32,54,2000,jmag=,10.40,120,120,1,x,1,simulcal=,y,gmag=,11.5,Teff=,5576,Gaia DR3,2132628489996257920,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-0084,19,21,40.9944,37,51,06,2000,jmag=,10.72,120,120,1,x,1,simulcal=,y,gmag=,11.9,Teff=,5541,Gaia DR3,2051106987063242880,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-0087,19,16,52.2,47,53,04,2000,jmag=,10.52,120,120,1,x,1,simulcal=,y,gmag=,11.6,Teff=,5642,Gaia DR3,2127941757262806656,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-0105,19,55,44.8896,44,51,28,2000,jmag=,11.65,120,120,1,x,1,simulcal=,y,gmag=,12.9,Teff=,5660,Gaia DR3,2079192121810035840,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-0112,19,42,35.6904,48,29,44,2000,jmag=,11.70,120,120,1,x,1,simulcal=,y,gmag=,12.8,Teff=,5837,Gaia DR3,2134719834131370496,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-0118,19,9,27.0696,38,38,59,2000,jmag=,11.27,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,5747,Gaia DR3,2099605968225288960,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-0270,19,34,55.8768,41,54,03,2000,jmag=,10.09,120,120,1,x,1,simulcal=,y,gmag=,11.5,Teff=,5588,Gaia DR3,2077618037775709568,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-0283,19,14,7.3968,40,56,32,2000,jmag=,10.42,120,120,1,x,1,simulcal=,y,gmag=,11.5,Teff=,5685,Gaia DR3,2102110174677569664,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-0299,19,2,38.796,37,57,52,2000,jmag=,11.67,120,120,1,x,1,simulcal=,y,gmag=,12.9,Teff=,5539,Gaia DR3,2099862910348755712,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-0303,19,34,42.0768,41,17,43,2000,jmag=,11.02,120,120,1,x,1,simulcal=,y,gmag=,12.1,Teff=,5637,Gaia DR3,2077409645964537472,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-0306,19,57,16.692,41,23,05,2000,jmag=,11.26,120,120,1,x,1,simulcal=,y,gmag=,12.6,Teff=,5323,Gaia DR3,2075161655782111872,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-0314,19,21,31.56,43,17,35,2000,jmag=,10.29,120,120,1,x,1,simulcal=,y,gmag=,12.5,Teff=,3871,Gaia DR3,2102053446751282944,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-0323,18,56,14.6712,45,30,25,2000,jmag=,11.28,120,120,1,x,1,simulcal=,y,gmag=,12.5,Teff=,5427,Gaia DR3,2106821925598401152,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-0372,19,56,29.3856,41,52,00,2000,jmag=,11.29,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,5815,Gaia DR3,2075377679763353984,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-0984,19,24,11.712,36,50,24,2000,jmag=,10.46,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,5295,Gaia DR3,2050249406650364160,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-0987,19,42,17.7984,42,48,23,2000,jmag=,11.23,120,120,1,x,1,simulcal=,y,gmag=,12.5,Teff=,5512,Gaia DR3,2077994272606400512,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-1283,19,44,1.7064,44,51,13,2000,jmag=,10.49,120,120,1,x,1,simulcal=,y,gmag=,11.6,Teff=,5775,Gaia DR3,2079752464723012096,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-1478,19,15,23.6712,51,12,33,2000,jmag=,11.30,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,5593,Gaia DR3,2133344791759137152,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-1611,19,16,18.1704,51,45,27,2000,jmag=,9.82,120,120,1,x,1,simulcal=,y,gmag=,11.7,Teff=,4450,Gaia DR3,2133476355197071616,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-1619,19,39,57.6552,39,20,47,2000,jmag=,10.28,120,120,1,x,1,simulcal=,y,gmag=,11.8,Teff=,4834,Gaia DR3,2076237253025202688,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-1800,19,1,4.4616,48,33,36,2000,jmag=,11.21,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,5541,Gaia DR3,2131587531660567296,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-1961,19,10,17.0808,42,48,50,2000,jmag=,11.54,120,120,1,x,1,simulcal=,y,gmag=,12.8,Teff=,5430,Gaia DR3,2102600488143944192,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-1964,19,22,48.888,43,36,26,2000,jmag=,9.40,120,120,1,x,1,simulcal=,y,gmag=,10.7,Teff=,5589,Gaia DR3,2126080314136290560,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-2029,19,59,35.1624,46,03,07,2000,jmag=,11.61,120,120,1,x,1,simulcal=,y,gmag=,13.0,Teff=,5212,Gaia DR3,2085281530744134272,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-2059,19,10,21.6216,51,03,38,2000,jmag=,11.31,120,120,1,x,1,simulcal=,y,gmag=,13.2,Teff=,4999,Gaia DR3,2133011639737119872,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-2079,19,39,54.9168,46,00,20,2000,jmag=,11.66,120,120,1,x,1,simulcal=,y,gmag=,12.9,Teff=,5582,Gaia DR3,2080070975195117312,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-2173,19,49,10.1808,49,58,54,2000,jmag=,11.24,120,120,1,x,1,simulcal=,y,gmag=,12.8,Teff=,4844,Gaia DR3,2087250476887856256,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-2208,19,22,10.4736,47,43,33,2000,jmag=,11.34,120,120,1,x,1,simulcal=,y,gmag=,12.3,Teff=,5818,Gaia DR3,2129369095153280000,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-2287,19,39,47.6592,46,26,19,2000,jmag=,10.85,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,4661,Gaia DR3,2080095512350543744,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-2295,19,18,10.8336,39,09,52,2000,jmag=,10.09,120,120,1,x,1,simulcal=,y,gmag=,11.7,Teff=,5424,Gaia DR3,2100954278719435008,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-2583,18,53,42.9864,47,35,33,2000,jmag=,11.46,120,120,1,x,1,simulcal=,y,gmag=,12.6,Teff=,5642,Gaia DR3,2107658516506930048,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-2675,19,31,53.1,41,02,09,2000,jmag=,11.32,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,5728,Gaia DR3,2053550106200274688,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-2678,19,29,33.252,42,13,60,2000,jmag=,10.52,120,120,1,x,1,simulcal=,y,gmag=,11.8,Teff=,5398,Gaia DR3,2125713940547834496,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-2754,18,54,58.9968,48,22,24,2000,jmag=,11.03,120,120,1,x,1,simulcal=,y,gmag=,12.1,Teff=,5776,Gaia DR3,2131677584235170048,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-2755,19,26,17.8128,38,39,21,2000,jmag=,11.07,120,120,1,x,1,simulcal=,y,gmag=,12.1,Teff=,5830,Gaia DR3,2052740449026979584,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-2803,19,39,28.0512,46,47,26,2000,jmag=,11.06,120,120,1,x,1,simulcal=,y,gmag=,12.2,Teff=,5615,Gaia DR3,2128517003703948032,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-2867,19,40,36.1224,46,46,20,2000,jmag=,11.07,120,120,1,x,1,simulcal=,y,gmag=,12.6,Teff=,4945,Gaia DR3,2080481990687615616,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-3158,19,19,0.5496,41,38,05,2000,jmag=,7.24,120,120,1,x,1,simulcal=,y,gmag=,8.7,Teff=,5046,Gaia DR3,2101486923385239808,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-3232,18,48,28.2792,46,13,26,2000,jmag=,11.13,120,120,1,x,1,simulcal=,y,gmag=,12.2,Teff=,5733,Gaia DR3,2119099931425654912,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-3237,19,1,19.3512,42,02,26,2000,jmag=,11.20,120,120,1,x,1,simulcal=,y,gmag=,12.2,Teff=,5733,Gaia DR3,2104172854190854528,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-3246,19,17,41.748,46,43,34,2000,jmag=,10.80,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,4871,Gaia DR3,2127777307254217472,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-3864,19,33,22.7928,39,15,28,2000,jmag=,11.49,120,120,1,x,1,simulcal=,y,gmag=,12.9,Teff=,5011,Gaia DR3,2052368955838887808,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-3876,19,21,45.7608,38,31,25,2000,jmag=,11.46,120,120,1,x,1,simulcal=,y,gmag=,12.6,Teff=,5618,Gaia DR3,2052827207364859264,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-3892,19,22,14.2824,49,56,35,2000,jmag=,11.57,120,120,1,x,1,simulcal=,y,gmag=,12.7,Teff=,5707,Gaia DR3,2130033097097486336,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-4004,18,55,58.8216,39,55,01,2000,jmag=,11.49,120,120,1,x,1,simulcal=,y,gmag=,12.7,Teff=,5761,Gaia DR3,2103314346067173504,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-4032,19,2,54.8376,42,39,16,2000,jmag=,11.42,120,120,1,x,1,simulcal=,y,gmag=,12.6,Teff=,5575,Gaia DR3,2105526799680172032,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-4288,19,9,29.1,39,36,13,2000,jmag=,11.33,120,120,1,x,1,simulcal=,y,gmag=,12.3,Teff=,5882,Gaia DR3,2100418850915010432,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-4292,19,5,32.8632,47,00,60,2000,jmag=,11.69,120,120,1,x,1,simulcal=,y,gmag=,12.8,Teff=,5812,Gaia DR3,2130695518492411904,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-4399,18,48,30.9312,44,18,11,2000,jmag=,10.78,120,120,1,x,1,simulcal=,y,gmag=,12.0,Teff=,5585,Gaia DR3,2105389708623762304,IB,p,2,U011,,y,n,,,n
-360,,120,1,KOI-4582,19,45,20.8512,43,36,00,2000,jmag=,10.62,120,120,1,x,1,simulcal=,y,gmag=,11.7,Teff=,5737,Gaia DR3,2078794755737702144,IB,p,2,U011,,y,n,,,n
-10800,,300,20,42813,6,12,13.8,-14,38,56,2000,jmag=,8.055999756,300,300,1,x,1,simulcal=,y,gmag=,9.282242775,Teff=,5398,Gaia DR3,2993561629444856960,TK,p,1,U151,,y,n,1,,n
-10800,,300,20,12572,2,3,37.3,21,16,54,2000,jmag=,7.921999931,300,300,1,x,1,simulcal=,y,gmag=,9.033464432,Teff=,5599,Gaia DR3,94468978202180352,TK,p,1,U151,,y,n,1,,n
-10800,,300,20,6061,1,2,24,37,11,7,2000,jmag=,7.710999966,300,300,1,x,1,simulcal=,y,gmag=,8.709353447,Teff=,5972,Gaia DR3,369669965470499456,TK,p,1,U151,,y,n,1,,n
-10800,,300,20,237566,7,0,19.2,56,49,27,2000,jmag=,8.265000343,300,300,1,x,1,simulcal=,y,gmag=,9.24847126,Teff=,5852,Gaia DR3,1000423609817438592,TK,p,1,U151,,y,n,1,,n
-16800,,600,20,T001249,13,22,14.4,66,18,30,2000,jmag=,9.536000252,600,600,1,x,1,simulcal=,y,gmag=,10.69962597,Teff=,5502,Gaia DR3,1678371724905519744,TK,p,1,U151,,y,n,1,,n
-16800,,600,20,T001279,12,20,14.4,56,12,5,2000,jmag=,9.333999634,600,600,1,x,1,simulcal=,y,gmag=,10.48054314,Teff=,5414,Gaia DR3,1574358783911530624,TK,p,1,U151,,y,n,1,,n
-16800,,600,20,T001472,0,56,26.4,48,38,15,2000,jmag=,9.793999672,600,600,1,x,1,simulcal=,y,gmag=,11.11361885,Teff=,5714,Gaia DR3,402396521052843264,TK,p,1,U151,,y,n,1,,n
-10800,,300,20,87620,10,7,14.4,46,6,53,2000,jmag=,8.123999596,300,300,1,x,1,simulcal=,y,gmag=,9.161318779,Teff=,5859,Gaia DR3,810069697186043264,TK,p,1,U151,,y,n,1,,n
-16800,,600,20,T005507,9,54,24,6,38,47,2000,jmag=,9.394000053,600,600,1,x,1,simulcal=,y,gmag=,11.94074535,Teff=,3514,Gaia DR3,3850532189108251008,TK,p,1,U151,,y,n,1,,n
-16800,,600,20,T005799,20,6,31.2,15,59,24,2000,jmag=,9.741999626,600,600,1,x,1,simulcal=,y,gmag=,12.30795383,Teff=,3521,Gaia DR3,1807887150930343424,TK,p,1,U151,,y,n,1,,n
-10800,,300,20,T006026,0,0,52.8,35,45,0,2000,jmag=,8.036999702,300,300,1,x,1,simulcal=,y,gmag=,9.612057686,Teff=,4540,Gaia DR3,2877050883371424768,TK,p,1,U151,,y,n,1,,n
-7320,,126,20,3651,0,39,21.8053,21,14,53,2000,jmag=,4.47,42,42,3,x,1,simulcal=,y,gmag=,5.654319,Teff=,5240,GaiaDR3,2802397960855105920,AH,p,1,C398,,y,n,1,,n
-6240,,72,20,4628,0,48,22.9759,5,16,23,2000,jmag=,4.37,36,36,2,x,1,simulcal=,y,gmag=,5.467689,Teff=,4960,GaiaDR3,2552925644460225152,AH,p,1,C398,,y,n,1,,n
-6000,,60,20,4614,0,49,9.5,57,48,41,2000,jmag=,2.37,12,12,5,x,1,simulcal=,y,gmag=,3.320067,Teff=,5880,GaiaDR3,425040000962559616,AH,p,1,C398,,y,n,1,,n
-6420,,81,20,10476,1,42,29.7625,20,15,51,2000,jmag=,3.83,27,27,3,x,1,simulcal=,y,gmag=,4.99968,Teff=,5200,GaiaDR3,96331172942614528,AH,p,1,C398,,y,n,1,,n
-5760,,48,20,10700,1,44,4.0831,-15,55,55,2000,jmag=,2.14,12,12,4,x,1,simulcal=,y,gmag=,3.3004,Teff=,5310,GaiaDR3,2452378776434477184,AH,p,1,C398,,y,n,1,,n
-6720,,96,20,19373,3,9,4.0193,49,36,47.802,2000,jmag=,3.14,12,12,8,x,1,simulcal=,y,gmag=,3.902639,Teff=,5940,GaiaDR3,436648129327098496,AH,p,1,C398,,y,n,1,,n
-5760,,48,20,26965,4,15,12.8,-7,40,31,2000,jmag=,2.93,12,12,4,x,1,simulcal=,y,gmag=,4.179894,Teff=,5133,GaiaDR3,3195919528989223040,AH,p,1,C398,,y,n,1,,n
-7620,,141,20,32147,5,0,48.9993,-5,45,39,2000,jmag=,4.45,47,47,3,x,1,simulcal=,y,gmag=,5.886492,Teff=,4800,GaiaDR3,3211461469444773376,AH,p,1,C398,,y,n,1,,n
-7560,,138,20,34411,5,19,8.4754,40,5,41,2000,jmag=,3.61,23,23,6,x,1,simulcal=,y,gmag=,4.525885,Teff=,5830,GaiaDR3,188771135583573504,AH,p,1,C398,,y,n,1,,n
-7980,,159,20,50692,6,55,18.6663,25,22,32.503,2000,jmag=,4.913,53,53,3,x,1,simulcal=,y,gmag=,5.602784,Teff=,5810,GaiaDR3,3381727613874753536,AH,p,1,C398,,y,n,1,,n
-8480,,184,20,55575,7,15,50.1391,47,14,19,2000,jmag=,4.48,46,46,4,x,1,simulcal=,y,gmag=,5.38816,Teff=,5800,GaiaDR3,974887555341533440,AH,p,1,C398,,y,n,1,,n
-8600,,190,20,86728,10,1,0.6568,31,55,15,2000,jmag=,4.27,38,38,5,x,1,simulcal=,y,gmag=,5.204957,Teff=,5760,GaiaDR3,746545172372256384,AH,p,1,C398,,y,n,1,,n
-7900,,155,20,95128,10,59,27.9727,40,25,50,2000,jmag=,3.96,31,31,5,x,1,simulcal=,y,gmag=,4.866588,Teff=,5850,GaiaDR3,777254360337133312,AH,p,1,C398,,y,n,1,,n
-6300,,75,20,95735,11,3,19.1,35,56,19,2000,jmag=,4.2,75,75,1,x,1,simulcal=,y,gmag=,6.551172,Teff=,3589,GaiaDR3,762815470562110464,AH,p,1,C398,,y,n,1,,n
-,,,,MASCARA-1,21,10,12,10,44,20,2000,jmag=,7.8,300,300,99,x,1,simulcal=,n,gmag=,8.3,Teff=,7490,GaiaDR3,1744911763437512064,AH,p,1,C400,"aka HD201585, atmospheric event observation",n,y,nan,nan,y
+Time(sec)_full_semester,Slew+readout(sec),Time_per_night(sec),N_obs(full_semester),Starname,RAH,RAM,RAS,DECD,DECM,DECS,epoch,jmag=,Jmag,T_exp(sec),T_max(sec),Nobs per,Format1,Nvisits,Format2,Simulcal,gmag=,Gmag,Teff,Teff_val,Gaia_DR3,Gaia_DR3_id,Program code,Format3,priority,Telescope,Comment,Include,Done,Cadence,IntraNightCadence,RM or,,SUM for Each program
+Exposure time + overhead,240,,requested ,,,,,,,,,,,nominal,maximum,Visit,,per night,,,,,,,,,(for script),,,Propsoal Code,,Y/N,y/n,min separation,min separation,other Non-Queue,,
+Formula,leave blank,Formula,,,,,,,,,,static,,,,,static,,static,,static,,static,,static,,,static,,,,,,in days (integer),in hours (integers),y/n,,
+do not change,do not change,do not change,,,,,,,,,31,,,,,,,,,,,,,,,,,,,,,,,,,,,
+3744,,48,13,185144,19,32,22.0,69,39,40,2000,jmag=,3.40,16,16,3,x,1of2,simulcal=,y,gmag=,4.5,Teff=,5300,Gaia DR3,2261614264931057664,AH,p,1,C011,SigDra - everynight [EXAMPLE LINE],N,Y,1,nan,n,,25920
+9867,,519,13,149026,16,30,30.0,38,20,50,2000,jmag=,7.10,519,519,1,x,1of3,simulcal=,n,gmag=,8.0,Teff=,6100,Gaia DR3,1331356474971716992,AH,p,1,C015,Known planet (2.9 day orbit) [EXAMPLE LINE],N,Y,5,nan,n,,60480
+25920,,1200,18,Ori40003,05,35,15.55,-05,25,14,2000,jmag=,10.00,1200,1800,1,x,1,simulcal=,n,gmag=,13.1,Teff=,3800,Gaia DR3,3017360966647238272,LH,p,1,C404,"pre-ms stellar quadruple system; goal is every night during september with either kpf or hires, EveryNight",y,n,1,nan,n,,4972800
+60480,,720,63,T001749,18,50,57.07,64,25,09,2000,jmag=,11.10,720,720,1,x,3,simulcal=,y,gmag=,13.2,Teff=,3923,Gaia DR3,2253774094189458432,HK,p,1,C351,"M dwarf with three small planets, TTVs measured with Palomar (PI Mike Greklek-McKeon), everynight",y,n,1,1,n,,29520
+4972800,,8640,560,219134,23,13,20.9,57,10,11,2000,jmag=,3.90,120,120,72,x,4,simulcal=,y,gmag=,5.2,Teff=,4700,Gaia DR3,2009481748875806976,HK,p,1,C382,Measurement of sodium absorption during transit of hot super-Earth HD 219134b; needs continuous observation during transit (1h) + ~2.5h of out-of-transit baseline,y,n,0,nan,y,,36000
+29520,,1400,18,K00319,18,49,34,43,53,22,2000,jmag=,11.50,1400,1400,1,x,1,simulcal=,y,gmag=,12.7,Teff=,5460,Gaia DR3,2105362903731391744,JZ,p,1,C316,"Kepler Field star, which is only obserable in the early months of the semester.",y,n,2,nan,n,,36000
+28800,,1200,20,K00117,19,48,06.8,48,12,31,2000,jmag=,11.39,1200.0,1200.0,1,x,1,simulcal=,y,gmag=,12.5,Teff=,5861,Gaia DR3,2086625752425381632,LW,p,1,D317,Kepler107,,,1,nan,n,,46000
+7200,,1200,5,K00701,18,52,51.1,45,20,59,2000,jmag=,12.26,1200.0,1200.0,1,x,1,simulcal=,y,gmag=,13.7,Teff=,4862,Gaia DR3,2107001283431633408,LW,p,2,D317,Kepler62,,,15,nan,n,,46000
+25000,,260,50,26965,4,15,12.8,-7,40,31,2000,jmag=,2.93,52,52,5,x,1,simulcal=,y,gmag=,4.2,Teff=,5107,Gaia DR3,3195919528989223040,PR,p,1,U147,,y,,1,nan,n,,31260
+21000,,180,50,22049,03,32,55.8,-09,27,30,2000,jmag=,2.23,30,30,6,x,1,simulcal=,y,gmag=,3.4,Teff=,5041,Gaia DR3,5164707970261890560,PR,p,1,U147,Eps Eri,y,,1,nan,n,,31260
+17520,,17280,1,34411,05,19,8.5,40,05,57,2000,jmag=,3.61,18,18,960,x,1,simulcal=,y,gmag=,4.5,Teff=,5784,Gaia DR3,188771135583573504,PR,p,1,U150,observing 8 full hours in fast readout mode to detect p-modes within single night,y,,nan,nan,y,,77800
+13740,,13500,1,26965,4,15,12.8,-7,40,31,2000,jmag=,2.93,12,12,1125,x,1,simulcal=,y,gmag=,4.2,Teff=,5107,Gaia DR3,3195919528989223040,PR,p,1,U150,observing 7.5 full hours in fast readout mode to detect p-modes within single night,y,,nan,nan,y,,77800
+3600,,120,10,HIP102295A,20,43,38.8,19,43,41,2000,jmag=,7.20,120,120,1,x,,simulcal=,y,gmag=,8.1,Teff=,5608,Gaia DR3,1814257343328666624,JW,p,2,H391,observe SE component,,,1,nan,n,,77800
+1760,,200,4,15337,02,27,28.3,-27,38,12,2000,jmag=,7.50,200,200,1,x,1,simulcal=,y,gmag=,8.8,Teff=,5175,Gaia DR3,5068777809824976256,JW,p,2,H391,"companion at 1.5 arcsec, observe brighter component. ",,,1,nan,n,,77800
+1200,,360,2,HIP57386,11,45,55.5,11,22,15,2000,jmag=,8.40,360,360,1,x,1,simulcal=,y,gmag=,9.2,Teff=,6379,Gaia DR3,3913486896315719424,JW,p,2,H391,"companion at 0.7'', observe brighter component (SW)",,,1,nan,n,,77800
+2520,,180,6,HIP64573,13,14,09.7,-16,33,35,2000,jmag=,8.60,180,180,1,x,1,simulcal=,y,gmag=,8.6,Teff=,5344,Gaia DR3,3511580658668406528,JW,p,2,H391,"companion at 1.7'', observe NE component",,,1,nan,n,,77800
+2880,,240,6,HIP93711,19,04,54.7,79,45,23,2000,jmag=,7.80,240,240,1,x,1,simulcal=,y,gmag=,9.3,Teff=,4603,Gaia DR3,2294924072772825088,JW,p,2,H391,,,,1,nan,n,,77800
+1680,,180,4,TIC286132427,09,46,53.9,-04,17,53,2000,jmag=,7.50,180,180,1,x,1,simulcal=,y,gmag=,8.5,Teff=,5815,Gaia DR3,3825847092208384640,JW,p,2,H391,"companion at 1.75'', observe brighter component",,,1,nan,n,,77800
+4320,,300,8,HIP26250,05,35,27.8,21,17,39,2000,jmag=,8.00,300,300,1,x,1,simulcal=,y,gmag=,9.0,Teff=,6169,Gaia DR3,3402980516507429888,JW,p,2,H391,,,,1,nan,n,,77800
+18000,,480,25,HIP24007,05,09,34.8,24,19,27,2000,jmag=,8.60,480,480,1,x,1,simulcal=,y,gmag=,10.2,Teff=,5125,Gaia DR3,3418915433588729856,JW,p,2,H391,"companion at 1 arcsec, observe the East component, rotate the slit to avoid comapnion",,,1,nan,n,,77800
+6800,,100,20,73344,08,38,45.5,23,41,07,2000,jmag=,5.80,100,100,1,x,1,simulcal=,y,gmag=,6.7,Teff=,6061,Gaia DR3,666427539629086976,JW,p,1,H391,TOI-5140,,,1,nan,n,,77800
+1680,,180,4,118203,13,34,02.3,53,43,41,2000,jmag=,6.80,180,180,1,x,1,simulcal=,y,gmag=,7.8,Teff=,5837,Gaia DR3,1560420854826284928,JW,p,2,H391,,,,1,nan,n,,77800
+7200,,360,12,96735,11,08,55.9,34,18,11,2000,jmag=,7.70,360,360,1,x,1,simulcal=,y,gmag=,8.8,Teff=,5690,Gaia DR3,761300339243646848,JW,p,2,H391,,,,1,nan,n,,77800
+3000,,260,6,HIP115594,23,24,55.1,-38,09,39,2000,jmag=,8.40,360,360,1,x,1,simulcal=,y,gmag=,9.5,Teff=,6200,Gaia DR3,6550557886476222336,JW,p,2,H391,"companion at 0.7'', observe NW component, ",,,1,nan,n,,77800
+21000,,600,25,HIP112486,22,47,05.0,29,51,17,2000,jmag=,10.20,600,600,1,x,1,simulcal=,y,gmag=,11.4,Teff=,5278,Gaia DR3,1887706880428475520,JW,p,2,H391,"a close companion at 2 arcsec, rotate the slit to avoid the companion",,,1,nan,n,,77800
+720,,120,2,HIP117249,23,46,29,81,22,41,2000,jmag=,7.30,120,120,1,x,1,simulcal=,y,gmag=,7.8,Teff=,7665,Gaia DR3,2286390900469275136,JW,p,2,H391,TOI-6246,,,1,nan,n,,77800
+720,,120,2,HIP45961,09,22,23,-06,03,38,2000,jmag=,6.80,120,120,1,x,1,simulcal=,y,gmag=,7.3,Teff=,7707,Gaia DR3,5746169949987879680,JW,p,2,H391,TOI-6260,,,1,nan,n,,30480
+720,,120,2,HIP49508,10,6,30,03,28,27,2000,jmag=,7.00,120,120,1,x,1,simulcal=,y,gmag=,7.8,Teff=,6387,Gaia DR3,3836824650659925120,JW,p,2,H391,TOI-6265,,,1,nan,n,,30480
+15240,,15000,1,T002364,05,56,31.2,-05,00,43,2000,jmag=,10.90,300,300,50,x,1,simulcal=,y,gmag=,12.1,Teff=,5300,Gaia DR3,3022644120017418496,SY,p,1,N226,"RM on 2023-10-21, transit time UT 1035-1450 + pre- and post-transit baseline",y,,nan,nan,y,,9780
+15240,,15000,1,T002374,21,17,59.6,-22,00,59,2000,jmag=,10.40,300,300,50,x,1,simulcal=,y,gmag=,11.8,Teff=,4900,Gaia DR3,6828814283414902912,SY,p,1,N226,"RM on 2023-11-06, transit time UT 0435-0736 + pre- and post-transit baseline",y,,nan,nan,y,,9780
+2220,,130,6,T005865,20,44,53.1,06,38,29,2000,jmag=,10.80,130,130,1,x,1,simulcal=,y,gmag=,11.8,Teff=,6044,Gaia DR3,1748010152845985920,SY,p,2,N206,,y,,1,nan,n,,9780
+2520,,180,6,T005927,21,4,34,34,20,41,2000,jmag=,11.60,180,180,1,x,1,simulcal=,y,gmag=,12.5,Teff=,6503,Gaia DR3,1866383707833637248,SY,p,2,N206,,y,,1,nan,n,,9780
+2520,,180,6,T003519,20,32,18.7,21,20,42,2000,jmag=,11.40,180,180,1,x,1,simulcal=,y,gmag=,12.5,Teff=,5870,Gaia DR3,1818385764677637376,SY,p,2,N206,"Note 5mag fainter companions 1.2"" NW and 2.2"" W ",y,,1,nan,n,,32499
+2520,,180,6,T005105,09,4,40.8,20,55,53,2000,jmag=,11.60,180,180,1,x,1,simulcal=,y,gmag=,12.5,Teff=,6356,Gaia DR3,684753439229558656,SY,p,2,N206,,y,,1,nan,n,,32499
+1832,,1592,1,XO-2N,07,48,6.42,50,13,31,2000,jmag=,9.70,1592,1592,1,x,1,simulcal=,n,gmag=,11.0,Teff=,5340,Gaia DR3,934346809278715776,MR,p,2,Y280,ideally observed back-to-back with XO-2S; northwest component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+1494,,1254,1,XO-2S,07,48,7.43,50,13,01,2000,jmag=,9.70,1254,1254,1,x,1,simulcal=,n,gmag=,10.9,Teff=,5374,Gaia DR3,934346740559239296,MR,p,2,Y280,ideally observed back-to-back with XO-2N; southeast component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+710,,470,1,HAT-P-1,22,57,46.89,38,40,30,2000,jmag=,9.20,470,470,1,x,1,simulcal=,n,gmag=,10.2,Teff=,5980,Gaia DR3,1928431764627661440,MR,p,2,Y280,ideally observed back-to-back with ADS16402A; northeast component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+629,,389,1,ADS16402A,22,57,45.96,38,40,27,2000,jmag=,8.70,389,389,1,x,1,simulcal=,n,gmag=,9.6,Teff=,6251,Gaia DR3,1928431764627661312,MR,p,2,Y280,ideally observed back-to-back with HAT-P-1; southwest component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+1260,,1020,1,WASP-85A,11,43,37.93,06,33,50,2000,jmag=,9.30,1020,1020,1,x,1,simulcal=,n,gmag=,10.6,Teff=,6112,Gaia DR3,3909745223886018432,MR,p,2,Y280,ideally observed back-to-back with WASP-85 B; northwest component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+2478,,2238,1,WASP-85B,11,43,38.11,06,33,49,2000,jmag=,11.6,746,746,3,x,1,simulcal=,n,gmag=,11.6,Teff=,5378,Gaia DR3,3909745223886018560,MR,p,2,Y280,"ideally observed back-to-back with WASP-85 A; southeast component of binary system; goal SNR=200, Texp = 2237s total",y,N,nan,nan,n,,32499
+948,,708,1,WASP-77A,02,28,37.33,-07,03,38,2000,jmag=,8.80,708,708,1,x,1,simulcal=,n,gmag=,10.1,Teff=,5617,Gaia DR3,5178405479961698048,MR,p,2,Y280,ideally observed back-to-back with WASP-77 B; northwest component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+3192,,2952,1,WASP-77B,02,28,37.42,-07,03,41,2000,jmag=,11.8,984,984,3,x,1,simulcal=,n,gmag=,11.8,Teff=,4810,Gaia DR3,5178405479961475712,MR,p,2,Y280,"ideally observed back-to-back with WASP-77 A; southeast component of binary system; goal SNR=200, Total Texp=2951",y,N,nan,nan,n,,32499
+1685,,1445,1,HAT-P-4A,15,19,46.36,36,13,46,2000,jmag=,10.10,1445,1445,1,x,1,simulcal=,n,gmag=,11.1,Teff=,5860,Gaia DR3,1291120362349158016,MR,p,2,Y280,ideally observed back-to-back with HAT-P-4 B; northwest component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+2196,,1956,1,HAT-P-4B,15,19,59.99,36,12,18,2000,jmag=,10.50,652,652,3,x,1,simulcal=,n,gmag=,11.4,Teff=,5989,Gaia DR3,1291119606434912384,MR,p,2,Y280,"ideally observed back-to-back with HAT-P-4 A;  southeast component of binary system; goal SNR=200, Texp =1956",y,N,nan,nan,n,,32499
+1719,,1479,1,WASP-173A,23,36,40.49,-34,36,41,2000,jmag=,10.40,1479,1479,1,x,1,simulcal=,n,gmag=,11.4,Teff=,5800,Gaia DR3,2323985539482908416,MR,p,2,Y280,ideally observed back-to-back with WASP-173 B; northwest component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+3735,,3495,1,WASP-173B,23,36,40.95,-34,36,43,2000,jmag=,10.80,1165,1165,3,x,1,simulcal=,n,gmag=,12.0,Teff=,5444,Gaia DR3,2323985535188372480,MR,p,2,Y280,"ideally observed back-to-back with WASP-173 A; southeast component of binary system; goal SNR=200, Total Texp=3493",y,N,nan,nan,n,,32499
+345,,105,1,202772A,21,18,47.9,-26,36,59,2000,jmag=,7.23,105,105,1,x,1,simulcal=,n,gmag=,8.2,Teff=,6272,Gaia DR3,6790773586275235200,MR,p,2,Y280,ideally observed back-to-back with HD 202772 B; southeast component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+810,,570,1,202772B,21,18,47.81,-26,36,58,2000,jmag=,10.0,570,570,1,x,1,simulcal=,n,gmag=,10.0,Teff=,5987,Gaia DR3,6790773586276283648,MR,p,2,Y280,ideally observed back-to-back with HD 202772 A; northwest component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+829,,589,1,WASP-94A,20,55,7.98,-34,08,09,2000,jmag=,9.20,589,589,1,x,1,simulcal=,n,gmag=,10.0,Teff=,6170,Gaia DR3,6780546169634170496,MR,p,2,Y280,ideally observed back-to-back with WASP-94 B; west component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+1143,,903,1,WASP-94B,20,55,9.19,-34,08,09,2000,jmag=,9.50,903,903,1,x,1,simulcal=,n,gmag=,10.4,Teff=,6040,Gaia DR3,6780546169633474944,MR,p,2,Y280,ideally observed back-to-back with WASP-94 A; east component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+693,,453,1,KOI-13A,19,7,53.13,46,52,06,2000,jmag=,9.50,453,453,1,x,1,simulcal=,n,gmag=,10.4,Teff=,7650,Gaia DR3,2130632159136095104,MR,p,2,Y280,ideally observed back-to-back with KOI-13 B; southeast component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+1128,,888,1,KOI-13B,19,7,53.02,46,52,06,2000,jmag=,10.6,888,888,1,x,1,simulcal=,n,gmag=,10.6,Teff=,7063,Gaia DR3,2130632159130638464,MR,p,2,Y280,ideally observed back-to-back with KOI-13 A; northwest component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+287,,47,1,20782,03,20,3.99,-28,51,16,2000,jmag=,6.30,47,47,1,x,1,simulcal=,n,gmag=,7.2,Teff=,5782,Gaia DR3,5060104351007433472,MR,p,2,Y280,ideally observed back-to-back with HD 20781; southeast component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+337,,97,1,20781,03,20,3.35,-28,47,03,2000,jmag=,7.00,97,97,1,x,1,simulcal=,n,gmag=,8.2,Teff=,5342,Gaia DR3,5060105897197110144,MR,p,2,Y280,ideally observed back-to-back with HD 20782; northwest component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+390,,150,1,KELT-2A,06,10,39.37,30,57,26,2000,jmag=,7.70,150,150,1,x,1,simulcal=,n,gmag=,8.6,Teff=,6327,Gaia DR3,3438059369839738624,MR,p,2,Y280,ideally observed back-to-back with KELT-2 B; southeast component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
+3726,,3486,1,KELT-2B,06,10,39.28,30,57,28,2000,jmag=,12.0,1162,1162,3,x,1,simulcal=,n,gmag=,12.0,Teff=,5247,Gaia DR3,3438059442854472832,MR,p,2,Y280,"ideally observed back-to-back with KELT-2 A; northwest component of binary system; goal SNR=200, Texp=3484",y,N,nan,nan,n,,32499
+478,,238,1,80606,09,22,37.67,50,36,14,2000,jmag=,7.70,238,238,1,x,1,simulcal=,n,gmag=,8.8,Teff=,5561,Gaia DR3,1019003226022657920,MR,p,2,Y280,ideally observed back-to-back with HD 80607;northeast component of binary system; goal SNR=200,y,N,nan,nan,n,,1450
+455,,215,1,80607,09,22,39.82,50,36,14,2000,jmag=,7.80,215,215,1,x,1,simulcal=,n,gmag=,9.0,Teff=,5538,Gaia DR3,1019003329101872896,MR,p,2,Y280,ideally observed back-to-back with HD 80606; southwest component of binary system; goal SNR=200,y,N,nan,nan,n,,1450
+690,,450,1,TIC139474683,05,52,30.44,07,57,09,2000,jmag=,10.86,450,600,1,x,1,simulcal=,y,gmag=,12.2,Teff=,5988,Gaia DR3,3323055543114557184,NS,p,1,H390,RM Dec 20,Y,N,nan,nan,y,,61835
+760,,520,1,TIC256722647,21,58,15.34,71,07,54,2000,jmag=,11.08,520,750,1,x,1,simulcal=,y,gmag=,12.5,Teff=,5761,Gaia DR3,2224458777730383616,NS,p,1,H390,"RM Aug 4, transit 0945-1443 UTC, 1.5h baseline",Y,N,nan,nan,y,,61835
+7775,,71,25,93963,10,51,6.41,25,38,28,2000,jmag=,8.11,71,71,1,x,5,simulcal=,y,gmag=,9.0,Teff=,5987,Gaia DR3,729899906357408768,CB,p,1,H376,Observe w cadence of ~5 RVs/night separated by ~1 hr (25 RVs total),Y,N,1,1,n,,61835
+22960,,334,40,GJ3929,15,58,18.62,35,24,29,2000,jmag=,8.69,334,334,1,x,4,simulcal=,y,gmag=,11.5,Teff=,3384,Gaia DR3,1372215976327300480,CB,p,1,H376,Observe w cadence of 4 RVs/night separated by >1 hr (40 RVs total),Y,N,1,1,n,,61835
+23600,,940,20,Kepler-99,19,49,25.52,41,18,14,2000,jmag=,11.02,940,940,1,x,2,simulcal=,y,gmag=,12.5,Teff=,5054.63,Gaia DR3,2076871091425583232,CB,p,2,H376,Observe w cadence of 2 RVs/night separated by as much as possible (>3 hours) (20 RVs total),Y,N,1,3,n,,51300
+7500,,260,15,T001444,20,21,53.98,70,56,37,2000,jmag=,9.47,260,260,1,x,5,simulcal=,y,gmag=,10.6,Teff=,5430,Gaia DR4,2274696151198328960,CB,p,3,H376,Observe w cadence of ~5 RVs/night separated by ~1 hr (15 RVs total),Y,N,1,1,n,,115620
+51300,,900,45,K00148,19,56,33.4,40,56,56,2000,jmag=,11.70,900,900,1,x,1,simulcal=,y,gmag=,13.1,Teff=,5118,Gaia DR3,2075112109039378688,EP,p,1,U012,"Kepler-48, observe every night we are on the telescope until mid-dec",Y,N,1,,n,,115620
+46740,,900,41,T006324,22,3,22.7,67,29,55,2000,jmag=,9.40,900,900,1,x,2,simulcal=,y,gmag=,12.2,Teff=,3300,Gaia DR3,2220012421430629632,FD,p,1,N461,Observe 2x per night,y,n,1,3,n,,115620
+22140,,300,41,T005961,23,16,51.9,05,41,45,2000,jmag=,7.90,300,300,1,x,2,simulcal=,y,gmag=,9.9,Teff=,3900,Gaia DR3,2664042942398600064,FD,p,1,N461,"Observe 2x per night, separate by 3hr",y,n,1,3,n,,43966
+46740,,900,41,T005530,00,25,57.2,-05,41,49,2000,jmag=,10.20,900,900,1,x,2,simulcal=,y,gmag=,12.3,Teff=,3900,Gaia DR3,2431638070123733120,FD,p,1,N461,"Observe 2x per night, separate by 3hr",y,n,1,3,n,,43966
+569,,329,1,2M00284657+0321391,00,28,46.57,03,21,39,2000,jmag=,10.6,329,400,1,x,1,simulcal=,y,gmag=,10.6,Teff=,4636,Gaia DR3,2547892973582849920,JO,p,2,H357,,,,nan,nan,n,,43966
+621,,381,1,2M00434887+1846525,00,43,48.87,18,46,53,2000,jmag=,10.7,381,400,1,x,1,simulcal=,y,gmag=,10.7,Teff=,4347,Gaia DR3,2783161798769417600,JO,p,2,H357,,,,nan,nan,n,,43966
+252,,12,1,2M01225675+0725095,01,22,56.75,07,25,10,2000,jmag=,7.0,12,100,1,x,1,simulcal=,y,gmag=,7.0,Teff=,4360,Gaia DR3,2566277181659646208,JO,p,2,H357,,,,nan,nan,n,,43966
+581,,341,1,2M01404974+3310396,01,40,49.74,33,10,40,2000,jmag=,10.6,341,400,1,x,1,simulcal=,y,gmag=,10.6,Teff=,4582,Gaia DR3,317525287221684608,JO,p,2,H357,,,,nan,nan,n,,43966
+252,,12,1,2M02484368+3106550,02,48,43.68,31,06,55,2000,jmag=,6.6,12,100,1,x,1,simulcal=,y,gmag=,6.6,Teff=,4580,Gaia DR3,130173900330982016,JO,p,2,H357,,,,nan,nan,n,,43966
+475,,235,1,2M03590421+2505379,03,59,4.21,25,05,38,2000,jmag=,10.2,235,300,1,x,1,simulcal=,y,gmag=,10.2,Teff=,4377,Gaia DR3,66280626805140608,JO,p,2,H357,,,,nan,nan,n,,43966
+895,,655,1,2M04350942+5805101,04,35,9.42,58,05,10,2000,jmag=,11.4,655,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4368,Gaia DR3,278564401931982208,JO,p,2,H357,,,,nan,nan,n,,43966
+673,,433,1,2M04425197+0723374,04,42,51.97,07,23,37,2000,jmag=,10.9,433,500,1,x,1,simulcal=,y,gmag=,10.9,Teff=,4602,Gaia DR3,3289139045369149696,JO,p,2,H357,,,,nan,nan,n,,43966
+531,,291,1,2M05180911+2945556,05,18,9.11,29,45,56,2000,jmag=,10.5,291,300,1,x,1,simulcal=,y,gmag=,10.5,Teff=,4407,Gaia DR3,3446689745845534336,JO,p,2,H357,,,,nan,nan,n,,43966
+525,,285,1,2M05191492+2343580,05,19,14.92,23,43,58,2000,jmag=,10.4,285,300,1,x,1,simulcal=,y,gmag=,10.4,Teff=,4610,Gaia DR3,3417178239577007872,JO,p,2,H357,,,,nan,nan,n,,43966
+374,,134,1,2M07162622+2612379,07,16,26.22,26,12,38,2000,jmag=,9.7,134,200,1,x,1,simulcal=,y,gmag=,9.7,Teff=,4373,Gaia DR3,871280986973452672,JO,p,2,H357,,,,nan,nan,n,,43966
+907,,667,1,2M07312565+4303595,07,31,25.65,43,03,60,2000,jmag=,11.4,667,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4484,Gaia DR3,972933894978708224,JO,p,2,H357,,,,nan,nan,n,,43966
+382,,142,1,2M07340277+2939053,07,34,2.77,29,39,05,2000,jmag=,9.8,142,200,1,x,1,simulcal=,y,gmag=,9.8,Teff=,4800,Gaia DR3,879620954468113024,JO,p,2,H357,,,,nan,nan,n,,43966
+506,,266,1,2M07493694+1457293,07,49,36.94,14,57,29,2000,jmag=,10.4,266,300,1,x,1,simulcal=,y,gmag=,10.4,Teff=,4514,Gaia DR3,3164621037152175872,JO,p,2,H357,,,,nan,nan,n,,43966
+577,,337,1,2M07545153+4051467,07,54,51.53,40,51,47,2000,jmag=,10.6,337,400,1,x,1,simulcal=,y,gmag=,10.6,Teff=,4762,Gaia DR3,920702247935488896,JO,p,2,H357,,,,nan,nan,n,,43966
+452,,212,1,2M07552412+3917476,07,55,24.12,39,17,48,2000,jmag=,10.1,212,300,1,x,1,simulcal=,y,gmag=,10.1,Teff=,4403,Gaia DR3,919717429114017152,JO,p,2,H357,,,,nan,nan,n,,43966
+748,,508,1,2M07594433+1822344,07,59,44.33,18,22,34,2000,jmag=,11.1,508,600,1,x,1,simulcal=,y,gmag=,11.1,Teff=,4541,Gaia DR3,669166491812987904,JO,p,2,H357,,,,nan,nan,n,,43966
+736,,496,1,2M08064999+3322165,08,6,49.99,33,22,17,2000,jmag=,11.0,496,500,1,x,1,simulcal=,y,gmag=,11.0,Teff=,4408,Gaia DR3,902263369218625024,JO,p,2,H357,,,,nan,nan,n,,43966
+848,,608,1,2M08101129+3640502,08,10,11.29,36,40,50,2000,jmag=,11.3,608,700,1,x,1,simulcal=,y,gmag=,11.3,Teff=,4363,Gaia DR3,906323659500433664,JO,p,2,H357,,,,nan,nan,n,,43966
+881,,641,1,2M08123609+5337408,08,12,36.09,53,37,41,2000,jmag=,11.3,641,700,1,x,1,simulcal=,y,gmag=,11.3,Teff=,4574,Gaia DR3,1031840951989590272,JO,p,2,H357,,,,nan,nan,n,,43966
+478,,238,1,2M08271362+4128326,08,27,13.62,41,28,33,2000,jmag=,10.2,238,300,1,x,1,simulcal=,y,gmag=,10.2,Teff=,4424,Gaia DR3,914771516574592896,JO,p,2,H357,,,,nan,nan,n,,43966
+359,,119,1,2M08363324+1516597,08,36,33.24,15,16,60,2000,jmag=,9.6,119,200,1,x,1,simulcal=,y,gmag=,9.6,Teff=,4517,Gaia DR3,657626292645182080,JO,p,2,H357,,,,nan,nan,n,,43966
+928,,688,1,2M09244286+3520321,09,24,42.86,35,20,32,2000,jmag=,11.4,688,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4866,Gaia DR3,798565884982660096,JO,p,2,H357,,,,nan,nan,n,,43966
+938,,698,1,2M09280412+2725458,09,28,4.12,27,25,46,2000,jmag=,11.4,698,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4632,Gaia DR3,694541639634307712,JO,p,2,H357,,,,nan,nan,n,,43966
+785,,545,1,2M10160829+4424400,10,16,8.29,44,24,40,2000,jmag=,11.1,545,600,1,x,1,simulcal=,y,gmag=,11.1,Teff=,4837,Gaia DR3,809059005482867840,JO,p,2,H357,,,,nan,nan,n,,43966
+376,,136,1,2M10214349+3631535,10,21,43.49,36,31,54,2000,jmag=,9.7,136,200,1,x,1,simulcal=,y,gmag=,9.7,Teff=,4586,Gaia DR3,753931687192476288,JO,p,2,H357,,,,nan,nan,n,,43966
+472,,232,1,2M10292571+3631444,10,29,25.71,36,31,44,2000,jmag=,10.2,232,300,1,x,1,simulcal=,y,gmag=,10.2,Teff=,4593,Gaia DR3,754439734579243776,JO,p,2,H357,,,,nan,nan,n,,43966
+660,,420,1,2M11111316+0658099,11,11,13.16,06,58,10,2000,jmag=,10.8,420,500,1,x,1,simulcal=,y,gmag=,10.8,Teff=,4480,Gaia DR3,3818092992611836672,JO,p,2,H357,,,,nan,nan,n,,43966
+807,,567,1,2M11482364+3504215,11,48,23.64,35,04,22,2000,jmag=,11.2,567,600,1,x,1,simulcal=,y,gmag=,11.2,Teff=,4442,Gaia DR3,4031253937499438848,JO,p,2,H357,,,,nan,nan,n,,43966
+383,,143,1,2M12165297+0541261,12,16,52.97,05,41,26,2000,jmag=,9.8,143,200,1,x,1,simulcal=,y,gmag=,9.8,Teff=,4627,Gaia DR3,3894478985971517056,JO,p,2,H357,,,,nan,nan,n,,43966
+806,,566,1,2M12192916+0030384,12,19,29.16,00,30,38,2000,jmag=,11.2,566,600,1,x,1,simulcal=,y,gmag=,11.2,Teff=,4532,Gaia DR3,3698298726865928192,JO,p,2,H357,,,,nan,nan,n,,43966
+715,,475,1,2M12230871+4527544,12,23,8.71,45,27,54,2000,jmag=,11.0,475,500,1,x,1,simulcal=,y,gmag=,11.0,Teff=,4268,Gaia DR3,1544750550683288832,JO,p,2,H357,,,,nan,nan,n,,43966
+756,,516,1,2M12373781+4539492,12,37,37.81,45,39,49,2000,jmag=,11.1,516,600,1,x,1,simulcal=,y,gmag=,11.1,Teff=,4700,Gaia DR3,1541305334078958848,JO,p,2,H357,,,,nan,nan,n,,43966
+572,,332,1,2M12442019+4619140,12,44,20.19,46,19,14,2000,jmag=,10.6,332,400,1,x,1,simulcal=,y,gmag=,10.6,Teff=,4583,Gaia DR3,1542616639134835968,JO,p,2,H357,,,,nan,nan,n,,43966
+530,,290,1,2M13034595+2837205,13,3,45.95,28,37,21,2000,jmag=,10.5,290,300,1,x,1,simulcal=,y,gmag=,10.5,Teff=,4517,Gaia DR3,1461221030278712064,JO,p,2,H357,,,,nan,nan,n,,43966
+575,,335,1,2M13564919+2429274,13,56,49.19,24,29,27,2000,jmag=,10.6,335,400,1,x,1,simulcal=,y,gmag=,10.6,Teff=,4562,Gaia DR3,1257953594096532480,JO,p,2,H357,,,,nan,nan,n,,43966
+601,,361,1,2M14025529+2434102,14,2,55.29,24,34,10,2000,jmag=,10.7,361,400,1,x,1,simulcal=,y,gmag=,10.7,Teff=,4562,Gaia DR3,1257816464380723328,JO,p,2,H357,,,,nan,nan,n,,43966
+254,,14,1,2M14062615+3050475,14,6,26.15,30,50,48,2000,jmag=,7.2,14,100,1,x,1,simulcal=,y,gmag=,7.2,Teff=,4669,Gaia DR3,1454245453633192576,JO,p,2,H357,,,,nan,nan,n,,43966
+932,,692,1,2M14292053+0929377,14,29,20.53,09,29,38,2000,jmag=,11.4,692,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4443,Gaia DR3,1176314546496417280,JO,p,2,H357,,,,nan,nan,n,,43966
+409,,169,1,2M14321303+4536295,14,32,13.03,45,36,30,2000,jmag=,9.9,169,200,1,x,1,simulcal=,y,gmag=,9.9,Teff=,4467,Gaia DR3,1494347975593649920,JO,p,2,H357,,,,nan,nan,n,,43966
+870,,630,1,2M14355973+5321429,14,35,59.73,53,21,43,2000,jmag=,11.3,630,700,1,x,1,simulcal=,y,gmag=,11.3,Teff=,4534,Gaia DR3,1606734556626908416,JO,p,2,H357,,,,nan,nan,n,,43966
+799,,559,1,2M14454102+3407192,14,45,41.02,34,07,19,2000,jmag=,11.2,559,600,1,x,1,simulcal=,y,gmag=,11.2,Teff=,4687,Gaia DR3,1292848932067458048,JO,p,2,H357,,,,nan,nan,n,,43966
+669,,429,1,2M14513461+1709364,14,51,34.61,17,09,36,2000,jmag=,10.9,429,500,1,x,1,simulcal=,y,gmag=,10.9,Teff=,4420,Gaia DR3,1188218443494278016,JO,p,2,H357,,,,nan,nan,n,,43966
+433,,193,1,2M15031027+2618462,15,3,10.27,26,18,46,2000,jmag=,10.0,193,200,1,x,1,simulcal=,y,gmag=,10.0,Teff=,4657,Gaia DR3,1268024536491723520,JO,p,2,H357,,,,nan,nan,n,,43966
+832,,592,1,2M15061530+5348151,15,6,15.3,53,48,15,2000,jmag=,11.2,592,600,1,x,1,simulcal=,y,gmag=,11.2,Teff=,4674,Gaia DR3,1600003793118466176,JO,p,2,H357,,,,nan,nan,n,,43966
+644,,404,1,2M15392086+4745238,15,39,20.86,47,45,24,2000,jmag=,10.8,404,500,1,x,1,simulcal=,y,gmag=,10.8,Teff=,4301,Gaia DR3,1401159589135954432,JO,p,2,H357,,,,nan,nan,n,,43966
+568,,328,1,2M15393148+2902081,15,39,31.48,29,02,08,2000,jmag=,10.6,328,400,1,x,1,simulcal=,y,gmag=,10.6,Teff=,4772,Gaia DR3,1272856855736663040,JO,p,2,H357,,,,nan,nan,n,,43966
+476,,236,1,2M16003799+4724117,16,0,37.99,47,24,12,2000,jmag=,10.2,236,300,1,x,1,simulcal=,y,gmag=,10.2,Teff=,4649,Gaia DR3,1398884081103135744,JO,p,2,H357,,,,nan,nan,n,,43966
+539,,299,1,2M16004908+4647072,16,0,49.08,46,47,07,2000,jmag=,10.5,299,300,1,x,1,simulcal=,y,gmag=,10.5,Teff=,4577,Gaia DR3,1398717333292238848,JO,p,2,H357,,,,nan,nan,n,,43966
+634,,394,1,2M16052028+2959488,16,5,20.28,29,59,49,2000,jmag=,10.8,394,400,1,x,1,simulcal=,y,gmag=,10.8,Teff=,4593,Gaia DR3,1320316278715947392,JO,p,2,H357,,,,nan,nan,n,,43966
+949,,709,1,2M16241551+2637281,16,24,15.51,26,37,28,2000,jmag=,11.5,709,800,1,x,1,simulcal=,y,gmag=,11.5,Teff=,4445,Gaia DR3,1305000356620687488,JO,p,2,H357,,,,nan,nan,n,,43966
+394,,154,1,2M16250656+3002259,16,25,6.56,30,02,26,2000,jmag=,9.8,154,200,1,x,1,simulcal=,y,gmag=,9.8,Teff=,4284,Gaia DR3,1318101346902484352,JO,p,2,H357,,,,nan,nan,n,,43966
+752,,512,1,2M16411431+7634328,16,41,14.31,76,34,33,2000,jmag=,11.1,512,600,1,x,1,simulcal=,y,gmag=,11.1,Teff=,4710,Gaia DR3,1703467837291943936,JO,p,2,H357,,,,nan,nan,n,,43966
+454,,214,1,2M16442562+4326502,16,44,25.62,43,26,50,2000,jmag=,10.1,214,300,1,x,1,simulcal=,y,gmag=,10.1,Teff=,4449,Gaia DR3,1357601061612512128,JO,p,2,H357,,,,nan,nan,n,,43966
+462,,222,1,2M17203767+5802115,17,20,37.67,58,02,12,2000,jmag=,10.2,222,300,1,x,1,simulcal=,y,gmag=,10.2,Teff=,4435,Gaia DR3,1433209391013360384,JO,p,2,H357,,,,nan,nan,n,,43966
+718,,478,1,2M18470628+4340344,18,47,6.28,43,40,34,2000,jmag=,11.0,478,500,1,x,1,simulcal=,y,gmag=,11.0,Teff=,4325,Gaia DR3,2105255190248353792,JO,p,2,H357,,,,nan,nan,n,,43966
+400,,160,1,2M19052715+4422517,19,5,27.15,44,22,52,2000,jmag=,9.9,160,200,1,x,1,simulcal=,y,gmag=,9.9,Teff=,4630,Gaia DR3,2106098068990306304,JO,p,2,H357,,,,nan,nan,n,,43966
+739,,499,1,2M19093571+4930362,19,9,35.71,49,30,36,2000,jmag=,11.0,499,500,1,x,1,simulcal=,y,gmag=,11.0,Teff=,4684,Gaia DR3,2132809192158414464,JO,p,2,H357,,,,nan,nan,n,,43966
+939,,699,1,2M19200011+4149074,19,20,0.11,41,49,07,2000,jmag=,11.4,699,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4406,Gaia DR3,2101864571264254080,JO,p,2,H357,,,,nan,nan,n,,43966
+501,,261,1,2M19234503+3744304,19,23,45.03,37,44,30,2000,jmag=,10.3,261,300,1,x,1,simulcal=,y,gmag=,10.3,Teff=,4309,Gaia DR3,2052547793971117056,JO,p,2,H357,,,,nan,nan,n,,43966
+715,,475,1,2M19315759+4622327,19,31,57.59,46,22,33,2000,jmag=,11.0,475,500,1,x,1,simulcal=,y,gmag=,11.0,Teff=,4471,Gaia DR3,2128271129715505280,JO,p,2,H357,,,,nan,nan,n,,43966
+850,,610,1,2M19371802+3919430,19,37,18.02,39,19,43,2000,jmag=,11.3,610,700,1,x,1,simulcal=,y,gmag=,11.3,Teff=,4452,Gaia DR3,2052414207612692864,JO,p,2,H357,,,,nan,nan,n,,43966
+896,,656,1,2M19410755+3920580,19,41,7.55,39,20,58,2000,jmag=,11.4,656,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4494,Gaia DR3,2076193723545609472,JO,p,2,H357,,,,nan,nan,n,,43966
+844,,604,1,2M19485155+3942492,19,48,51.55,39,42,49,2000,jmag=,11.3,604,700,1,x,1,simulcal=,y,gmag=,11.3,Teff=,4546,Gaia DR3,2073644883794182912,JO,p,2,H357,,,,nan,nan,n,,43966
+805,,565,1,2M19525474+4432210,19,52,54.74,44,32,21,2000,jmag=,11.2,565,600,1,x,1,simulcal=,y,gmag=,11.2,Teff=,4740,Gaia DR3,2079266824180801536,JO,p,2,H357,,,,nan,nan,n,,43966
+886,,646,1,2M19550000+4434211,19,55,0,44,34,21,2000,jmag=,11.4,646,700,1,x,1,simulcal=,y,gmag=,11.4,Teff=,4541,Gaia DR3,2079093376225156608,JO,p,2,H357,,,,nan,nan,n,,43966
+711,,471,1,2M22161177+5256226,22,16,11.77,52,56,23,2000,jmag=,10.9,471,500,1,x,1,simulcal=,y,gmag=,10.9,Teff=,5026,Gaia DR3,2004350603002238976,JO,p,2,H357,,,,nan,nan,n,,43966
+698,,458,1,2M23570064+5724573,23,57,0.64,57,24,57,2000,jmag=,10.9,458,500,1,x,1,simulcal=,y,gmag=,10.9,Teff=,4428,Gaia DR3,1998109500112204160,JO,p,2,H357,,,,nan,nan,n,,18000
+668,,428,1,2M23575198+5616414,23,57,51.98,56,16,41,2000,jmag=,10.9,428,500,1,x,1,simulcal=,y,gmag=,10.9,Teff=,4534,Gaia DR3,1994798801884205696,JO,p,2,H357,,,,nan,nan,n,,18000
+360,,120,1,KOI-0063,19,16,54.2808,49,32,54,2000,jmag=,10.40,120,120,1,x,1,simulcal=,y,gmag=,11.5,Teff=,5576,Gaia DR3,2132628489996257920,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-0084,19,21,40.9944,37,51,06,2000,jmag=,10.72,120,120,1,x,1,simulcal=,y,gmag=,11.9,Teff=,5541,Gaia DR3,2051106987063242880,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-0087,19,16,52.2,47,53,04,2000,jmag=,10.52,120,120,1,x,1,simulcal=,y,gmag=,11.6,Teff=,5642,Gaia DR3,2127941757262806656,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-0105,19,55,44.8896,44,51,28,2000,jmag=,11.65,120,120,1,x,1,simulcal=,y,gmag=,12.9,Teff=,5660,Gaia DR3,2079192121810035840,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-0112,19,42,35.6904,48,29,44,2000,jmag=,11.70,120,120,1,x,1,simulcal=,y,gmag=,12.8,Teff=,5837,Gaia DR3,2134719834131370496,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-0118,19,9,27.0696,38,38,59,2000,jmag=,11.27,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,5747,Gaia DR3,2099605968225288960,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-0270,19,34,55.8768,41,54,03,2000,jmag=,10.09,120,120,1,x,1,simulcal=,y,gmag=,11.5,Teff=,5588,Gaia DR3,2077618037775709568,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-0283,19,14,7.3968,40,56,32,2000,jmag=,10.42,120,120,1,x,1,simulcal=,y,gmag=,11.5,Teff=,5685,Gaia DR3,2102110174677569664,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-0299,19,2,38.796,37,57,52,2000,jmag=,11.67,120,120,1,x,1,simulcal=,y,gmag=,12.9,Teff=,5539,Gaia DR3,2099862910348755712,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-0303,19,34,42.0768,41,17,43,2000,jmag=,11.02,120,120,1,x,1,simulcal=,y,gmag=,12.1,Teff=,5637,Gaia DR3,2077409645964537472,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-0306,19,57,16.692,41,23,05,2000,jmag=,11.26,120,120,1,x,1,simulcal=,y,gmag=,12.6,Teff=,5323,Gaia DR3,2075161655782111872,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-0314,19,21,31.56,43,17,35,2000,jmag=,10.29,120,120,1,x,1,simulcal=,y,gmag=,12.5,Teff=,3871,Gaia DR3,2102053446751282944,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-0323,18,56,14.6712,45,30,25,2000,jmag=,11.28,120,120,1,x,1,simulcal=,y,gmag=,12.5,Teff=,5427,Gaia DR3,2106821925598401152,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-0372,19,56,29.3856,41,52,00,2000,jmag=,11.29,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,5815,Gaia DR3,2075377679763353984,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-0984,19,24,11.712,36,50,24,2000,jmag=,10.46,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,5295,Gaia DR3,2050249406650364160,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-0987,19,42,17.7984,42,48,23,2000,jmag=,11.23,120,120,1,x,1,simulcal=,y,gmag=,12.5,Teff=,5512,Gaia DR3,2077994272606400512,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-1283,19,44,1.7064,44,51,13,2000,jmag=,10.49,120,120,1,x,1,simulcal=,y,gmag=,11.6,Teff=,5775,Gaia DR3,2079752464723012096,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-1478,19,15,23.6712,51,12,33,2000,jmag=,11.30,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,5593,Gaia DR3,2133344791759137152,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-1611,19,16,18.1704,51,45,27,2000,jmag=,9.82,120,120,1,x,1,simulcal=,y,gmag=,11.7,Teff=,4450,Gaia DR3,2133476355197071616,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-1619,19,39,57.6552,39,20,47,2000,jmag=,10.28,120,120,1,x,1,simulcal=,y,gmag=,11.8,Teff=,4834,Gaia DR3,2076237253025202688,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-1800,19,1,4.4616,48,33,36,2000,jmag=,11.21,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,5541,Gaia DR3,2131587531660567296,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-1961,19,10,17.0808,42,48,50,2000,jmag=,11.54,120,120,1,x,1,simulcal=,y,gmag=,12.8,Teff=,5430,Gaia DR3,2102600488143944192,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-1964,19,22,48.888,43,36,26,2000,jmag=,9.40,120,120,1,x,1,simulcal=,y,gmag=,10.7,Teff=,5589,Gaia DR3,2126080314136290560,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-2029,19,59,35.1624,46,03,07,2000,jmag=,11.61,120,120,1,x,1,simulcal=,y,gmag=,13.0,Teff=,5212,Gaia DR3,2085281530744134272,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-2059,19,10,21.6216,51,03,38,2000,jmag=,11.31,120,120,1,x,1,simulcal=,y,gmag=,13.2,Teff=,4999,Gaia DR3,2133011639737119872,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-2079,19,39,54.9168,46,00,20,2000,jmag=,11.66,120,120,1,x,1,simulcal=,y,gmag=,12.9,Teff=,5582,Gaia DR3,2080070975195117312,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-2173,19,49,10.1808,49,58,54,2000,jmag=,11.24,120,120,1,x,1,simulcal=,y,gmag=,12.8,Teff=,4844,Gaia DR3,2087250476887856256,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-2208,19,22,10.4736,47,43,33,2000,jmag=,11.34,120,120,1,x,1,simulcal=,y,gmag=,12.3,Teff=,5818,Gaia DR3,2129369095153280000,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-2287,19,39,47.6592,46,26,19,2000,jmag=,10.85,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,4661,Gaia DR3,2080095512350543744,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-2295,19,18,10.8336,39,09,52,2000,jmag=,10.09,120,120,1,x,1,simulcal=,y,gmag=,11.7,Teff=,5424,Gaia DR3,2100954278719435008,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-2583,18,53,42.9864,47,35,33,2000,jmag=,11.46,120,120,1,x,1,simulcal=,y,gmag=,12.6,Teff=,5642,Gaia DR3,2107658516506930048,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-2675,19,31,53.1,41,02,09,2000,jmag=,11.32,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,5728,Gaia DR3,2053550106200274688,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-2678,19,29,33.252,42,13,60,2000,jmag=,10.52,120,120,1,x,1,simulcal=,y,gmag=,11.8,Teff=,5398,Gaia DR3,2125713940547834496,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-2754,18,54,58.9968,48,22,24,2000,jmag=,11.03,120,120,1,x,1,simulcal=,y,gmag=,12.1,Teff=,5776,Gaia DR3,2131677584235170048,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-2755,19,26,17.8128,38,39,21,2000,jmag=,11.07,120,120,1,x,1,simulcal=,y,gmag=,12.1,Teff=,5830,Gaia DR3,2052740449026979584,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-2803,19,39,28.0512,46,47,26,2000,jmag=,11.06,120,120,1,x,1,simulcal=,y,gmag=,12.2,Teff=,5615,Gaia DR3,2128517003703948032,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-2867,19,40,36.1224,46,46,20,2000,jmag=,11.07,120,120,1,x,1,simulcal=,y,gmag=,12.6,Teff=,4945,Gaia DR3,2080481990687615616,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-3158,19,19,0.5496,41,38,05,2000,jmag=,7.24,120,120,1,x,1,simulcal=,y,gmag=,8.7,Teff=,5046,Gaia DR3,2101486923385239808,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-3232,18,48,28.2792,46,13,26,2000,jmag=,11.13,120,120,1,x,1,simulcal=,y,gmag=,12.2,Teff=,5733,Gaia DR3,2119099931425654912,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-3237,19,1,19.3512,42,02,26,2000,jmag=,11.20,120,120,1,x,1,simulcal=,y,gmag=,12.2,Teff=,5733,Gaia DR3,2104172854190854528,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-3246,19,17,41.748,46,43,34,2000,jmag=,10.80,120,120,1,x,1,simulcal=,y,gmag=,12.4,Teff=,4871,Gaia DR3,2127777307254217472,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-3864,19,33,22.7928,39,15,28,2000,jmag=,11.49,120,120,1,x,1,simulcal=,y,gmag=,12.9,Teff=,5011,Gaia DR3,2052368955838887808,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-3876,19,21,45.7608,38,31,25,2000,jmag=,11.46,120,120,1,x,1,simulcal=,y,gmag=,12.6,Teff=,5618,Gaia DR3,2052827207364859264,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-3892,19,22,14.2824,49,56,35,2000,jmag=,11.57,120,120,1,x,1,simulcal=,y,gmag=,12.7,Teff=,5707,Gaia DR3,2130033097097486336,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-4004,18,55,58.8216,39,55,01,2000,jmag=,11.49,120,120,1,x,1,simulcal=,y,gmag=,12.7,Teff=,5761,Gaia DR3,2103314346067173504,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-4032,19,2,54.8376,42,39,16,2000,jmag=,11.42,120,120,1,x,1,simulcal=,y,gmag=,12.6,Teff=,5575,Gaia DR3,2105526799680172032,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-4288,19,9,29.1,39,36,13,2000,jmag=,11.33,120,120,1,x,1,simulcal=,y,gmag=,12.3,Teff=,5882,Gaia DR3,2100418850915010432,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-4292,19,5,32.8632,47,00,60,2000,jmag=,11.69,120,120,1,x,1,simulcal=,y,gmag=,12.8,Teff=,5812,Gaia DR3,2130695518492411904,IB,p,2,U011,,y,n,nan,nan,n,,18000
+360,,120,1,KOI-4399,18,48,30.9312,44,18,11,2000,jmag=,10.78,120,120,1,x,1,simulcal=,y,gmag=,12.0,Teff=,5585,Gaia DR3,2105389708623762304,IB,p,2,U011,,y,n,nan,nan,n,,148800
+360,,120,1,KOI-4582,19,45,20.8512,43,36,00,2000,jmag=,10.62,120,120,1,x,1,simulcal=,y,gmag=,11.7,Teff=,5737,Gaia DR3,2078794755737702144,IB,p,2,U011,,y,n,nan,nan,n,,148800
+10800,,300,20,42813,6,12,13.8,-14,38,56,2000,jmag=,8.055999756,300,300,1,x,1,simulcal=,y,gmag=,9.282242775,Teff=,5398,Gaia DR3,2993561629444856960,TK,p,1,U151,,y,n,1,nan,n,,148800
+10800,,300,20,12572,2,3,37.3,21,16,54,2000,jmag=,7.921999931,300,300,1,x,1,simulcal=,y,gmag=,9.033464432,Teff=,5599,Gaia DR3,94468978202180352,TK,p,1,U151,,y,n,1,nan,n,,148800
+10800,,300,20,6061,1,2,24,37,11,7,2000,jmag=,7.710999966,300,300,1,x,1,simulcal=,y,gmag=,8.709353447,Teff=,5972,Gaia DR3,369669965470499456,TK,p,1,U151,,y,n,1,nan,n,,148800
+10800,,300,20,237566,7,0,19.2,56,49,27,2000,jmag=,8.265000343,300,300,1,x,1,simulcal=,y,gmag=,9.24847126,Teff=,5852,Gaia DR3,1000423609817438592,TK,p,1,U151,,y,n,1,nan,n,,148800
+16800,,600,20,T001249,13,22,14.4,66,18,30,2000,jmag=,9.536000252,600,600,1,x,1,simulcal=,y,gmag=,10.69962597,Teff=,5502,Gaia DR3,1678371724905519744,TK,p,1,U151,,y,n,1,nan,n,,148800
+16800,,600,20,T001279,12,20,14.4,56,12,5,2000,jmag=,9.333999634,600,600,1,x,1,simulcal=,y,gmag=,10.48054314,Teff=,5414,Gaia DR3,1574358783911530624,TK,p,1,U151,,y,n,1,nan,n,,148800
+16800,,600,20,T001472,0,56,26.4,48,38,15,2000,jmag=,9.793999672,600,600,1,x,1,simulcal=,y,gmag=,11.11361885,Teff=,5714,Gaia DR3,402396521052843264,TK,p,1,U151,,y,n,1,nan,n,,148800
+10800,,300,20,87620,10,7,14.4,46,6,53,2000,jmag=,8.123999596,300,300,1,x,1,simulcal=,y,gmag=,9.161318779,Teff=,5859,Gaia DR3,810069697186043264,TK,p,1,U151,,y,n,1,nan,n,,148800
+16800,,600,20,T005507,9,54,24,6,38,47,2000,jmag=,9.394000053,600,600,1,x,1,simulcal=,y,gmag=,11.94074535,Teff=,3514,Gaia DR3,3850532189108251008,TK,p,1,U151,,y,n,1,nan,n,,148800
+16800,,600,20,T005799,20,6,31.2,15,59,24,2000,jmag=,9.741999626,600,600,1,x,1,simulcal=,y,gmag=,12.30795383,Teff=,3521,Gaia DR3,1807887150930343424,TK,p,1,U151,,y,n,1,nan,n,,98660
+10800,,300,20,T006026,0,0,52.8,35,45,0,2000,jmag=,8.036999702,300,300,1,x,1,simulcal=,y,gmag=,9.612057686,Teff=,4540,Gaia DR3,2877050883371424768,TK,p,1,U151,,y,n,1,nan,n,,98660
+7320,,126,20,3651,0,39,21.8053,21,14,53,2000,jmag=,4.47,42,42,3,x,1,simulcal=,y,gmag=,5.654319,Teff=,5240,GaiaDR3,2802397960855105920,AH,p,1,C398,,y,n,1,nan,n,,98660
+6240,,72,20,4628,0,48,22.9759,5,16,23,2000,jmag=,4.37,36,36,2,x,1,simulcal=,y,gmag=,5.467689,Teff=,4960,GaiaDR3,2552925644460225152,AH,p,1,C398,,y,n,1,nan,n,,98660
+6000,,60,20,4614,0,49,9.5,57,48,41,2000,jmag=,2.37,12,12,5,x,1,simulcal=,y,gmag=,3.320067,Teff=,5880,GaiaDR3,425040000962559616,AH,p,1,C398,,y,n,1,nan,n,,98660
+6420,,81,20,10476,1,42,29.7625,20,15,51,2000,jmag=,3.83,27,27,3,x,1,simulcal=,y,gmag=,4.99968,Teff=,5200,GaiaDR3,96331172942614528,AH,p,1,C398,,y,n,1,nan,n,,98660
+5760,,48,20,10700,1,44,4.0831,-15,55,55,2000,jmag=,2.14,12,12,4,x,1,simulcal=,y,gmag=,3.3004,Teff=,5310,GaiaDR3,2452378776434477184,AH,p,1,C398,,y,n,1,nan,n,,98660
+6720,,96,20,19373,3,9,4.0193,49,36,47.802,2000,jmag=,3.14,12,12,8,x,1,simulcal=,y,gmag=,3.902639,Teff=,5940,GaiaDR3,436648129327098496,AH,p,1,C398,,y,n,1,nan,n,,98660
+5760,,48,20,26965,4,15,12.8,-7,40,31,2000,jmag=,2.93,12,12,4,x,1,simulcal=,y,gmag=,4.179894,Teff=,5133,GaiaDR3,3195919528989223040,AH,p,1,C398,,y,n,1,nan,n,,98660
+7620,,141,20,32147,5,0,48.9993,-5,45,39,2000,jmag=,4.45,47,47,3,x,1,simulcal=,y,gmag=,5.886492,Teff=,4800,GaiaDR3,3211461469444773376,AH,p,1,C398,,y,n,1,nan,n,,98660
+7560,,138,20,34411,5,19,8.4754,40,5,41,2000,jmag=,3.61,23,23,6,x,1,simulcal=,y,gmag=,4.525885,Teff=,5830,GaiaDR3,188771135583573504,AH,p,1,C398,,y,n,1,nan,n,,98660
+7980,,159,20,50692,6,55,18.6663,25,22,32.503,2000,jmag=,4.913,53,53,3,x,1,simulcal=,y,gmag=,5.602784,Teff=,5810,GaiaDR3,3381727613874753536,AH,p,1,C398,,y,n,1,nan,n,,98660
+8480,,184,20,55575,7,15,50.1391,47,14,19,2000,jmag=,4.48,46,46,4,x,1,simulcal=,y,gmag=,5.38816,Teff=,5800,GaiaDR3,974887555341533440,AH,p,1,C398,,y,n,1,nan,n,,98660
+8600,,190,20,86728,10,1,0.6568,31,55,15,2000,jmag=,4.27,38,38,5,x,1,simulcal=,y,gmag=,5.204957,Teff=,5760,GaiaDR3,746545172372256384,AH,p,1,C398,,y,n,1,nan,n,,98660
+7900,,155,20,95128,10,59,27.9727,40,25,50,2000,jmag=,3.96,31,31,5,x,1,simulcal=,y,gmag=,4.866588,Teff=,5850,GaiaDR3,777254360337133312,AH,p,1,C398,,y,n,1,nan,n,,598800
+6300,,75,20,95735,11,3,19.1,35,56,19,2000,jmag=,4.2,75,75,1,x,1,simulcal=,y,gmag=,6.551172,Teff=,3589,GaiaDR3,762815470562110464,AH,p,1,C398,,y,n,1,nan,n,,304800
+598800,,29700,20,MASCARA-1,21,10,12,10,44,20,2000,jmag=,7.8,300,300,99,x,1,simulcal=,n,gmag=,8.3,Teff=,7490,GaiaDR3,1744911763437512064,AH,p,1,C400,"aka HD201585, atmospheric event observation",n,y,nan,nan,y,,0
+304800,,15000,20,3167,0,34,57.524,4,22,53.284,2000,jmag=,7.5,300,300,50,x,1,simulcal=,y,gmag=,8.77,Teff=,5300,GaiaDR3,2554032474712538880,WS,p,1,N133,RM effect observations of HD 3167b (3 different nights are scheduled),y,n,nan,nan,y,"Three transit observations scheduled for this program: (HST) 2023-09-21, 2023-09-22, 2023-10-19",
