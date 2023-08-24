@@ -356,9 +356,12 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
         for index, row in ttp_frame.iterrows():
             try:
                 nvisits = int(row['Nvisits'])
-                intra_night_sep[index] = int(row['IntraNightCadence'])*60
             except:
                 nvisits = 1
+            try:
+                intra_night_sep[index] = int(row['IntraNightCadence'])*60
+            except:
+                intra_night_sep[index] = 60
             num_visits[index] = nvisits
 
         ind_to_id = defaultdict(int)
@@ -380,7 +383,7 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
         t = Time(t,format='jd')
 
         R = sum(num_visits[targ] for targ in nightly_targets)+2
-        T = 5
+        T = 4
         slots = range(T)
 
         min_az = 5.3
@@ -496,9 +499,9 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
         flow_constr = Mod.addConstrs(((gp.quicksum(xijm[i,k,m] for i in range(R)[:-1] for m in range(T))
                         - gp.quicksum(xijm[k,j,m] for j in range(R)[1:] for m in range(T)) == 0)
                         for k in range(R)[:-1][1:]), 'flow_constr')
-        exp_constr = Mod.addConstrs((ti[j] >= tijm[i,j,m] + (dist[(i,j,m)] + s_i[j])*xijm[i,j,m] 
-                        for i in range(R)[:-1] for j in range(R)[1:] for m in range(T))
-                    , 'exp_constr')
+        exp_constr = Mod.addConstrs((ti[j] >= gp.quicksum(tijm[i,j,m] + (dist[(i,j,m)] + s_i[j])*xijm[i,j,m] 
+                        for i in range(R)[:-1] for m in range(T)) for j in range(R)[1:])
+                        , 'exp_constr')
         t_min = Mod.addConstrs(((tijm[i,j,m] >= w[m]*xijm[i,j,m]) for j in range(R) for m in range(T)
                         for i in range(R)),'t_min')
         t_max = Mod.addConstrs((tijm[i,j,m] <= w[m+1]*xijm[i,j,m] for j in range(R) for m in range(T) 
@@ -509,9 +512,9 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
         #Multivisit constraints for KPF
         for targ in multi_visit_ind.keys():
             indeces = multi_visit_ind[targ]
-            intra_sep = Mod.addConstrs((gp.quicksum(tijm[indeces[i],j,m] for j in range(R)[1:] for m in range(T))
+            intra_sep = Mod.addConstrs(((gp.quicksum(tijm[indeces[i],j,m] for j in range(R)[1:] for m in range(T))
                                     >= (gp.quicksum(tijm[indeces[i-1],j,m] for j in range(R)[1:] for m in range(T))
-                                    + yi[indeces[i]]*intra_night_sep[targ]) 
+                                    + yi[indeces[i]]*intra_night_sep[targ])) 
                                     for i in range(len(indeces))[1:]),'intra_sep_constr')
 
         priority_param = 50
@@ -526,7 +529,7 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
         Mod.params.MIPGap = 0
         Mod.update()
         Mod.optimize()
-        try:
+        if Mod.SolCount > 0:
             num_scheduled = 0
             scheduled_targets = []
             for i in range(R)[1:-1]:
@@ -624,11 +627,13 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
                 if np.round(yi[i].X,0) == 0:
                     extras.append(ind_to_id[i])
 
-        except:
+            #Turn all the nights targets into starlists   
+            formatting.write_starlist(instrument,all_targets_frame,ordered_requests,extras,condition,current_day,outputdir)
+
+        else:
             logger.critical('No incumbent solution for {} in time allotted, aborting solve. Try increasing time_limit parameter.'.format(current_day))
         
-        #Turn all the nights targets into starlists   
-        formatting.write_starlist(instrument,all_targets_frame,ordered_requests,extras,condition,current_day,outputdir)
+        
         
 
 def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights,marked_scripts,schedule_dates,output_flag,
@@ -688,7 +693,10 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
     #Formally make lists of targets,slots,and observations to communicate to Gurobi
     target_ids = all_targets_frame['request_number'].tolist()
     slots = plan.index.tolist()
-    Nobs = all_targets_frame['N_obs(full_semester)'].tolist()
+    if instrument == 'KPF':
+        Nobs = (all_targets_frame['N_obs(full_semester)'].to_numpy(dtype=int))/(all_targets_frame['Nvisits'].to_numpy(dtype=int))
+    if instrument == 'HIRES':
+        Nobs = all_targets_frame['N_obs(full_semester)'].to_numpy(dtype=int)
 
     #Turn our reservation list into a dictionary for when we want to easily access reservations by target
     reservation_dict = defaultdict(list)
@@ -898,7 +906,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
                 m.addGenConstrAbs(abs_dev[program],dev[program],'dev_to_abs')
         
         #These scalars should be adjusted through trial and error, and are dependent on model size.
-        cadence_scalar = 1/800
+        cadence_scalar = 1/2000
         program_scalar = 600
 
         #Reward more observations, closer cadence to minimum, and also program equity
@@ -941,15 +949,21 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
             conflicting_constraints(m,300)
         
         if m.Status != GRB.INFEASIBLE:
+            num_scheduled = 0
             #Create lists of target ids that correspond to each quarter night slot
             scheduled_targets = []
             for v in yrt.values():
                 #If decision variable = 1, append the id to that slot
                 if np.round(v.X,0) == 1:
+                    num_scheduled += 1
                     #Perhaps theres a better way than parsing the names, I haven't found it!
                     scheduled_targets.append(v.VarName[4:][:-1].split(','))
 
             unordered_times = []
+            #TODO update both the scheduled observations and (somehow) the bound to account for Nvisits. Each sequence of visits is
+            #considered a single observation here. The objective values don't account for this, and the total observations will be 
+            #higher than the queried objective value/bound
+            logger.info('{} observations scheduled of {} upper bound. {} were requested'.format(num_scheduled,math.ceil(m.ObjBound),math.ceil(sum(Nobs))))
 
             #Reorder the quarter nights
             for i in range(len(scheduled_targets)):
@@ -992,7 +1006,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
                 
                 #Plot target cadence by program
                 logger.info('Plotting Program Cadences')
-                plotting.plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,
+                plotting.plot_program_cadence(instrument,plan,all_targets_frame,twilight_frame,starlists,
                                     min_separations,plotpath,current_day)
                 #plotting.plot_cadence_night_resolution(plan,all_targets_frame,twilight_frame,starlists,
                 #                     min_separations,plotpath)

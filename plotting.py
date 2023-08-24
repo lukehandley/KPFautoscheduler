@@ -224,7 +224,7 @@ def calculate_intervals(plan,twilight_frame):
     plan['qn_stop'] = interval_stops
     return plan
 
-def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_separations,outputdir,current_day,cadence_mode=False):
+def plot_program_cadence(instrument,plan,all_targets_frame,twilight_frame,starlists,min_separations,outputdir,current_day,cadence_mode=False):
 
     dates = plan.Date.to_list()
     
@@ -272,6 +272,7 @@ def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_sep
             y_positions = []
             y_labels = []
             nobs_list = []
+            nvisits_list = []
             target_list = []
             request_list = []
             targ_names = []
@@ -284,7 +285,9 @@ def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_sep
                 target = apl.FixedTarget(name=name, coord=coords)
                 target_list.append(target)
                 targ_names.append(name)
-                nobs_list.append(program_frame.loc[request_id,'N_obs(full_semester)'])
+                nobs_list.append(int(program_frame.loc[request_id,'N_obs(full_semester)']))
+                if instrument == 'KPF':
+                    nvisits_list.append(int(program_frame.loc[request_id,'Nvisits']))
 
             AZ = keck.altaz(t, target_list, grid_times_targets=True)
             observability_matrix = []
@@ -322,6 +325,8 @@ def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_sep
                 height = i*5
                 name = targ_names[i]
                 nobs = nobs_list[i]
+                if instrument == 'KPF':
+                    nvisits = nvisits_list[i]
                 total_observed = 0
                 a = observability_matrix[i]
                 targ = request_list[i]
@@ -342,7 +347,7 @@ def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_sep
                             d = np.concatenate((one,two))
                         else:
                             d = a[b:c]
-                        if (len(d) - np.bincount(d)[0]) >= len(d)/2:
+                        if (len(d) - np.bincount(d)[0]) >= len(d)/4:
                             observability.append(1)
                         else:
                             observability.append(0)
@@ -374,9 +379,14 @@ def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_sep
                                 allocated.append((Time(row['Date'],format='iso')-start).jd)
                         axs.vlines(allocated,height,height+1,color='blue',alpha=.2)
                         if qn == 3:
-                            plt.text(182,height-.5,str(min_cadence)
-                                                    + ' Days Minimum Cadence, '+ str(total_observed) + 
-                                                    '/%s Observations Achieved' % nobs,fontsize=4)
+                            if instrument == 'KPF':
+                                plt.text(182,height-.5,str(min_cadence)
+                                                        + ' Days Minimum Cadence, '+ str(total_observed*nvisits) + 
+                                                        '/{} Observations Achieved ({} visits each tick)'.format(nobs,nvisits),fontsize=4)
+                            else:
+                                plt.text(182,height-.5,str(min_cadence)
+                                                        + ' Days Minimum Cadence, '+ str(total_observed) + 
+                                                        '/%s Observations Achieved' % nobs,fontsize=4)
                     else:
                         observed = []
                         axs.hlines([height,height+1],0,171,color = 'black',alpha = .2,linewidth=0.5)
@@ -393,9 +403,14 @@ def plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,min_sep
                                 allocated.append((Time(row['Date'],format='iso')-start).jd)
                         axs.vlines(allocated,height,height+1,color='blue',alpha=.2)
                         if qn == 3:
-                            plt.text(182,height-.5,str(min_cadence)
-                                                    + ' Days Minimum Cadence, '+ str(total_observed) + 
-                                                    '/%s Observations Achieved' % nobs,fontsize=4)
+                            if instrument == 'KPF':
+                                plt.text(182,height-.5,str(min_cadence)
+                                                        + ' Days Minimum Cadence, '+ str(total_observed*nvisits) + 
+                                                        '/{} Observations Achieved ({} visits each tick)'.format(nobs,nvisits),fontsize=4)
+                            else:
+                                plt.text(182,height-.5,str(min_cadence)
+                                                        + ' Days Minimum Cadence, '+ str(total_observed) + 
+                                                        '/%s Observations Achieved' % nobs,fontsize=4)
                     height += 1
             axs.vlines((Time(current_day,format='iso')-start).jd,0,height,color='black',alpha=0.15)
             axs.set_yticks(y_positions,y_labels,fontsize=4)
