@@ -13,4 +13,4 @@ xxxxx           26965 04 15 16.3 -07 39 10 2000 jmag=2.9    12/12   1of1 sc=y 4x
            22049 03 32 55.8 -09 27 30 2000 jmag=2.2    30/30   1of1 sc=y 6x gmag=3.4  Teff=5041 Gaia DR3 5164707970261890560 PR p1 U147 Eps Eri
             9407 01 34 31.6 +68 56 56 2000 jmag=5.2   300/300  1of1 sc=y 1x gmag=6.4  Teff=5560 Gaia DR3 532057254394731776   TW p3 T999  #TWILIGHT
             4628 00 48 24.2 +05 16 23 2000 jmag=4.4    45/45   1of1 sc=y 3x gmag=5.5  Teff=4943 Gaia DR3 2552925644460225152  TW p3 T999  #TWILIGHT IF SOUTH
-x (12)           10700 01 44 01.3 -15 55 55 2000 jmag=3.5    30/30   1of1 sc=y 3x gmag=3.3  Teff=4943 Gaia DR3 2452378776434477184  TW p3 T999  #TWILIGHT IF SOUTH
+x          10700 01 44 01.3 -15 55 55 2000 jmag=3.5    30/30   1of1 sc=y 3x gmag=3.3  Teff=4943 Gaia DR3 2452378776434477184  TW p3 T999  #TWILIGHT IF SOUTH
