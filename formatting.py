@@ -28,7 +28,7 @@ def format_observers_sheet(observers_sheet,instrument):
         for index,row in all_targets_frame.iterrows():
             #Remove Spaces
             row['Starname'] = row['Starname'].replace(" ", "")
-            if row['DECD'] < 0:
+            if int(row['DECD']) < 0:
                 dec = (np.abs((int(row['DECD']))) + (1/60)*row['DECM'] + (1/3600)*row['DECS'])
                 all_targets_frame.at[index,'dec'] = -np.abs(dec)
             else:
@@ -76,7 +76,7 @@ def format_observers_sheet(observers_sheet,instrument):
         for index,row in all_targets_frame.iterrows():
             #Remove Spaces
             row['Starname'] = row['Starname'].replace(" ", "")
-            if row['DECD'] < 0:
+            if int(row['DECD']) < 0:
                 dec = (np.abs((int(row['DECD']))) + (1/60)*row['DECM'] + (1/3600)*row['DECS'])
                 all_targets_frame.at[index,'dec'] = -np.abs(dec)
             else:

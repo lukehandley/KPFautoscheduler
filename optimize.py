@@ -118,7 +118,7 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame):
                 d = np.concatenate((one,two))
             else:
                 d = a[b:c]
-            if (len(d) - np.bincount(d)[0]) >= len(d)/4 and moon_safe(moon,ra_dec_list[i]):
+            if (len(d) - np.bincount(d)[0]) >= len(d)/8 and moon_safe(moon,ra_dec_list[i]):
                 reservation_matrix[i,ind] = 1
 
 
@@ -195,7 +195,7 @@ def can_force(forced_slots,reserved_slots):
 def relaxed_minimum(minimum,relaxation):
     return math.ceil(minimum * relaxation)
 
-def process_scripts(all_targets_frame,plan,marked_scripts,current_day):
+def process_scripts(instrument,all_targets_frame,plan,marked_scripts,current_day):
 
     logger.info('Processing Scripts...')
 
@@ -260,6 +260,11 @@ def process_scripts(all_targets_frame,plan,marked_scripts,current_day):
                         if targ.size > 0:
                             targ_per_script += 1
                             observed_dict[targ[0]].append(slot)
+
+                            #KPF cases: only count the night once even if it appears multiple times
+                            if instrument == 'KPF':
+                                if int(all_targets_frame.loc[targ[0],'Nvisits']) > 1:
+                                    observed_dict[targ[0]] = [s for s in set(observed_dict[targ[0]])]
 
                     if targ_per_script == 0:
                         logger.warning('No targets recognized in {}'.format(filename))
@@ -706,7 +711,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
                 reservation_dict[targ].append(slot)
 
     ############Process completed observations############
-    observed_dict = process_scripts(all_targets_frame,plan,marked_scripts,current_day)
+    observed_dict = process_scripts(instrument,all_targets_frame,plan,marked_scripts,current_day)
 
     #Remove reservations that occur before the current day unless actually took place
     starting_slot = plan[plan['Date'] == current_day].index[0]
@@ -802,7 +807,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
         #Force the next night to contain an amount of stars necessary for different conditions
         if condition_type == 'nominal':
             #These bound the size of the upcoming nights 'bin'
-            lb = 0.95
+            lb = 0.75
             ub = 1.0
             mag_lim = np.inf
             outpfile = os.path.join(outputdir,'{}_2023B_nominal.csv'.format(instrument))

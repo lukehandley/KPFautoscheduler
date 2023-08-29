@@ -330,7 +330,7 @@ def plot_program_cadence(instrument,plan,all_targets_frame,twilight_frame,starli
                 total_observed = 0
                 a = observability_matrix[i]
                 targ = request_list[i]
-                min_cadence = min_separations[targ]
+                min_cadence = int(min_separations[targ])
                 total_observed = 0
                 for qn in [0,1,2,3]:
                     observability = []
@@ -347,7 +347,7 @@ def plot_program_cadence(instrument,plan,all_targets_frame,twilight_frame,starli
                             d = np.concatenate((one,two))
                         else:
                             d = a[b:c]
-                        if (len(d) - np.bincount(d)[0]) >= len(d)/4:
+                        if (len(d) - np.bincount(d)[0]) >= len(d)/8:
                             observability.append(1)
                         else:
                             observability.append(0)
