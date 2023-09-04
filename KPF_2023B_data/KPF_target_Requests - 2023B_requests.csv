@@ -8,9 +8,9 @@ do not change,do not change,do not change,,,,,,,,,31,,,,,,,,,,,,,,,,,,,,,,,,,,,
 60480,,720,63,T001749,18,50,57.07,64,25,09,2000,jmag=,11.10,720,720,1,x,3,simulcal=,y,gmag=,13.2,Teff=,3923,Gaia DR3,2253774094189458432,HK,p,1,C351,"M dwarf with three small planets, TTVs measured with Palomar (PI Mike Greklek-McKeon), everynight",y,n,1,1,n,,29520
 4972800,,8640,560,219134,23,13,20.9,57,10,11,2000,jmag=,3.90,120,120,72,x,4,simulcal=,y,gmag=,5.2,Teff=,4700,Gaia DR3,2009481748875806976,HK,p,1,C382,Measurement of sodium absorption during transit of hot super-Earth HD 219134b; needs continuous observation during transit (1h) + ~2.5h of out-of-transit baseline,y,n,0,nan,y,,36000
 29520,,1400,18,K00319,18,49,34,43,53,22,2000,jmag=,11.50,1400,1400,1,x,1,simulcal=,y,gmag=,12.7,Teff=,5460,Gaia DR3,2105362903731391744,JZ,p,1,C316,"Kepler Field star, which is only obserable in the early months of the semester.",y,n,2,nan,n,,36000
-28800,,1200,20,K00117,19,48,06.8,48,12,31,2000,jmag=,11.39,1200.0,1200.0,1,x,1,simulcal=,y,gmag=,12.5,Teff=,5861,Gaia DR3,2086625752425381632,LW,p,1,D317,Kepler107,,,1,nan,n,,46000
-7200,,1200,5,K00701,18,52,51.1,45,20,59,2000,jmag=,12.26,1200.0,1200.0,1,x,1,simulcal=,y,gmag=,13.7,Teff=,4862,Gaia DR3,2107001283431633408,LW,p,2,D317,Kepler62,,,15,nan,n,,46000
-25000,,260,50,26965,4,15,12.8,-7,40,31,2000,jmag=,2.93,52,52,5,x,1,simulcal=,y,gmag=,4.2,Teff=,5107,Gaia DR3,3195919528989223040,PR,p,1,U147,,y,,1,nan,n,,31260
+28800,,1200,20,K00117,19,48,06.8,48,12,31,2000,jmag=,11.39,1200.0,1200.0,1,x,1,simulcal=,y,gmag=,12.5,Teff=,5861,Gaia DR3,2086625752425381632,LW,p,1,D317,Kepler107,,,1,nan,n,,71000
+7200,,1200,5,K00701,18,52,51.1,45,20,59,2000,jmag=,12.26,1200.0,1200.0,1,x,1,simulcal=,y,gmag=,13.7,Teff=,4862,Gaia DR3,2107001283431633408,LW,p,2,D317,Kepler62,,,15,nan,n,,71000
+50000,,260,100,26965,4,15,16.3,-7,39,10,2000,jmag=,2.93,52,52,5,x,1,simulcal=,y,gmag=,4.2,Teff=,5107,Gaia DR3,3195919528989223040,PR,p,1,U147,pmra=-2.2397 pmdec=-3.4203  # Sharing w/ C398,y,,1,1,n,,31260
 21000,,180,50,22049,03,32,55.8,-09,27,30,2000,jmag=,2.23,30,30,6,x,1,simulcal=,y,gmag=,3.4,Teff=,5041,Gaia DR3,5164707970261890560,PR,p,1,U147,Eps Eri,y,,1,nan,n,,31260
 17520,,17280,1,34411,05,19,8.5,40,05,57,2000,jmag=,3.61,18,18,960,x,1,simulcal=,y,gmag=,4.5,Teff=,5784,Gaia DR3,188771135583573504,PR,p,1,U150,observing 8 full hours in fast readout mode to detect p-modes within single night,y,,nan,nan,y,,77800
 13740,,13500,1,26965,4,15,12.8,-7,40,31,2000,jmag=,2.93,12,12,1125,x,1,simulcal=,y,gmag=,4.2,Teff=,5107,Gaia DR3,3195919528989223040,PR,p,1,U150,observing 7.5 full hours in fast readout mode to detect p-modes within single night,y,,nan,nan,y,,77800
@@ -56,8 +56,8 @@ do not change,do not change,do not change,,,,,,,,,31,,,,,,,,,,,,,,,,,,,,,,,,,,,
 1128,,888,1,KOI-13B,19,7,53.02,46,52,06,2000,jmag=,10.6,888,888,1,x,1,simulcal=,n,gmag=,10.6,Teff=,7063,Gaia DR3,2130632159130638464,MR,p,2,Y280,ideally observed back-to-back with KOI-13 A; northwest component of binary system; goal SNR=200,N,N,nan,nan,n,,32499
 287,,47,1,20782,03,20,3.99,-28,51,16,2000,jmag=,6.30,47,47,1,x,1,simulcal=,n,gmag=,7.2,Teff=,5782,Gaia DR3,5060104351007433472,MR,p,2,Y280,ideally observed back-to-back with HD 20781; southeast component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
 337,,97,1,20781,03,20,3.35,-28,47,03,2000,jmag=,7.00,97,97,1,x,1,simulcal=,n,gmag=,8.2,Teff=,5342,Gaia DR3,5060105897197110144,MR,p,2,Y280,ideally observed back-to-back with HD 20782; northwest component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
-390,,150,1,KELT-2A,06,10,39.37,30,57,26,2000,jmag=,7.70,150,150,1,x,1,simulcal=,n,gmag=,8.6,Teff=,6327,Gaia DR3,3438059369839738624,MR,p,2,Y280,ideally observed back-to-back with KELT-2 B; southeast component of binary system; goal SNR=200,y,N,nan,nan,n,,32499
-3726,,3486,1,KELT-2B,06,10,39.28,30,57,28,2000,jmag=,12.0,1162,1162,3,x,1,simulcal=,n,gmag=,12.0,Teff=,5247,Gaia DR3,3438059442854472832,MR,p,2,Y280,"ideally observed back-to-back with KELT-2 A; northwest component of binary system; goal SNR=200, Texp=3484",y,N,nan,nan,n,,32499
+390,,150,1,KELT-2A,06,10,39.37,30,57,26,2000,jmag=,7.70,150,150,1,x,1,simulcal=,n,gmag=,8.6,Teff=,6327,Gaia DR3,3438059369839738624,MR,p,2,Y280,ideally observed back-to-back with KELT-2 B; southeast component of binary system; goal SNR=200,N,N,nan,nan,n,,32499
+3726,,3486,1,KELT-2B,06,10,39.28,30,57,28,2000,jmag=,12.0,1162,1162,3,x,1,simulcal=,n,gmag=,12.0,Teff=,5247,Gaia DR3,3438059442854472832,MR,p,2,Y280,"ideally observed back-to-back with KELT-2 A; northwest component of binary system; goal SNR=200, Texp=3484",N,N,nan,nan,n,,32499
 478,,238,1,80606,09,22,37.67,50,36,14,2000,jmag=,7.70,238,238,1,x,1,simulcal=,n,gmag=,8.8,Teff=,5561,Gaia DR3,1019003226022657920,MR,p,2,Y280,ideally observed back-to-back with HD 80607;northeast component of binary system; goal SNR=200,y,N,nan,nan,n,,1450
 455,,215,1,80607,09,22,39.82,50,36,14,2000,jmag=,7.80,215,215,1,x,1,simulcal=,n,gmag=,9.0,Teff=,5538,Gaia DR3,1019003329101872896,MR,p,2,Y280,ideally observed back-to-back with HD 80606; southwest component of binary system; goal SNR=200,y,N,nan,nan,n,,1450
 690,,450,1,TIC139474683,05,52,30.44,07,57,09,2000,jmag=,10.86,450,600,1,x,1,simulcal=,y,gmag=,12.2,Teff=,5988,Gaia DR3,3323055543114557184,NS,p,1,H390,RM Dec 20,Y,N,nan,nan,y,,61835
@@ -201,19 +201,19 @@ do not change,do not change,do not change,,,,,,,,,31,,,,,,,,,,,,,,,,,,,,,,,,,,,
 16800,,600,20,T005507,9,54,24,6,38,47,2000,jmag=,9.394000053,600,600,1,x,1,simulcal=,y,gmag=,11.94074535,Teff=,3514,Gaia DR3,3850532189108251008,TK,p,1,U151,,y,n,1,nan,n,,148800
 16800,,600,20,T005799,20,6,31.2,15,59,24,2000,jmag=,9.741999626,600,600,1,x,1,simulcal=,y,gmag=,12.30795383,Teff=,3521,Gaia DR3,1807887150930343424,TK,p,1,U151,,y,n,1,nan,n,,98660
 10800,,300,20,T006026,0,0,52.8,35,45,0,2000,jmag=,8.036999702,300,300,1,x,1,simulcal=,y,gmag=,9.612057686,Teff=,4540,Gaia DR3,2877050883371424768,TK,p,1,U151,,y,n,1,nan,n,,98660
-7320,,126,20,3651,0,39,11.2,21,14,53,2000,jmag=,4.47,42,42,3,x,1,simulcal=,y,gmag=,5.654319,Teff=,5240,GaiaDR3,2802397960855105920,AH,p,1,C398,,y,n,1,nan,n,,98660
-6240,,72,20,4628,0,48,40,5,16,23,2000,jmag=,4.37,36,36,2,x,1,simulcal=,y,gmag=,5.467689,Teff=,4960,GaiaDR3,2552925644460225152,AH,p,1,C398,,y,n,1,nan,n,,98660
-6000,,60,20,4614,0,49,9.5,57,48,41,2000,jmag=,2.37,12,12,5,x,1,simulcal=,y,gmag=,3.320067,Teff=,5880,GaiaDR3,425040000962559616,AH,p,1,C398,,y,n,1,nan,n,,98660
-6420,,81,20,10476,1,42,22.8,20,15,51,2000,jmag=,3.83,27,27,3,x,1,simulcal=,y,gmag=,4.99968,Teff=,5200,GaiaDR3,96331172942614528,AH,p,1,C398,,y,n,1,nan,n,,98660
-5760,,48,20,10700,1,43,24,-15,55,55,2000,jmag=,2.14,12,12,4,x,1,simulcal=,y,gmag=,3.3004,Teff=,5310,GaiaDR3,2452378776434477184,AH,p,1,C398,,y,n,1,nan,n,,98660
-6720,,96,20,19373,3,9,33,49,36,45,2000,jmag=,3.14,12,12,8,x,1,simulcal=,y,gmag=,3.902639,Teff=,5940,GaiaDR3,436648129327098496,AH,p,1,C398,,y,n,1,nan,n,,98660
-5760,,48,20,26965,4,14,24.8,-7,40,31,2000,jmag=,2.93,12,12,4,x,1,simulcal=,y,gmag=,4.179894,Teff=,5133,GaiaDR3,3195919528989223040,AH,p,1,C398,Set to N because sharing target with Jacob L.,n,n,1,nan,n,,98660
-7620,,141,20,32147,5,1,1.6,-5,45,39,2000,jmag=,4.45,47,47,3,x,1,simulcal=,y,gmag=,5.886492,Teff=,4800,GaiaDR3,3211461469444773376,AH,p,1,C398,,y,n,1,nan,n,,98660
-7560,,138,20,34411,5,19,20.4,40,5,41,2000,jmag=,3.61,23,23,6,x,1,simulcal=,y,gmag=,4.525885,Teff=,5830,GaiaDR3,188771135583573504,AH,p,1,C398,,y,n,1,nan,n,,98660
-7980,,159,20,50692,6,55,18.6663,25,22,32.503,2000,jmag=,4.913,53,53,3,x,1,simulcal=,y,gmag=,5.602784,Teff=,5810,GaiaDR3,3381727613874753536,AH,p,1,C398,,y,n,1,nan,n,,98660
-8480,,184,20,55575,7,15,50.1391,47,14,19,2000,jmag=,4.48,46,46,4,x,1,simulcal=,y,gmag=,5.38816,Teff=,5800,GaiaDR3,974887555341533440,AH,p,1,C398,,y,n,1,nan,n,,98660
-8600,,190,20,86728,10,0,48.5,31,55,15,2000,jmag=,4.27,38,38,5,x,1,simulcal=,y,gmag=,5.204957,Teff=,5760,GaiaDR3,746545172372256384,AH,p,1,C398,,y,n,1,nan,n,,98660
-7900,,155,20,95128,10,59,20.7,40,25,50,2000,jmag=,3.96,31,31,5,x,1,simulcal=,y,gmag=,4.866588,Teff=,5850,GaiaDR3,777254360337133312,AH,p,1,C398,,y,n,1,nan,n,,598800
-6300,,75,20,95735,11,3,6.9,35,56,22,2000,jmag=,4.2,75,75,1,x,1,simulcal=,y,gmag=,6.551172,Teff=,3589,GaiaDR3,762815470562110464,AH,p,1,C398,,y,n,1,nan,n,,304800
+7320,,126,20,3651,0,39,21.8,21,15,1,2000,jmag=,4.47,42,42,3,x,1,simulcal=,y,gmag=,5.654319,Teff=,5240,GaiaDR3,2802397960855105920,AH,p,1,C398,pmra=-0.4611 pmdec=-0.3709,y,n,1,nan,n,,98660
+6240,,72,20,4628,0,48,22.9,5,16,50,2000,jmag=,4.37,36,36,2,x,1,simulcal=,y,gmag=,5.467689,Teff=,4960,GaiaDR3,2552925644460225152,AH,p,1,C398,pmra=0.7581 pmdec=-1.1413,y,n,1,nan,n,,98660
+6000,,60,20,4614,0,49,6.2,57,48,54,2000,jmag=,2.37,12,12,5,x,1,simulcal=,y,gmag=,3.320067,Teff=,5880,GaiaDR3,425040000962559616,AH,p,1,C398,pmra=1.0871  pmdec=-0.5597 ,y,n,1,nan,n,,98660
+6420,,81,20,10476,1,42,29.7,20,16,6,2000,jmag=,3.83,27,27,3,x,1,simulcal=,y,gmag=,4.99968,Teff=,5200,GaiaDR3,96331172942614528,AH,p,1,C398,pmra=-0.3021 pmdec=-0.6775,y,n,1,nan,n,,98660
+5760,,48,20,10700,1,44,4.1,-15,56,15,2000,jmag=,2.14,12,12,4,x,1,simulcal=,y,gmag=,3.3004,Teff=,5310,GaiaDR3,2452378776434477184,AH,p,1,C398,pmra=-1.7219 pmdec=0.8542,y,n,1,nan,n,,98660
+6720,,96,20,19373,3,9,4,49,36,47,2000,jmag=,3.14,12,12,8,x,1,simulcal=,y,gmag=,3.902639,Teff=,5940,GaiaDR3,436648129327098496,AH,p,1,C398,pmra=1.2622 pmdec=-0.0916,y,n,1,nan,n,,98660
+5760,,48,20,26965,4,15,16.3,-7,39,10,2000,jmag=,2.93,12,12,4,x,1,simulcal=,y,gmag=,4.179894,Teff=,5133,GaiaDR3,3195919528989223040,AH,p,1,C398,pmra=-2.2397 pmdec=-3.4203  # Set to N because sharing target with Jacob L.,n,n,1,nan,n,,98660
+7620,,141,20,32147,5,0,49,-5,45,13,2000,jmag=,4.45,47,47,3,x,1,simulcal=,y,gmag=,5.886492,Teff=,4800,GaiaDR3,3211461469444773376,AH,p,1,C398,pmra=0.5507 pmdec=-1.1092,y,n,1,nan,n,,98660
+7560,,138,20,34411,5,19,8.5,40,5,57,2000,jmag=,3.61,23,23,6,x,1,simulcal=,y,gmag=,4.525885,Teff=,5830,GaiaDR3,188771135583573504,AH,p,1,C398,pmra=0.5193 pmdec=-0.6647,y,n,1,nan,n,,98660
+7980,,159,20,50692,6,55,18.7,25,22,32.5,2000,jmag=,4.913,53,53,3,x,1,simulcal=,y,gmag=,5.602784,Teff=,5810,GaiaDR3,3381727613874753536,AH,p,1,C398,pmra=-0.0357 pmdec=0.0251,y,n,1,nan,n,,98660
+8480,,184,20,55575,7,15,50.1391,47,14,24,2000,jmag=,4.48,46,46,4,x,1,simulcal=,y,gmag=,5.38816,Teff=,5800,GaiaDR3,974887555341533440,AH,p,1,C398,pmra=0.0294 pmdec=-0.1861,y,n,1,nan,n,,98660
+8600,,190,20,86728,10,1,0.6,31,55,25,2000,jmag=,4.27,38,38,5,x,1,simulcal=,y,gmag=,5.204957,Teff=,5760,GaiaDR3,746545172372256384,AH,p,1,C398,pmra=-0.5292 pmdec=-0.4289,y,n,1,nan,n,,98660
+7900,,155,20,95128,10,59,27.9,40,25,49,2000,jmag=,3.96,31,31,5,x,1,simulcal=,y,gmag=,4.866588,Teff=,5850,GaiaDR3,777254360337133312,AH,p,1,C398,pmra=-0.3159 pmdec=0.0551,y,n,1,nan,n,,598800
+6300,,75,20,95735,11,3,20.1,35,58,11,2000,jmag=,4.2,75,75,1,x,1,simulcal=,y,gmag=,6.551172,Teff=,3589,GaiaDR3,762815470562110464,AH,p,1,C398,pmra=-0.5805 pmdec=-4.7699,y,n,1,nan,n,,304800
 598800,,29700,20,MASCARA-1,21,10,12,10,44,20,2000,jmag=,7.8,300,300,99,x,1,simulcal=,n,gmag=,8.3,Teff=,7490,GaiaDR3,1744911763437512064,AH,p,1,C400,"aka HD201585, atmospheric event observation",n,y,nan,nan,y,,0
 304800,,15000,20,3167,0,34,57.524,4,22,53.284,2000,jmag=,7.5,300,300,50,x,1,simulcal=,y,gmag=,8.77,Teff=,5300,GaiaDR3,2554032474712538880,WS,p,1,N133,RM effect observations of HD 3167b (3 different nights are scheduled),y,n,nan,nan,y,"Three transit observations scheduled for this program: (HST) 2023-09-21, 2023-09-22, 2023-10-19",

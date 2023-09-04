@@ -1,0 +1,45 @@
+xxx          185144 19 32 24.3 +69 39 00 2000  jmag=3.4   16/ 16  1of1 sc=y 3x gmag=4.2  Teff=5300 Gaia DR3 2261614264931057664  AH p1 C011 pmra=0.5983 pmdec=-1.7387 # Everynight SigDra
+x          K00319 18 49 34.0 +43 53 22 2000 jmag=11.5 1400/1400 1of1 sc=y 1x gmag=12.7 Teff=5460 Gaia DR3 2105362903731391744 JZ p1 C316 Kepler Field star, which is only obserable in the early months of the semester.
+x          K00117 19 48 06.8 +48 12 31 2000 jmag=11.4 1200/1200 1of1 sc=y 1x gmag=12.5 Teff=5861 Gaia DR3 2086625752425381632 LW p1 D317 Kepler107
+x          K00148 19 56 33.4 +40 56 56 2000 jmag=11.7  900/900  1of1 sc=y 1x gmag=13.1 Teff=5118 Gaia DR3 2075112109039378688 EP p1 U012 Kepler-48, observe every night we are on the telescope until mid-dec
+x      HIP102295A 20 43 38.8 +19 43 41 2000 jmag=7.2   120/120  1of1 sc=y 1x gmag=8.1  Teff=5608 Gaia DR3 1814257343328666624 JW p2 H391 observe SE component
+x         T005799 20 06 31.2 +15 59 24 2000 jmag=9.7   600/600  1of1 sc=y 1x gmag=12.3 Teff=3521 Gaia DR3 1807887150930343424 TK p1 U151
+x         T006255 22 06 00.8 +39 17 55 2000 jmag=8.9   600/600  1of3 sc=y 1x gmag=11.6 Teff=3450 Gaia DR3 1956328333130770048 FD p1 N461 Observe 3x per night
+xxxxxx           22049 03 32 55.8 -09 27 30 2000 jmag=2.2    30/30   1of1 sc=y 6x gmag=3.4  Teff=5041 Gaia DR3 5164707970261890560 PR p1 U147 Eps Eri
+       HIP115594 23 24 55.1 -38 09 39 2000 jmag=8.4   360/360  1of1 sc=y 1x gmag=9.5  Teff=6200 Gaia DR3 6550557886476222336 JW p2 H391 companion at 0.7'', observe NW component, 
+xxx           32147 05 00 49.0 -05 45 13 2000 jmag=4.4    47/47   1of1 sc=y 3x gmag=5.9  Teff=4800 Gaia DR3 3211461469444773376 AH p1 C398 pmra=0.5507 pmdec=-1.1092
+xxxxx           26965 04 15 16.3 -07 39 10 2000 jmag=2.9    52/52   1of2 sc=y 5x gmag=4.2  Teff=5107 Gaia DR3 3195919528989223040 PR p1 U147 pmra=-2.2397 pmdec=-3.4203  # Sharing w/ C398
+xxxxx            4614 00 49 06.2 +57 48 54 2000 jmag=2.4    12/12   1of1 sc=y 5x gmag=3.3  Teff=5880 Gaia DR3 425040000962559616  AH p1 C398 pmra=1.0871  pmdec=-0.5597 
+x         T001472 00 56 26.4 +48 38 15 2000 jmag=9.8   600/600  1of1 sc=y 1x gmag=11.1 Teff=5714 Gaia DR3 402396521052843264  TK p1 U151
+x         T006255 22 06 00.8 +39 17 55 2000 jmag=8.9   600/600  2of3 sc=y 1x gmag=11.6 Teff=3450 Gaia DR3 1956328333130770048 FD p1 N461 Observe 3x per night
+x            6061 01 02 24.0 +37 11 07 2000 jmag=7.7   300/300  1of1 sc=y 1x gmag=8.7  Teff=5972 Gaia DR3 369669965470499456  TK p1 U151
+x         T006026 00 00 52.8 +35 45 00 2000 jmag=8.0   300/300  1of1 sc=y 1x gmag=9.6  Teff=4540 Gaia DR3 2877050883371424768 TK p1 U151
+x         T006255 22 06 00.8 +39 17 55 2000 jmag=8.9   600/600  3of3 sc=y 1x gmag=11.6 Teff=3450 Gaia DR3 1956328333130770048 FD p1 N461 Observe 3x per night
+x       HIP112486 22 47 05.0 +29 51 17 2000 jmag=10.2  600/600  1of1 sc=y 1x gmag=11.4 Teff=5278 Gaia DR3 1887706880428475520 JW p2 H391 Companion at companion at 2 arcsec. Observe the brighter.
+x        Ori40003 05 35 15.6 -05 25 14 2000 jmag=10.0 1200/1800 1of1 sc=n 1x gmag=13.1 Teff=3800 Gaia DR3 3017360966647238272 LH p1 C404 pre-ms stellar quadruple system; goal is every night during september with either kpf or hires, EveryNight
+xxxxxxxx           19373 03 09 04.0 +49 36 47 2000 jmag=3.1    12/12   1of1 sc=y 8x gmag=3.9  Teff=5940 Gaia DR3 436648129327098496  AH p1 C398 pmra=1.2622 pmdec=-0.0916
+x        HIP24007 05 09 34.8 +24 19 27 2000 jmag=8.6   480/480  1of1 sc=y 1x gmag=10.2 Teff=5125 Gaia DR3 3418915433588729856 JW p2 H391 companion at 1 arcsec, observe the East bright component
+xxx           50692 06 55 18.7 +25 22 32 2000 jmag=4.9    53/53   1of1 sc=y 3x gmag=5.6  Teff=5810 Gaia DR3 3381727613874753536 AH p1 C398 pmra=-0.0357 pmdec=0.0251
+        HIP26250 05 35 27.8 +21 17 39 2000 jmag=8.0   300/300  1of1 sc=y 1x gmag=9.0  Teff=6169 Gaia DR3 3402980516507429888 JW p2 H391
+xxxxx           26965 04 15 16.3 -07 39 10 2000 jmag=2.9    52/52   2of2 sc=y 5x gmag=4.2  Teff=5107 Gaia DR3 3195919528989223040 PR p1 U147 pmra=-2.2397 pmdec=-3.4203  # Sharing w/ C398
+x           42813 06 12 13.8 -14 38 56 2000 jmag=8.1   300/300  1of1 sc=y 1x gmag=9.3  Teff=5398 Gaia DR3 2993561629444856960 TK p1 U151
+xxxxxx           34411 05 19 08.5 +40 05 57 2000 jmag=3.6    23/23   1of1 sc=y 6x gmag=4.5  Teff=5830 Gaia DR3 188771135583573504  AH p1 C398 pmra=0.5193 pmdec=-0.6647
+x          237566 07 00 19.2 +56 49 27 2000 jmag=8.3   300/300  1of1 sc=y 1x gmag=9.2  Teff=5852 Gaia DR3 1000423609817438592 TK p1 U151
+xxxx           55575 07 15 50.1 +47 14 24 2000 jmag=4.5    46/46   1of1 sc=y 4x gmag=5.4  Teff=5800 Gaia DR3 974887555341533440  AH p1 C398 pmra=0.0294 pmdec=-0.1861
+2M07312565+43035 07 31 25.6 +43 03 60 2000 jmag=11.4  667/700  1of1 sc=y 1x gmag=11.4 Teff=4484 Gaia DR3 972933894978708224  JO p2 H357
+2M07340277+29390 07 34 02.8 +29 39 05 2000 jmag=9.8   142/200  1of1 sc=y 1x gmag=9.8  Teff=4800 Gaia DR3 879620954468113024  JO p2 H357
+2M07162622+26123 07 16 26.2 +26 12 38 2000 jmag=9.7   134/200  1of1 sc=y 1x gmag=9.7  Teff=4373 Gaia DR3 871280986973452672  JO p2 H357
+            4628 00 48 24.2 +05 16 23 2000 jmag=4.4    45/45   1of1 sc=y 3x gmag=5.5  Teff=4943 Gaia DR3 2552925644460225152  TW p3 T999  #TWILIGHT IF SOUTH
+           10700 01 44 04.1 -15 56 15 2000 jmag=2.1    12/12   1of1 sc=y 4x gmag=3.3  Teff=5310 Gaia DR3 2452378776434477184 AH p1 C398 pmra=-1.7219 pmdec=0.8542
+x            9407 01 34 33.2 +68 56 53 2000 jmag=5.2   300/300  1of1 sc=y 1x gmag=6.4  Teff=5560 Gaia DR3 532057254394731776   TW p3 T999 pmra=-0.379  pmdec=0.115    #TWILIGHT
+XXXXXXXXXXXXXXXX 00 00 00    00 00 00 2000 XXXXXXXXXXXXXXXXXXXXXXX  EXTRAS  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX 
+          hr1544 04 50 36.7 +08 54 01 2000 jmag=4.3    30/30   1of1 sc=n 1x gmag=4.3  Teff=6700 Gaia DR3 3289827339649866880 BS p3 T999  BSTAR, OB needed.
+        HIP26250 05 35 27.8 +21 17 39 2000 jmag=8.0   300/300  1of1 sc=y 1x gmag=9.0  Teff=6169 Gaia DR3 3402980516507429888 JW p2 H391
+        HIP24007 05 09 34.8 +24 19 27 2000 jmag=8.6   480/480  1of1 sc=y 1x gmag=10.2 Teff=5125 Gaia DR3 3418915433588729856 JW p2 H391 companion at 1 arcsec, observe the East bright component
+2M07162622+26123 07 16 26.2 +26 12 38 2000 jmag=9.7   134/200  1of1 sc=y 1x gmag=9.7  Teff=4373 Gaia DR3 871280986973452672  JO p3 H357
+2M07312565+43035 07 31 25.6 +43 03 60 2000 jmag=11.4  667/700  1of1 sc=y 1x gmag=11.4 Teff=4484 Gaia DR3 972933894978708224  JO p3 H357
+       Kepler-99 19 49 25.5 +41 18 14 2000 jmag=11.0  940/940  1of2 sc=y 1x gmag=12.5 Teff=5054 Gaia DR3 2076871091425583232 CB p2 H376 Observe w cadence of 2 RVs/night separated by as much as possible (>3 hours) (20 RVs total)
+       Kepler-99 19 49 25.5 +41 18 14 2000 jmag=11.0  940/940  1of2 sc=y 1x gmag=12.5 Teff=5054 Gaia DR3 2076871091425583232 CB p2 H376 Observe w cadence of 2 RVs/night separated by as much as possible (>3 hours) (20 RVs total)
+         T001749 18 50 57.1 +64 25 09 2000 jmag=11.1  720/720  1of3 sc=y 1x gmag=13.2 Teff=3923 Gaia DR3 2253774094189458432 HK p1 C351 M dwarf with three small planets, TTVs measured with Palomar (PI Mike Greklek-McKeon), everynight
+         T001749 18 50 57.1 +64 25 09 2000 jmag=11.1  720/720  1of3 sc=y 1x gmag=13.2 Teff=3923 Gaia DR3 2253774094189458432 HK p1 C351 M dwarf with three small planets, TTVs measured with Palomar (PI Mike Greklek-McKeon), everynight
+         T001749 18 50 57.1 +64 25 09 2000 jmag=11.1  720/720  1of3 sc=y 1x gmag=13.2 Teff=3923 Gaia DR3 2253774094189458432 HK p1 C351 M dwarf with three small planets, TTVs measured with Palomar (PI Mike Greklek-McKeon), everynight
