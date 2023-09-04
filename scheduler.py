@@ -4,7 +4,7 @@ parser = argparse.ArgumentParser(description='Generate Schedules for Upcoming Ni
 
 parser.add_argument('-o','--observers_sheet', help='Path to observers csv')
 parser.add_argument('-t','--twilight_times', help='Path to twilight times csv',default='HIRES_2023B_data/twilight_times.csv')
-parser.add_argument('-a','--allocated_nights', help='Path to night allocations')
+parser.add_argument('-n','--allocated_nights', help='Path to night allocations')
 parser.add_argument('-m','--marked_scripts', help='Path to script directory')
 parser.add_argument('-i','--instrument', help='Instrument to schedule, currently HIRES or KPF')
 parser.add_argument('-d','--schedule_dates',action='append',help='Date(s) to be scheduled as YYYY-MM-DD. Must be in allocated_nights')
@@ -17,6 +17,9 @@ parser.add_argument('-p','--plot_results',action='store_true', help='Turn on plo
 parser.add_argument('-f','--folder', help='Folder in which to save generated scripts and plots')
 parser.add_argument('-l','--time_limit', help='Maximum time spent in each optimization instance in seconds',type=int,
                 default=300)
+parser.add_argument('-a','--accessibility_constant',help='Fraction of night targets must be visible',
+                default=6)
+
 
 args = parser.parse_args()
 
@@ -47,6 +50,6 @@ import optimize
 #Call the scheduling function
 optimize.semester_schedule(args.instrument,args.observers_sheet,args.twilight_times,args.allocated_nights,
                         args.marked_scripts,args.schedule_dates,args.gurobi_output,args.equalize,args.plot_results,
-                        args.folder,args.time_limit)
+                        args.folder,args.time_limit,args.accessibility_constant)
 
 

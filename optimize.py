@@ -21,7 +21,7 @@ import accounting
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-def generate_reservation_list(all_targets_frame,plan,twilight_frame):
+def generate_reservation_list(all_targets_frame,plan,twilight_frame,accessibility_constant):
     keck = apl.Observer.at_site('W. M. Keck Observatory')
 
     #Astroplan observers don't interface well with astropy functions
@@ -118,7 +118,7 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame):
                 d = np.concatenate((one,two))
             else:
                 d = a[b:c]
-            if (len(d) - np.bincount(d)[0]) >= len(d)/8 and moon_safe(moon,ra_dec_list[i]):
+            if (len(d) - np.bincount(d)[0]) >= len(d)/accessibility_constant and moon_safe(moon,ra_dec_list[i]):
                 reservation_matrix[i,ind] = 1
 
 
@@ -221,7 +221,6 @@ def process_scripts(instrument,all_targets_frame,plan,marked_scripts,current_day
 
                 #The observation is always assigned to the first qn of that date for simplicity. The date of observation
                 #all that matters for the optimization, not the specific qn
-                
                 slot = plan[plan['Date'] == day].index[0]
 
                 #Ignore scripts past the simulation start date
@@ -642,7 +641,7 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
         
 
 def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights,marked_scripts,schedule_dates,output_flag,
-                                                                            equalize_programs,plot_results,outputdir,time_limit):
+                                                            equalize_programs,plot_results,outputdir,time_limit,accessibility_constant):
 
     if len(schedule_dates) == 1:
         high_production_mode = False
@@ -684,7 +683,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
     plan = calculate_intervals(plan,twilight_frame)
 
     #Create a list of reservations and the minimum separation for each target
-    reservations,min_separations = generate_reservation_list(all_targets_frame,plan,twilight_frame)
+    reservations,min_separations = generate_reservation_list(all_targets_frame,plan,twilight_frame,accessibility_constant)
 
     #Group targets by program in case we want to use statistics or equalizing algorithm
     program_dict = defaultdict(list)
@@ -828,7 +827,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
                             for r in target_ids) <= ub * interval_dict[t] for t in fill_slots)
                                 ,'constr_fill_below')
         
-        #These alternate fill constraints will fill fill the total interval duration, not each one individually. Useful
+        #These alternate fill constraints will fill the total interval duration, not each one individually. Useful
         #if a single quarter night is struggling to get filled
         #fill_above = m.addConstr((gp.quicksum(yrt[r,t] * all_targets_frame.loc[r,'discretized_duration'] 
         #                    for r in target_ids for t in fill_slots) >= lb * sum(interval_dict[t] for t in fill_slots))
@@ -911,7 +910,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
                 m.addGenConstrAbs(abs_dev[program],dev[program],'dev_to_abs')
         
         #These scalars should be adjusted through trial and error, and are dependent on model size.
-        cadence_scalar = 1/2000
+        cadence_scalar = 1/10000
         program_scalar = 600
 
         #Reward more observations, closer cadence to minimum, and also program equity
@@ -1012,7 +1011,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
                 #Plot target cadence by program
                 logger.info('Plotting Program Cadences')
                 plotting.plot_program_cadence(instrument,plan,all_targets_frame,twilight_frame,starlists,
-                                    min_separations,plotpath,current_day)
+                                    min_separations,plotpath,current_day,accessibility_constant)
                 #plotting.plot_cadence_night_resolution(plan,all_targets_frame,twilight_frame,starlists,
                 #                     min_separations,plotpath)
 

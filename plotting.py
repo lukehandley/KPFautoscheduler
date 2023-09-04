@@ -114,7 +114,7 @@ def animate_telescope(time_strings,total_azimuth_list,total_zenith_list,tel_az,t
 
 def plot_program_cdf(plan,program_dict,targets_observed,Nobs,outputdir,current_day):
 
-    fig,axs = plt.subplots(1)
+    fig,axs = plt.subplots(1,figsize = (7,5))
     fig.patch.set_alpha(1)
     colors = plt.cm.rainbow(np.linspace(0, 1, len(program_dict.keys())))
     i = 0
@@ -136,8 +136,10 @@ def plot_program_cdf(plan,program_dict,targets_observed,Nobs,outputdir,current_d
         i += 1
     axs.vlines((Time(current_day,format='iso') - Time(starting_date,format='iso')).jd,0,100,color='black',linestyles='dashed')
     axs.set_xticks([0,50,100,150,185])
+    axs.set_xlim(0,225)
     axs.set_ylim(-5,105)
     axs.set_ylabel('Completion %')
+    axs.set_xlabel('Days into Semester')
     plt.legend()
     plt.savefig(os.path.join(outputdir,'Program_CDFs.png'),dpi=200)
     plt.close()
@@ -224,7 +226,8 @@ def calculate_intervals(plan,twilight_frame):
     plan['qn_stop'] = interval_stops
     return plan
 
-def plot_program_cadence(instrument,plan,all_targets_frame,twilight_frame,starlists,min_separations,outputdir,current_day,cadence_mode=False):
+def plot_program_cadence(instrument,plan,all_targets_frame,twilight_frame,starlists,min_separations,outputdir,
+                         current_day,accessibility_constant,cadence_mode=False):
 
     dates = plan.Date.to_list()
     
@@ -262,7 +265,7 @@ def plot_program_cadence(instrument,plan,all_targets_frame,twilight_frame,starli
     for program in all_targets_frame['Program code'].unique().tolist():
         fig,axs = plt.subplots(1,figsize=(12,12))
         fig.patch.set_alpha(1)
-        axs.set_xlim(-5,240)
+        axs.set_xlim(-5,260)
         height = 0
         if cadence_mode:
             program_frame = all_targets_frame[(all_targets_frame['Program code'] == program) & (all_targets_frame['N_obs(full_semester)'] > 1)]
@@ -347,7 +350,7 @@ def plot_program_cadence(instrument,plan,all_targets_frame,twilight_frame,starli
                             d = np.concatenate((one,two))
                         else:
                             d = a[b:c]
-                        if (len(d) - np.bincount(d)[0]) >= len(d)/8:
+                        if (len(d) - np.bincount(d)[0]) >= len(d)/accessibility_constant:
                             observability.append(1)
                         else:
                             observability.append(0)
@@ -361,7 +364,7 @@ def plot_program_cadence(instrument,plan,all_targets_frame,twilight_frame,starli
                                 condition = not condition
                         if len(points) % 2 != 0:
                             points.append(len(observability)-1)
-                        axs.hlines([height,height+1],0,171,color = 'black',alpha = .2,linewidth=0.5)
+                        axs.hlines([height,height+1],0,190,color = 'black',alpha = .2,linewidth=0.5)
                         j = 0
                         while j < (len(points) - 1):
                             axs.fill_between(np.linspace(points[j],points[j+1]),height,height+1,color = 'lime',alpha = .5)
@@ -380,16 +383,16 @@ def plot_program_cadence(instrument,plan,all_targets_frame,twilight_frame,starli
                         axs.vlines(allocated,height,height+1,color='blue',alpha=.2)
                         if qn == 3:
                             if instrument == 'KPF':
-                                plt.text(182,height-.5,str(min_cadence)
+                                plt.text(190,height-.5,str(min_cadence)
                                                         + ' Days Minimum Cadence, '+ str(total_observed*nvisits) + 
                                                         '/{} Observations Achieved ({} visits each tick)'.format(nobs,nvisits),fontsize=4)
                             else:
-                                plt.text(182,height-.5,str(min_cadence)
+                                plt.text(190,height-.5,str(min_cadence)
                                                         + ' Days Minimum Cadence, '+ str(total_observed) + 
                                                         '/%s Observations Achieved' % nobs,fontsize=4)
                     else:
                         observed = []
-                        axs.hlines([height,height+1],0,171,color = 'black',alpha = .2,linewidth=0.5)
+                        axs.hlines([height,height+1],0,190,color = 'black',alpha = .2,linewidth=0.5)
                         for j in range(len(starlists)):
                             if targ in starlists[j]:
                                 if plan.loc[j,'start'] == qn/4:
@@ -404,17 +407,17 @@ def plot_program_cadence(instrument,plan,all_targets_frame,twilight_frame,starli
                         axs.vlines(allocated,height,height+1,color='blue',alpha=.2)
                         if qn == 3:
                             if instrument == 'KPF':
-                                plt.text(182,height-.5,str(min_cadence)
+                                plt.text(190,height-.5,str(min_cadence)
                                                         + ' Days Minimum Cadence, '+ str(total_observed*nvisits) + 
                                                         '/{} Observations Achieved ({} visits each tick)'.format(nobs,nvisits),fontsize=4)
                             else:
-                                plt.text(182,height-.5,str(min_cadence)
+                                plt.text(190,height-.5,str(min_cadence)
                                                         + ' Days Minimum Cadence, '+ str(total_observed) + 
                                                         '/%s Observations Achieved' % nobs,fontsize=4)
                     height += 1
             axs.vlines((Time(current_day,format='iso')-start).jd,0,height,color='black',alpha=0.15)
             axs.set_yticks(y_positions,y_labels,fontsize=4)
-            axs.set_xticks([0,85,171],['Feb 7','May 03','Jul 28'])
+            axs.set_xticks([0,85,171])
             axs.set_title('Cadence for Program %s' % program)
             plt.savefig(os.path.join(cadence_folder,'Program_{}.pdf'.format(program)),dpi=200)
             plt.close()
