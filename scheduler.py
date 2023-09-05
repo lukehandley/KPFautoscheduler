@@ -20,7 +20,6 @@ parser.add_argument('-l','--time_limit', help='Maximum time spent in each optimi
 parser.add_argument('-a','--accessibility_constant',help='Fraction of night targets must be visible',
                 default=6)
 
-
 args = parser.parse_args()
 
 if args.folder is None:
