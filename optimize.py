@@ -118,7 +118,7 @@ def generate_reservation_list(all_targets_frame,plan,twilight_frame):
                 d = np.concatenate((one,two))
             else:
                 d = a[b:c]
-            if (len(d) - np.bincount(d)[0]) >= len(d)/4 and moon_safe(moon,ra_dec_list[i]):
+            if (len(d) - np.bincount(d)[0]) >= len(d)/8 and moon_safe(moon,ra_dec_list[i]):
                 reservation_matrix[i,ind] = 1
 
 
@@ -195,7 +195,7 @@ def can_force(forced_slots,reserved_slots):
 def relaxed_minimum(minimum,relaxation):
     return math.ceil(minimum * relaxation)
 
-def process_scripts(all_targets_frame,plan,marked_scripts,current_day):
+def process_scripts(instrument,all_targets_frame,plan,marked_scripts,current_day):
 
     logger.info('Processing Scripts...')
 
@@ -260,6 +260,11 @@ def process_scripts(all_targets_frame,plan,marked_scripts,current_day):
                         if targ.size > 0:
                             targ_per_script += 1
                             observed_dict[targ[0]].append(slot)
+
+                            #KPF cases: only count the night once even if it appears multiple times
+                            if instrument == 'KPF':
+                                if int(all_targets_frame.loc[targ[0],'Nvisits']) > 1:
+                                    observed_dict[targ[0]] = [s for s in set(observed_dict[targ[0]])]
 
                     if targ_per_script == 0:
                         logger.warning('No targets recognized in {}'.format(filename))
@@ -340,264 +345,301 @@ def salesman_scheduler(instrument,all_targets_frame,plan,current_day,output_flag
                 blocked_targets[i][j] = int(blocked_targets[i][j])
 
         ordered_requests = []
-
+        extras = []       
+        
         #Plot folder
         plotpath = os.path.join(outputdir,'{}_{}_plots'.format(instrument,current_day))
         
-        #The path for each quarter night is computed independently
-        for qn in plan[plan['Date'] == current_day].index.tolist():
+        #The entire night is now solved at once
+        qns = plan[plan['Date'] == current_day].index.tolist()
+        nightly_targets = [item for qn in qns for item in blocked_targets[qn]]
 
-            nightly_targets = blocked_targets[qn]
+        ttp_frame = all_targets_frame.loc[list(set(nightly_targets))]
+        ttp_frame['discretized_duration'] = ttp_frame['T_exp(sec)'].apply(discretize)
+        num_visits = defaultdict(int)
+        intra_night_sep = defaultdict(int)
+        for index, row in ttp_frame.iterrows():
+            try:
+                nvisits = int(row['Nvisits'])
+            except:
+                nvisits = 1
+            try:
+                intra_night_sep[index] = int(row['IntraNightCadence'])*60
+            except:
+                intra_night_sep[index] = 60
+            num_visits[index] = nvisits
 
-            #Find reason for duplicates
-            nightly_targets = list(set(nightly_targets))
-
-            ind_to_id = defaultdict(int)
-            i = 1
-            for targ in nightly_targets:
+        ind_to_id = defaultdict(int)
+        multi_visit_ind = defaultdict(list)
+        i = 1
+        for targ in nightly_targets:
+            for j in range(num_visits[targ]):
+                if num_visits[targ] > 1:
+                    multi_visit_ind[targ].append(i)
                 ind_to_id[i] = targ
                 i += 1
 
-            start = Time(plan.loc[qn,'qn_start'],format='jd')
-            end = Time(plan.loc[qn,'qn_stop'],format='jd')
-            dur = np.round((end-start).jd*24*60,0)*60
-            stop = start + TimeDelta(dur,format='sec')
-            step = TimeDelta(60,format='sec')
-            t = np.arange(start.jd,stop.jd,step.jd)
-            t = Time(t,format='jd')
+        start = Time(plan.loc[qns[0],'qn_start'],format='jd')
+        end = Time(plan.loc[qns[-1],'qn_stop'],format='jd')
+        dur = np.round((end-start).jd*24*60,0)*60
+        stop = start + TimeDelta(dur,format='sec')
+        step = TimeDelta(60,format='sec')
+        t = np.arange(start.jd,stop.jd,step.jd)
+        t = Time(t,format='jd')
 
-            R = len(nightly_targets)+2
-            T = math.ceil(dur/(60*15))
-            slots = range(T)
+        R = sum(num_visits[targ] for targ in nightly_targets)+2
+        T = 4
+        slots = range(T)
 
-            min_az = 5.3
-            max_az = 146.2
-            min_alt = 33.3
-            else_min_alt = 25
-            #min_alt = 40
-            #else_min_alt = 40
-            max_alt = 90
+        min_az = 5.3
+        max_az = 146.2
+        min_alt = 33.3
+        else_min_alt = 25
+        #min_alt = 40
+        #else_min_alt = 40
+        max_alt = 90
 
-            e_i = []
-            l_i = []
-            s_i = []
-            for i in range(R):
-                if i == 0 or i == R-1:
-                    e_i.append(0)
-                    l_i.append((stop-t[0]).jd*24*60)
-                    s_i.append(0)
+        e_i = []
+        l_i = []
+        s_i = []
+        for i in range(R):
+            if i == 0 or i == R-1:
+                e_i.append(0)
+                l_i.append((stop-t[0]).jd*24*60)
+                s_i.append(0)
+            else:
+                targ = ind_to_id[i]
+                exp = ttp_frame.loc[targ,'discretized_duration']
+                s_i.append(exp)
+                ra,dec = get_ra_dec(ttp_frame,targ)
+                coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
+                target = apl.FixedTarget(name=targ, coord=coords)
+                AZ = keck.altaz(t, target)
+                alt=AZ.alt.deg
+                az=AZ.az.deg
+                deck = np.where((az >= min_az) & (az <= max_az))
+                deck_height = np.where((alt <= max_alt) & (alt >= min_alt))
+                first = np.intersect1d(deck,deck_height)
+                not_deck_1 = np.where((az < min_az))
+                not_deck_2 = np.where((az > max_az))
+                not_deck_height = np.where((alt <= max_alt) & (alt >= else_min_alt))
+                second = np.intersect1d(not_deck_1,not_deck_height)
+                third = np.intersect1d(not_deck_2,not_deck_height)
+                good = np.concatenate((first,second,third))
+                if len(good > 0):
+                    e_i.append(np.round(((t[good[0]]+TimeDelta(s_i[i]*60,format='sec'))-t[0]).jd*24*60,1))
+                    if t[good[-1]].jd < stop.jd:
+                        l_i.append(np.round((t[good[-1]]-t[0]).jd*24*60,1))
+                    elif t[good[-1]].jd >= stop.jd:
+                        l_i.append(np.round((stop-t[0]).jd*24*60,1))
                 else:
-                    targ = ind_to_id[i]
-                    exp = all_targets_frame.loc[targ,'discretized_duration']
-                    s_i.append(exp)
-                    ra,dec = get_ra_dec(all_targets_frame,targ)
+                    print('Error, target {} does not meet observability requirements'.format(all_targets_frame.loc[ind_to_id[i],'Starname']))
+        
+        def to_wrap_frame(angle):
+            angle += 90
+            if angle >= 360:
+                angle -= 360
+            return angle
+        
+        start_slots = Time(np.linspace(start.jd,stop.jd,T,endpoint=False),format='jd')
+        #Move to middle of slot for coordinates
+        shift = (end.jd-start.jd)/(2*T)
+        slot_times = start_slots + shift
+        coordinate_matrix = []
+        coordinate_matrix.append([(0,0) for slot in slot_times])
+        for i in range(R)[1:-1]:
+            id_num = ind_to_id[i]
+            ra,dec = get_ra_dec(ttp_frame,id_num)
+            coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
+            target = apl.FixedTarget(name=id_num, coord=coords)
+            altaz = keck.altaz(slot_times,target)
+            coordinate_matrix.append([(item.alt.deg,item.az.deg) for item in altaz])
+        coordinate_matrix.append([(0,0) for slot in slot_times])
+        coordinate_matrix = np.array(coordinate_matrix)
+
+        def distance(targ1,targ2,slot):
+            if targ1 == 0 or targ1 == R-1:
+                return 0
+            if targ2 == 0 or targ2 == R-1:
+                return 0
+
+            alt1 = coordinate_matrix[targ1,slot][0]
+            alt2 = coordinate_matrix[targ2,slot][0]                             
+            az1 = to_wrap_frame(coordinate_matrix[targ1,slot][1])
+            az2 = to_wrap_frame(coordinate_matrix[targ2,slot][1])
+
+
+            #diff = (t1[0]-t2[0], t1[1]-t2[1])
+            #return math.sqrt(diff[0]*diff[0]+diff[1]*diff[1])
+            return max(np.abs(alt1-alt2),np.abs(az1-az2))
+
+        dist = defaultdict(float)
+        for i in range(len(start_slots)):
+            for targ1,targ2 in permutations(range(R)[1:-1],2):
+                dist[(targ1,targ2,i)] = np.round(distance(targ1,targ2,i)/60,1)
+
+        #Time windows
+        w = []
+        for m in range(T):
+            w.append(np.round((start_slots[m] - start_slots[0]).jd*24*60,1))
+        w.append(np.round((stop - start_slots[0]).jd*24*60,1))
+
+        ####Model and Variables####
+        Mod = Model('TTP')
+        Mod.Params.OutputFlag = output_flag
+
+        yi = Mod.addVars(range(R),vtype=GRB.BINARY,name='yi')
+        xijm = Mod.addVars(range(R),range(R),range(T),vtype=GRB.BINARY,name='xijm')
+        tijm = Mod.addVars(range(R),range(R),range(T),vtype=GRB.CONTINUOUS,name='tijm')
+        ti = Mod.addVars(range(R),vtype=GRB.CONTINUOUS,lb=0,name='ti')
+
+        tijmdef = Mod.addConstrs((ti[i] == gp.quicksum(tijm[i,j,m] for j in range(R)[1:] for m in range(T)) 
+                            for i in range(R)[:-1]),'tijm_def')
+        start_origin = Mod.addConstr(gp.quicksum(xijm[0,j,m] for j in range(R) for m in range(T)) == 1,
+                        'start_origin')
+        end_origin = Mod.addConstr(gp.quicksum(xijm[i,R-1,m] for i in range(R) for m in range(T)) == 1,
+                        'end_origin')
+        visit_once = Mod.addConstrs((gp.quicksum(xijm[i,j,m] for i in range(R)[:-1] for m in range(T)) == yi[j]
+                        for j in range(R)[1:]), 'visit_once')
+        flow_constr = Mod.addConstrs(((gp.quicksum(xijm[i,k,m] for i in range(R)[:-1] for m in range(T))
+                        - gp.quicksum(xijm[k,j,m] for j in range(R)[1:] for m in range(T)) == 0)
+                        for k in range(R)[:-1][1:]), 'flow_constr')
+        exp_constr = Mod.addConstrs((ti[j] >= gp.quicksum(tijm[i,j,m] + (dist[(i,j,m)] + s_i[j])*xijm[i,j,m] 
+                        for i in range(R)[:-1] for m in range(T)) for j in range(R)[1:])
+                        , 'exp_constr')
+        t_min = Mod.addConstrs(((tijm[i,j,m] >= w[m]*xijm[i,j,m]) for j in range(R) for m in range(T)
+                        for i in range(R)),'t_min')
+        t_max = Mod.addConstrs((tijm[i,j,m] <= w[m+1]*xijm[i,j,m] for j in range(R) for m in range(T) 
+                        for i in range(R)),'t_max')
+        rise_constr = Mod.addConstrs((ti[i] >= e_i[i]*yi[i] for i in range(R)),'rise_constr')
+        set_constr = Mod.addConstrs((ti[i] <= l_i[i]*yi[i] for i in range(R)),'set_constr')
+
+        #Multivisit constraints for KPF
+        for targ in multi_visit_ind.keys():
+            indeces = multi_visit_ind[targ]
+            intra_sep = Mod.addConstrs(((gp.quicksum(tijm[indeces[i],j,m] for j in range(R)[1:] for m in range(T))
+                                    >= (gp.quicksum(tijm[indeces[i-1],j,m] for j in range(R)[1:] for m in range(T))
+                                    + yi[indeces[i]]*intra_night_sep[targ])) 
+                                    for i in range(len(indeces))[1:]),'intra_sep_constr')
+
+        priority_param = 50
+        slew_param = 1/100
+
+        Mod.setObjective(priority_param*gp.quicksum(yi[j] for j in range(R)[1:-1]) 
+                            -slew_param *gp.quicksum(dist[(i,j,m)]*xijm[i,j,m] for i in range(R)[1:-1] 
+                                        for j in range(R)[1:-1] for m in range(T))
+                            ,GRB.MAXIMIZE)
+        logger.info('Solving TTP for {}'.format(current_day))
+        Mod.params.TimeLimit = time_limit
+        Mod.params.MIPGap = 0
+        Mod.update()
+        Mod.optimize()
+        if Mod.SolCount > 0:
+            num_scheduled = 0
+            scheduled_targets = []
+            for i in range(R)[1:-1]:
+                if np.round(yi[i].X,0) == 1:
+                    num_scheduled += 1
+                    v = ti[i]
+                    scheduled_targets.append((int(v.VarName[3:-1]),int(np.round(v.X))))
+
+            logger.info('{} of {} total exposures scheduled into script.'.format(num_scheduled,R-2))
+
+            start_times = []
+            unordered_times = []
+
+            for i in range(len(scheduled_targets)):
+                unordered_times.append(int(scheduled_targets[i][1]))
+            order = np.argsort(unordered_times)
+            scheduled_targets = [scheduled_targets[i] for i in order]
+            
+
+            if plot_results:
+                logger.info('Plotting {}'.format(current_day))
+
+                obs_time=[]
+                az_path=[]
+                alt_path=[]
+                names=[]
+                targ_list=[]
+                for pair in scheduled_targets:
+                    targ=pair[0]
+                    time=t[pair[1]]
+                    exp=s_i[targ]
+                    targ_list.append(targ)
+                    names.append(all_targets_frame.loc[ind_to_id[targ],'Starname'])
+                    time1=time-TimeDelta(60*exp,format='sec')
+                    obs_time.append(time1.jd)
+                    obs_time.append(time.jd)
+                    az_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time1,keck)[1])
+                    az_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time,keck)[1])
+                    alt_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time1,keck)[0])
+                    alt_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time,keck)[0])
+                    
+                time_array = []
+                for i in range(len(obs_time)):
+                    if i % 2 == 0:
+                        time_array.append((obs_time[i] - obs_time[0])*1440)
+
+                start = Time(obs_time[0],format='jd')
+                stop = Time(obs_time[-1],format='jd')
+                step = TimeDelta(2,format='sec')
+                t = np.arange(start.jd,stop.jd,step.jd)
+                t = Time(t,format='jd')
+                        
+                time_counter = Time(obs_time[0],format='jd')
+                time_strings = t.isot
+                observed_at_time = []
+                tel_targs = []
+                while time_counter.jd < obs_time[-1]:
+                    ind = np.flatnonzero(time_array <= (time_counter.jd - obs_time[0])*1440)[-1]
+                    req = ind_to_id[targ_list[ind]]
+                    observed_at_time.append(ind)
+                    ra,dec = get_ra_dec(all_targets_frame,req)
                     coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
                     target = apl.FixedTarget(name=targ, coord=coords)
-                    AZ = keck.altaz(t, target)
-                    alt=AZ.alt.deg
-                    az=AZ.az.deg
-                    deck = np.where((az >= min_az) & (az <= max_az))
-                    deck_height = np.where((alt <= max_alt) & (alt >= min_alt))
-                    first = np.intersect1d(deck,deck_height)
-                    not_deck_1 = np.where((az < min_az))
-                    not_deck_2 = np.where((az > max_az))
-                    not_deck_height = np.where((alt <= max_alt) & (alt >= else_min_alt))
-                    second = np.intersect1d(not_deck_1,not_deck_height)
-                    third = np.intersect1d(not_deck_2,not_deck_height)
-                    good = np.concatenate((first,second,third))
-                    if len(good > 0):
-                        e_i.append(np.round(((t[good[0]]+TimeDelta(s_i[i]*60,format='sec'))-t[0]).jd*24*60,1))
-                        if t[good[-1]].jd < stop.jd:
-                            l_i.append(np.round((t[good[-1]]-t[0]).jd*24*60,1))
-                        elif t[good[-1]].jd >= stop.jd:
-                            l_i.append(np.round((stop-t[0]).jd*24*60,1))
-                    else:
-                        print('Error, target {} does not meet observability requirements'.format(all_targets_frame.loc[ind_to_id[i],'Starname']))
+                    tel_targs.append(target)
+                    time_counter += TimeDelta(2,format='sec')
 
-            def to_wrap_frame(angle):
-                angle += 90
-                if angle >= 360:
-                    angle -= 360
-                return angle
-
-            start_slots = Time(np.linspace(start.jd,stop.jd,T,endpoint=False),format='jd')
-            #Move to middle of slot for coordinates
-            shift = (end.jd-start.jd)/(2*T)
-            slot_times = start_slots + shift
-            coordinate_matrix = []
-            coordinate_matrix.append([(0,0) for slot in slot_times])
-            for i in range(len(nightly_targets)):
-                id_num = nightly_targets[i]
-                ra,dec = get_ra_dec(all_targets_frame,id_num)
-                coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
-                target = apl.FixedTarget(name=id_num, coord=coords)
-                altaz = keck.altaz(slot_times,target)
-                coordinate_matrix.append([(item.alt.deg,item.az.deg) for item in altaz])
-            coordinate_matrix.append([(0,0) for slot in slot_times])
-            coordinate_matrix = np.array(coordinate_matrix)
-
-            def distance(targ1,targ2,slot):
-                if targ1 == 0 or targ1 == R-1:
-                    return 0
-                if targ2 == 0 or targ2 == R-1:
-                    return 0
-
-                alt1 = coordinate_matrix[targ1,slot][0]
-                alt2 = coordinate_matrix[targ2,slot][0]                             
-                az1 = to_wrap_frame(coordinate_matrix[targ1,slot][1])
-                az2 = to_wrap_frame(coordinate_matrix[targ2,slot][1])
-
-
-                #diff = (t1[0]-t2[0], t1[1]-t2[1])
-                #return math.sqrt(diff[0]*diff[0]+diff[1]*diff[1])
-                return max(np.abs(alt1-alt2),np.abs(az1-az2))
-
-            dist = defaultdict(float)
-            for i in range(len(start_slots)):
-                for targ1,targ2 in permutations(range(R),2):
-                    dist[(targ1,targ2,i)] = np.round(distance(targ1,targ2,i)/60,1)
-
-            #Time windows
-            w = []
-            for m in range(T):
-                w.append(np.round((start_slots[m] - start_slots[0]).jd*24*60,1))
-            w.append(np.round((stop - start_slots[0]).jd*24*60,1))
-
-            ####Model and Variables####
-            Mod = Model('TTP')
-            Mod.Params.OutputFlag = output_flag
-
-            yi = Mod.addVars(range(R),vtype=GRB.BINARY,name='yi')
-            xijm = Mod.addVars(range(R),range(R),range(T),vtype=GRB.BINARY,name='xijm')
-            tijm = Mod.addVars(range(R),range(R),range(T),vtype=GRB.CONTINUOUS,name='tijm')
-            ti = Mod.addVars(range(R),vtype=GRB.CONTINUOUS,lb=0,name='ti')
-
-            tijmdef = Mod.addConstrs((ti[i] == gp.quicksum(tijm[i,j,m] for j in range(R)[1:] for m in range(T))
-                                for i in range(R)[:-1]),'tijm_def')
-            start_origin = Mod.addConstr(gp.quicksum(xijm[0,j,m] for j in range(R) for m in range(T)) == 1,
-                               'start_origin')
-            end_origin = Mod.addConstr(gp.quicksum(xijm[i,R-1,m] for i in range(R) for m in range(T)) == 1,
-                               'end_origin')
-            visit_once = Mod.addConstrs((gp.quicksum(xijm[i,j,m] for i in range(R)[:-1] for m in range(T)) == yi[j]
-                             for j in range(R)[1:]), 'visit_once')
-            flow_constr = Mod.addConstrs(((gp.quicksum(xijm[i,k,m] for i in range(R)[:-1] for m in range(T))
-                               - gp.quicksum(xijm[k,j,m] for j in range(R)[1:] for m in range(T)) == 0)
-                              for k in range(R)[:-1][1:]), 'flow_constr')
-            exp_constr = Mod.addConstrs((ti[j] >= tijm[i,j,m] + (dist[(i,j,m)] + s_i[j])*xijm[i,j,m]
-                             for i in range(R)[:-1] for j in range(R)[1:] for m in range(T))
-                          , 'exp_constr')
-            t_min = Mod.addConstrs(((tijm[i,j,m] >= w[m]*xijm[i,j,m]) for j in range(R) for m in range(T)
-                             for i in range(R)),'t_min')
-            t_max = Mod.addConstrs((tijm[i,j,m] <= w[m+1]*xijm[i,j,m] for j in range(R) for m in range(T)
-                             for i in range(R)),'t_max')
-            rise_constr = Mod.addConstrs((ti[i] >= e_i[i]*yi[i] for i in range(R)),'rise_constr')
-            set_constr = Mod.addConstrs((ti[i] <= l_i[i]*yi[i] for i in range(R)),'set_constr')
-            priority_param = 50
-            slew_param = 1/100
-
-            Mod.setObjective(priority_param*gp.quicksum(yi[j] for j in range(R))
-                             -slew_param *gp.quicksum(dist[(i,j,m)]*xijm[i,j,m] for i in range(R)[:-1]
-                                           for j in range(R)[1:] for m in range(T))
-                                ,GRB.MAXIMIZE)
-            logger.info('Solving TTP for qn {}'.format(qn))
-            Mod.params.TimeLimit = time_limit
-            Mod.params.MIPGap = 0
-            Mod.update()
-            Mod.optimize()
-            try:
-                scheduled_targets = []
-                for i in range(R)[1:][:-1]:
-                    if np.round(yi[i].X,0) == 1:
-                        v = ti[i]
-                        scheduled_targets.append((int(v.VarName[3:-1]),int(np.round(v.X))))
-
-                start_times = []
-                unordered_times = []
-
-                for i in range(len(scheduled_targets)):
-                    unordered_times.append(int(scheduled_targets[i][1]))
-                order = np.argsort(unordered_times)
-                scheduled_targets = [scheduled_targets[i] for i in order]
-                
-
-                if plot_results:
-                    logger.info('Plotting qn {}'.format(qn))
-
-                    obs_time=[]
-                    az_path=[]
-                    alt_path=[]
-                    names=[]
-                    targ_list=[]
-                    for pair in scheduled_targets:
-                        targ=pair[0]
-                        time=t[pair[1]]
-                        exp=s_i[targ]
-                        targ_list.append(targ)
-                        names.append(all_targets_frame.loc[ind_to_id[targ],'Starname'])
-                        time1=time-TimeDelta(60*exp,format='sec')
-                        obs_time.append(time1.jd)
-                        obs_time.append(time.jd)
-                        az_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time1,keck)[1])
-                        az_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time,keck)[1])
-                        alt_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time1,keck)[0])
-                        alt_path.append(get_alt_az(all_targets_frame,ind_to_id[targ],time,keck)[0])
-                        
-                    time_array = []
-                    for i in range(len(obs_time)):
-                        if i % 2 == 0:
-                            time_array.append((obs_time[i] - obs_time[0])*1440)
-
-                    start = Time(obs_time[0],format='jd')
-                    stop = Time(obs_time[-1],format='jd')
-                    step = TimeDelta(2,format='sec')
-                    t = np.arange(start.jd,stop.jd,step.jd)
-                    t = Time(t,format='jd')
-                            
-                    time_counter = Time(obs_time[0],format='jd')
-                    time_strings = t.isot
-                    observed_at_time = []
-                    tel_targs = []
-                    while time_counter.jd < obs_time[-1]:
-                        ind = np.flatnonzero(time_array <= (time_counter.jd - obs_time[0])*1440)[-1]
-                        req = ind_to_id[targ_list[ind]]
-                        observed_at_time.append(ind)
-                        ra,dec = get_ra_dec(all_targets_frame,req)
-                        coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
-                        target = apl.FixedTarget(name=targ, coord=coords)
-                        tel_targs.append(target)
-                        time_counter += TimeDelta(2,format='sec')
-
-                    AZ1 = keck.altaz(t, tel_targs, grid_times_targets=False)
-                    tel_az = np.round(AZ1.az.rad,2)
-                    tel_zen = 90 - np.round(AZ1.alt.deg,2)
-                    target_list = []
-                    for targ in targ_list:
-                        ra,dec = get_ra_dec(all_targets_frame,ind_to_id[targ])
-                        coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
-                        target = apl.FixedTarget(name=targ, coord=coords)
-                        target_list.append(target)
-                        
-                    AZ = keck.altaz(t, target_list, grid_times_targets=True)
-
-                    total_azimuth_list = []
-                    total_zenith_list = []
-
-                    for i in range(len(AZ[0])):
-                        total_azimuth_list.append(np.round(AZ[:,i].az.rad,2))
-                        total_zenith_list.append(90-np.round(AZ[:,i].alt.deg,2))
+                AZ1 = keck.altaz(t, tel_targs, grid_times_targets=False)
+                tel_az = np.round(AZ1.az.rad,2)
+                tel_zen = 90 - np.round(AZ1.alt.deg,2)
+                target_list = []
+                for targ in targ_list:
+                    ra,dec = get_ra_dec(all_targets_frame,ind_to_id[targ])
+                    coords = apy.coordinates.SkyCoord(ra * u.hourangle, dec * u.deg, frame='icrs')
+                    target = apl.FixedTarget(name=targ, coord=coords)
+                    target_list.append(target)
                     
-                    plotting.plot_path_2D(obs_time,az_path,alt_path,names,targ_list,
-                                        plotpath,current_day,int(plan.loc[qn,'stop']*4))
-                    plotting.animate_telescope(time_strings,total_azimuth_list,total_zenith_list,
-                                            tel_az,tel_zen,observed_at_time,plotpath,int(plan.loc[qn,'stop']*4))
-                
-                for pair in scheduled_targets:
-                    ordered_requests.append(ind_to_id[pair[0]])
-            except:
-                logger.critical('No incumbent solution for qn {}, omitting from script. Try increasing time_limit parameter.'.format(qn))
+                AZ = keck.altaz(t, target_list, grid_times_targets=True)
 
-        #Turn all the nights targets into starlists   
-        formatting.write_starlist(instrument,all_targets_frame,ordered_requests,condition,current_day,outputdir)
+                total_azimuth_list = []
+                total_zenith_list = []
+
+                for i in range(len(AZ[0])):
+                    total_azimuth_list.append(np.round(AZ[:,i].az.rad,2))
+                    total_zenith_list.append(90-np.round(AZ[:,i].alt.deg,2))
+                
+                plotting.plot_path_2D(obs_time,az_path,alt_path,names,targ_list,
+                                    plotpath,current_day)
+                plotting.animate_telescope(time_strings,total_azimuth_list,total_zenith_list,
+                                        tel_az,tel_zen,observed_at_time,plotpath)
+            
+            for pair in scheduled_targets:
+                ordered_requests.append(ind_to_id[pair[0]])
+
+            for i in range(R)[1:-1]:
+                if np.round(yi[i].X,0) == 0:
+                    extras.append(ind_to_id[i])
+
+            #Turn all the nights targets into starlists   
+            formatting.write_starlist(instrument,all_targets_frame,ordered_requests,extras,condition,current_day,outputdir)
+
+        else:
+            logger.critical('No incumbent solution for {} in time allotted, aborting solve. Try increasing time_limit parameter.'.format(current_day))
+        
+        
+        
 
 def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights,marked_scripts,schedule_dates,output_flag,
                                                                             equalize_programs,plot_results,outputdir,time_limit):
@@ -656,7 +698,10 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
     #Formally make lists of targets,slots,and observations to communicate to Gurobi
     target_ids = all_targets_frame['request_number'].tolist()
     slots = plan.index.tolist()
-    Nobs = all_targets_frame['N_obs(full_semester)'].tolist()
+    if instrument == 'KPF':
+        Nobs = (all_targets_frame['N_obs(full_semester)'].to_numpy(dtype=int))/(all_targets_frame['Nvisits'].to_numpy(dtype=int))
+    if instrument == 'HIRES':
+        Nobs = all_targets_frame['N_obs(full_semester)'].to_numpy(dtype=int)
 
     #Turn our reservation list into a dictionary for when we want to easily access reservations by target
     reservation_dict = defaultdict(list)
@@ -666,7 +711,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
                 reservation_dict[targ].append(slot)
 
     ############Process completed observations############
-    observed_dict = process_scripts(all_targets_frame,plan,marked_scripts,current_day)
+    observed_dict = process_scripts(instrument,all_targets_frame,plan,marked_scripts,current_day)
 
     #Remove reservations that occur before the current day unless actually took place
     starting_slot = plan[plan['Date'] == current_day].index[0]
@@ -762,7 +807,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
         #Force the next night to contain an amount of stars necessary for different conditions
         if condition_type == 'nominal':
             #These bound the size of the upcoming nights 'bin'
-            lb = 0.95
+            lb = 0.75
             ub = 1.0
             mag_lim = np.inf
             outpfile = os.path.join(outputdir,'{}_2023B_nominal.csv'.format(instrument))
@@ -866,7 +911,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
                 m.addGenConstrAbs(abs_dev[program],dev[program],'dev_to_abs')
 
         #These scalars should be adjusted through trial and error, and are dependent on model size.
-        cadence_scalar = 1/800
+        cadence_scalar = 1/2000
         program_scalar = 600
 
         #Reward more observations, closer cadence to minimum, and also program equity
@@ -909,15 +954,21 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
             conflicting_constraints(m,300)
 
         if m.Status != GRB.INFEASIBLE:
+            num_scheduled = 0
             #Create lists of target ids that correspond to each quarter night slot
             scheduled_targets = []
             for v in yrt.values():
                 #If decision variable = 1, append the id to that slot
                 if np.round(v.X,0) == 1:
+                    num_scheduled += 1
                     #Perhaps theres a better way than parsing the names, I haven't found it!
                     scheduled_targets.append(v.VarName[4:][:-1].split(','))
 
             unordered_times = []
+            #TODO update both the scheduled observations and (somehow) the bound to account for Nvisits. Each sequence of visits is
+            #considered a single observation here. The objective values don't account for this, and the total observations will be 
+            #higher than the queried objective value/bound
+            logger.info('{} observations scheduled of {} upper bound. {} were requested'.format(num_scheduled,math.ceil(m.ObjBound),math.ceil(sum(Nobs))))
 
             #Reorder the quarter nights
             for i in range(len(scheduled_targets)):
@@ -960,7 +1011,7 @@ def semester_schedule(instrument,observers_sheet,twilight_times,allocated_nights
 
                 #Plot target cadence by program
                 logger.info('Plotting Program Cadences')
-                plotting.plot_program_cadence(plan,all_targets_frame,twilight_frame,starlists,
+                plotting.plot_program_cadence(instrument,plan,all_targets_frame,twilight_frame,starlists,
                                     min_separations,plotpath,current_day)
                 #plotting.plot_cadence_night_resolution(plan,all_targets_frame,twilight_frame,starlists,
                 #                     min_separations,plotpath)

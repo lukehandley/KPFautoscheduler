@@ -28,7 +28,7 @@ def format_observers_sheet(observers_sheet,instrument):
         for index,row in all_targets_frame.iterrows():
             #Remove Spaces
             row['Starname'] = row['Starname'].replace(" ", "")
-            if row['DECD'] < 0:
+            if int(row['DECD']) < 0:
                 dec = (np.abs((int(row['DECD']))) + (1/60)*row['DECM'] + (1/3600)*row['DECS'])
                 all_targets_frame.at[index,'dec'] = -np.abs(dec)
             else:
@@ -76,7 +76,7 @@ def format_observers_sheet(observers_sheet,instrument):
         for index,row in all_targets_frame.iterrows():
             #Remove Spaces
             row['Starname'] = row['Starname'].replace(" ", "")
-            if row['DECD'] < 0:
+            if int(row['DECD']) < 0:
                 dec = (np.abs((int(row['DECD']))) + (1/60)*row['DECM'] + (1/3600)*row['DECS'])
                 all_targets_frame.at[index,'dec'] = -np.abs(dec)
             else:
@@ -135,7 +135,100 @@ def format_allocated_nights(allocated_nights,instrument):
 
         return obs_plan
 
-def write_starlist(instrument,frame,requests,condition,current_day,outputdir):
+def format_hires_row(row):
+    #Just a bunch of string formatting. This prints standard starlists as ordered by the salesman optimization
+
+    namestring = ' '*(16-len(row['Starname'][:16])) + row['Starname'][:16]
+
+    rastring = ('0'*(2-len(str(int(row['RAH'])))) + str(int(row['RAH'])) + ' '
+                    + '0'*(2-len(str(int(row['RAM'])))) + str(int(row['RAM'])) + ' '
+                        + '0'*(4-len(str(np.round(row['RAS'],1)))) + str(np.round(row['RAS'],1)))
+
+    starter = '+'
+    if row['DECD'] < 0:
+        starter = '-'
+        decstring = (starter + '0'*(2-len(str(abs(int(row['DECD']))))) + str(abs(int(row['DECD']))) + ' '
+                        + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
+                            + '0'*(2-len(str(int(row['DECS'])))) + str(int(row['DECS'])))
+    else:
+        decstring = (starter + '0'*(2-len(str(abs(int(row['DECD']))))) + str(abs(int(row['DECD']))) + ' '
+                        + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
+                            + '0'*(2-len(str(int(row['DECS'])))) + str(int(row['DECS'])))
+
+    magstring = (row['vmag='] + str(np.round(float(row['Vmag']),1)) + ' '*(4-len(str(np.round(row['Vmag'],1)))))
+
+    exposurestring = (' '*(4-len(str(int(row['T_exp(sec)'])))) + str(int(row['T_exp(sec)'])) + '/' 
+                        + str(int(row['T_max(sec)'])) + ' '*(4-len(str(int(row['T_max(sec)'])))))
+
+    countstring = (' '*(3-len(str(int(row['Exp_meter_counts(k)']))))
+                        + str(int(row['Exp_meter_counts(k)'])) + 'k')
+
+    line = (namestring + ' ' + rastring + ' ' + decstring + ' ' + str(int(row['epoch'])) + ' '
+                + magstring + ' ' + exposurestring + ' ' + countstring + ' ' + row['decker'] + ' ' + 
+                str(int(row['N_obs'])) + 'x' + ' ' + ' '*(3-len(row['Iodine'])) + row['Iodine']
+                + ' ' + row['Priority'] + ' ' + 
+                row['Program code'] + ' '*(3-len(row['Program code'])) + ' ' + row['Telescope Propsoal Code'])
+
+    if not pd.isnull(row['Comment']):
+        line += (' ' + str(row['Comment']))
+
+    return line
+
+def format_kpf_row(row):
+    #Just a bunch of string formatting. This prints standard starlists as ordered by the salesman optimization
+
+    namestring = ' '*(16-len(row['Starname'][:16])) + row['Starname'][:16]
+
+    rastring = ('0'*(2-len(str(int(row['RAH'])))) + str(int(row['RAH'])) + ' '
+                    + '0'*(2-len(str(int(row['RAM'])))) + str(int(row['RAM'])) + ' '
+                        + '0'*(4-len(str(np.round(row['RAS'],1)))) + str(np.round(row['RAS'],1))) 
+
+    starter = '+'
+    if row['DECD'] < 0:
+        starter = '-'
+        decstring = (starter + '0'*(2-len(str(abs(int(row['DECD']))))) + str(abs(int(row['DECD']))) + ' '
+                        + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
+                            + '0'*(4-len(str(row['DECS']))) + str(int(row['DECS'])))
+    else:
+        decstring = (starter + '0'*(2-len(str(abs(int(row['DECD']))))) + str(abs(int(row['DECD']))) + ' '
+                        + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
+                            + '0'*(4-len(str(row['DECS']))) + str(int(row['DECS'])))
+
+    jmagstring = (row['jmag='] + str(np.round(float(row['Jmag']),1)) + ' '*(4-len(str(np.round(row['Jmag'],1)))))
+
+    exposurestring = (' '*(4-len(str(int(row['T_exp(sec)'])))) + str(int(row['T_exp(sec)'])) + '/' 
+                        + str(int(row['T_max(sec)'])) + ' '*(4-len(str(int(row['T_max(sec)'])))))
+
+    try:
+        ofstring = ('1of' + str(int(row['Nvisits'])))
+    except:
+        ofstring = row['Nvisits']
+        
+    scstring = 'sc=' + row['Simulcal']
+
+    numstring = (str(row['Nobs per']) + row['Format1'])
+        
+    gmagstring = (row['gmag='] + str(np.round(float(row['Gmag']),1)) + ' '*(4-len(str(np.round(row['Gmag'],1)))))
+
+    teffstr = row['Teff'] + str(int(row['Teff_val'])) + ' '*(4-len(str(int(row['Teff_val']))))
+
+    gaiastring = 'Gaia DR3 ' + str(int(row['Gaia_DR3_id'])) + ' '*(19-len(str(int(row['Gaia_DR3_id']))))
+
+    programstring = row['Program code']
+
+    priostring = row['Format3'] + str(int(row['priority'])) + ' ' + row['Telescope']
+
+    line = (namestring + ' ' + rastring + ' ' + decstring + ' ' + str(int(row['epoch'])) + ' '
+                + jmagstring + ' ' + exposurestring + ' ' + ofstring + ' ' + scstring +  ' '
+                + numstring + ' '+ gmagstring + ' ' + teffstr + ' ' + gaiastring + ' ' 
+                        + programstring + ' ' + priostring)
+
+    if not pd.isnull(row['Comment']):
+        line += (' ' + str(row['Comment']))
+
+    return line
+
+def write_starlist(instrument,frame,requests,extras,condition,current_day,outputdir):
     script_dir = os.path.join(outputdir,'{}_scripts'.format(instrument))
     if not os.path.isdir(script_dir):
         os.mkdir(script_dir)
@@ -148,50 +241,22 @@ def write_starlist(instrument,frame,requests,condition,current_day,outputdir):
             'Priority','Program code','Telescope Propsoal Code','Comment']
 
         formatted_frame = frame.loc[requests][columns]
+        extras_frame = frame.loc[extras][columns]
 
         lines = []
         for index,row in formatted_frame.iterrows():
-            #Just a bunch of string formatting. This prints standard starlists as ordered by the salesman optimization
+            lines.append(format_hires_row(row))
 
-            namestring = ' '*(16-len(row['Starname'][:16])) + row['Starname'][:16]
+        lines.append('')
+        lines.append('X' * 45 + 'EXTRAS' + 'X' * 45)
+        lines.append('')
 
-            rastring = ('0'*(2-len(str(int(row['RAH'])))) + str(int(row['RAH'])) + ' '
-                            + '0'*(2-len(str(int(row['RAM'])))) + str(int(row['RAM'])) + ' '
-                                + '0'*(4-len(str(np.round(row['RAS'],1)))) + str(np.round(row['RAS'],1)))
+        for index,row in extras_frame.iterrows():
+            lines.append(format_hires_row(row))
 
-            starter = '+'
-            if row['DECD'] < 0:
-                starter = '-'
-                decstring = (starter + '0'*(2-len(str(abs(int(row['DECD']))))) + str(abs(int(row['DECD']))) + ' '
-                                + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
-                                    + '0'*(2-len(str(int(row['DECS'])))) + str(int(row['DECS'])))
-            else:
-                decstring = (starter + '0'*(2-len(str(abs(int(row['DECD']))))) + str(abs(int(row['DECD']))) + ' '
-                                + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
-                                    + '0'*(2-len(str(int(row['DECS'])))) + str(int(row['DECS'])))
-
-            magstring = (row['vmag='] + str(np.round(float(row['Vmag']),1)) + ' '*(4-len(str(np.round(row['Vmag'],1)))))
-
-            exposurestring = (' '*(4-len(str(int(row['T_exp(sec)'])))) + str(int(row['T_exp(sec)'])) + '/' 
-                                + str(int(row['T_max(sec)'])) + ' '*(4-len(str(int(row['T_max(sec)'])))))
-
-            countstring = (' '*(3-len(str(int(row['Exp_meter_counts(k)']))))
-                                + str(int(row['Exp_meter_counts(k)'])) + 'k')
-
-            line = (namestring + ' ' + rastring + ' ' + decstring + ' ' + str(int(row['epoch'])) + ' '
-                        + magstring + ' ' + exposurestring + ' ' + countstring + ' ' + row['decker'] + ' ' + 
-                        str(int(row['N_obs'])) + 'x' + ' ' + ' '*(3-len(row['Iodine'])) + row['Iodine']
-                        + ' ' + row['Priority'] + ' ' + 
-                        row['Program code'] + ' '*(3-len(row['Program code'])) + ' ' + row['Telescope Propsoal Code'])
-
-            if not pd.isnull(row['Comment']):
-                line += (' ' + str(row['Comment']))
-            
-            lines.append(line)
-
-            #Formatted starlists appear as text files in the directory
-            with open(script_file, 'w') as f:
-                f.write('\n'.join(lines))
+        #Formatted starlists appear as text files in the directory
+        with open(script_file, 'w') as f:
+            f.write('\n'.join(lines))
 
     if instrument == 'KPF':
         columns = ['Starname','RAH','RAM','RAS','DECD','DECM','DECS','epoch','jmag=','Jmag',
@@ -200,62 +265,19 @@ def write_starlist(instrument,frame,requests,condition,current_day,outputdir):
             'priority','Telescope','Comment']
         
         formatted_frame = frame.loc[requests][columns]
+        extras_frame = frame.loc[extras][columns]
 
         lines = []
         for index,row in formatted_frame.iterrows():
-            #Just a bunch of string formatting. This prints standard starlists as ordered by the salesman optimization
+            lines.append(format_kpf_row(row))
 
-            namestring = ' '*(16-len(row['Starname'][:16])) + row['Starname'][:16]
+        lines.append('')
+        lines.append('X' * 45 + 'EXTRAS' + 'X' * 45)
+        lines.append('')
 
-            rastring = ('0'*(2-len(str(int(row['RAH'])))) + str(int(row['RAH'])) + ' '
-                            + '0'*(2-len(str(int(row['RAM'])))) + str(int(row['RAM'])) + ' '
-                                + '0'*(4-len(str(np.round(row['RAS'],1)))) + str(np.round(row['RAS'],1))) 
+        for index,row in extras_frame.iterrows():
+            lines.append(format_kpf_row(row))
 
-            starter = '+'
-            if row['DECD'] < 0:
-                starter = '-'
-                decstring = (starter + '0'*(2-len(str(abs(int(row['DECD']))))) + str(abs(int(row['DECD']))) + ' '
-                                + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
-                                    + '0'*(4-len(str(row['DECS']))) + str(int(row['DECS'])))
-            else:
-                decstring = (starter + '0'*(2-len(str(abs(int(row['DECD']))))) + str(abs(int(row['DECD']))) + ' '
-                                + '0'*(2-len(str(int(row['DECM'])))) + str(int(row['DECM'])) + ' '
-                                    + '0'*(4-len(str(row['DECS']))) + str(int(row['DECS'])))
-
-            jmagstring = (row['jmag='] + str(np.round(float(row['Jmag']),1)) + ' '*(4-len(str(np.round(row['Jmag'],1)))))
-
-            exposurestring = (' '*(4-len(str(int(row['T_exp(sec)'])))) + str(int(row['T_exp(sec)'])) + '/' 
-                                + str(int(row['T_max(sec)'])) + ' '*(4-len(str(int(row['T_max(sec)'])))))
-            
-            try:
-                ofstring = ('1of' + str(int(row['Nvisits'])))
-            except:
-                ofstring = row['Nvisits']
-                
-            scstring = 'sc=' + row['Simulcal']
-            
-            numstring = (str(row['Nobs per']) + row['Format1'])
-                
-            gmagstring = (row['gmag='] + str(np.round(float(row['Gmag']),1)) + ' '*(4-len(str(np.round(row['Gmag'],1)))))
-            
-            teffstr = row['Teff'] + str(int(row['Teff_val'])) + ' '*(4-len(str(int(row['Teff_val']))))
-            
-            gaiastring = 'Gaia DR3 ' + str(int(row['Gaia_DR3_id'])) + ' '*(19-len(str(int(row['Gaia_DR3_id']))))
-            
-            programstring = row['Program code']
-            
-            priostring = row['Format3'] + str(int(row['priority'])) + ' ' + row['Telescope']
-
-            line = (namestring + ' ' + rastring + ' ' + decstring + ' ' + str(int(row['epoch'])) + ' '
-                        + jmagstring + ' ' + exposurestring + ' ' + ofstring + ' ' + scstring +  ' '
-                        + numstring + ' '+ gmagstring + ' ' + teffstr + ' ' + gaiastring + ' ' 
-                                + programstring + ' ' + priostring)
-            
-            if not pd.isnull(row['Comment']):
-                line += (' ' + str(row['Comment']))
-
-            lines.append(line)
-
-            #Formatted starlists appear as text files in the directory
-            with open(script_file, 'w') as f:
-                f.write('\n'.join(lines))
+        #Formatted starlists appear as text files in the directory
+        with open(script_file, 'w') as f:
+            f.write('\n'.join(lines))
